@@ -61,9 +61,9 @@ SEPARATOR="-------------------------------------------------"
 
 if [ -z "$l_output2" ]; then
     touch ./Result/pass.txt 
-    echo -e "$SEPARATOR\nAudit: $AUDIT_NAME\n$l_mname: PASS\n$l_output\n" >> "./Result/pass.txt"
+    echo -e "$SEPARATOR\nAudit: $AUDIT_NAME\n$l_mname: PASS\n$l_output\n" >> "./Result/Hardening_1/pass.txt"
 else
     touch ./Result/fail.txt
-    echo -e "$SEPARATOR\nAudit: $AUDIT_NAME\n$l_mname: FAIL\n$l_output2\n" >> "./Result/fail.txt"
-    echo -e "\n- Correctly set:\n$l_output\n" >> "./Result/fail.txt"
+    echo -e "$SEPARATOR\nAudit: $AUDIT_NAME\n$l_mname: FAIL\n$l_output2\n" >> "./Result/Hardening_1/fail.txt"
+    echo -e "\n- Correctly set:\n$l_output\n" >> "./Result/Hardening_1/fail.txt"
 fi
