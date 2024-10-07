@@ -58,8 +58,8 @@ select_mode() {
 execute_scripts() {
     case $hardness_choice in
         1)
-            #mkdir -p ./hardening/results/hardening_1
-            #sleep 2.5
+            mkdir -p ./Result/Hardening_1 #&& touch ./Result/Hardening_1/pass.txt
+            sleep 2.5
             #clear
             
             case $mode_choice in
@@ -443,7 +443,7 @@ execute_scripts() {
             esac
             ;;
         2)
-            mkdir -p ./hardening/results/hardening_2
+            mkdir -p ./Result/Hardening_2
             sleep 2.5
             clear
             
