@@ -1,26 +1,26 @@
 #!/usr/bin/env bash
 
-# Ergebnisverzeichnis definieren
+# Define the result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Stelle sicher, dass das Verzeichnis existiert
+mkdir -p "$RESULT_DIR"  # Create directory if it doesn't exist
 
-# Audit-Nummer definieren
+# Define the audit number
 AUDIT_NUMBER="1.1.1.1"
 
-# Setze Variablen für die Ausgabe
+# Initialize output variables
 l_output="" 
 l_output2="" 
 l_output3="" 
 l_dl=""  # Unset output variables
-l_mname="cramfs"  # set module name
-l_mtype="fs"      # set module type
+l_mname="cramfs"  # Set module name
+l_mtype="fs"      # Set module type
 l_searchloc="/lib/modprobe.d/*.conf /usr/local/lib/modprobe.d/*.conf /run/modprobe.d/*.conf /etc/modprobe.d/*.conf"
 l_mpath="/lib/modules/**/kernel/$l_mtype"
 l_mpname="$(tr '-' '_' <<< "$l_mname")"
 l_mndir="$(tr '-' '/' <<< "$l_mname")"
 
 module_loadable_chk() {
-    # Prüfen, ob das Modul aktuell ladbar ist
+    # Check if the module is currently loadable
     l_loadable="$(modprobe -n -v "$l_mname")"
     [ "$(wc -l <<< "$l_loadable")" -gt "1" ] && \
     l_loadable="$(grep -P -- "(^\h*install|\b$l_mname)\b" <<< "$l_loadable")"
@@ -33,7 +33,7 @@ module_loadable_chk() {
 }
 
 module_loaded_chk() {
-    # Prüfen, ob das Modul aktuell geladen ist
+    # Check if the module is currently loaded
     if ! lsmod | grep "$l_mname" > /dev/null 2>&1; then
         l_output="$l_output\n - module: \"$l_mname\" is not loaded"
     else
@@ -42,7 +42,7 @@ module_loaded_chk() {
 }
 
 module_deny_chk() {
-    # Prüfen, ob das Modul auf der Deny-Liste steht
+    # Check if the module is deny listed
     l_dl="y"
     if modprobe --showconfig | grep -Pq -- "^\h*blacklist\h+$l_mpname\b"; then
         l_output="$l_output\n - module: \"$l_mname\" is deny listed in: \"$(grep -Pls -- "^\h*blacklist\h+$l_mname\b" $l_searchloc)\""
@@ -51,7 +51,7 @@ module_deny_chk() {
     fi
 }
 
-# Prüfen, ob das Modul auf dem System existiert
+# Check if the module exists on the system
 for l_mdir in $l_mpath; do
     if [ -d "$l_mdir/$l_mndir" ] && [ -n "$(ls -A "$l_mdir/$l_mndir")" ]; then
         l_output3="$l_output3\n - \"$l_mdir\""
@@ -66,20 +66,21 @@ for l_mdir in $l_mpath; do
     fi
 done
 
-# Ergebnisbericht vorbereiten
+# Prepare result report
 if [ -z "$l_output2" ]; then
-    # PASS: Keine Fehler gefunden
+    # PASS: No issues found
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    # FAIL: Fehler gefunden
+    # FAIL: Issues found
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
     [ -n "$l_output" ] && RESULT="$RESULT\n- Correctly set:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Ergebnis in Datei schreiben
-echo -e "$RESULT" >> "$FILE_NAME"
-
-# Trennlinie hinzufügen
-echo -e "-------------------------------------------------" >> "$FILE_NAME"
+# Write the result to the file
+{
+    echo -e "$RESULT"
+    # Add a separator line
+    echo -e "-------------------------------------------------"
+} >> "$FILE_NAME"

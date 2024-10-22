@@ -1,57 +1,48 @@
 #!/usr/bin/env bash
 
-# Audit-Name
-AUDIT_NAME="1.1.2.1.1"
-
-# Initialisiere Ergebnisverzeichnis
+# Define the result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Stelle sicher, dass das Verzeichnis existiert
+mkdir -p "$RESULT_DIR"  # Create directory if it doesn't exist
 
-# Trennlinie
-SEPARATOR="-------------------------------------------------"
+# Define the audit number
+AUDIT_NUMBER="1.1.2.1.1"
 
-# Flag zur Verfolgung von Fehlern
-FAIL_FLAG=0
+# Initialize output variables
+l_output=""
+l_mount_output=""
+l_systemd_output=""
 
-# Ergebnisse initialisieren
-RESULTS="Audit: $AUDIT_NAME\n"
-
-# Funktion zum Überprüfen des Mount-Status von /tmp
-check_tmp_mount() {
-    MOUNT_OUTPUT=$(findmnt -kn /tmp)
-    
-    if [[ $MOUNT_OUTPUT == *"/tmp tmpfs"* ]]; then
-        RESULTS+="\n/tmp: PASS\n\n -- INFO --\n/tmp ist gemountet als tmpfs\n"
-    else
-        RESULTS+="\n/tmp: FAIL\n\n -- INFO --\n/tmp ist nicht gemountet\n"
-        FAIL_FLAG=1  # Setze den Fehler-Flag
-    fi
-}
-
-# Funktion zum Überprüfen des systemd-Status für tmp.mount
-check_systemd_tmp_mount() {
-    SYSTEMD_STATUS=$(systemctl is-enabled tmp.mount)
-    
-    if [[ $SYSTEMD_STATUS == "generated" || $SYSTEMD_STATUS == "enabled" ]]; then
-        RESULTS+="\ntmp.mount: PASS\n\n -- INFO --\nsystemd aktiviert tmp.mount beim Booten\n"
-    else
-        RESULTS+="\ntmp.mount: FAIL\n\n -- INFO --\ntmp.mount ist entweder maskiert oder deaktiviert\n"
-        FAIL_FLAG=1  # Setze den Fehler-Flag
-    fi
-}
-
-# Starte die Überprüfungen
-check_tmp_mount
-check_systemd_tmp_mount
-
-# Ergebnisse speichern
-if [[ $FAIL_FLAG -eq 1 ]]; then
-    # Wenn Fehler aufgetreten sind, schreibe alles in die Fail-Datei
-    echo -e "$RESULTS" >> "$RESULT_DIR/fail.txt"
+# Check the mount options for /tmp
+l_mount_output=$(findmnt -kn /tmp)
+if [[ $l_mount_output == *"/tmp tmpfs"* ]]; then
+    l_output+="\n- Audit: $AUDIT_NUMBER\n\n- /tmp is mounted with options: $l_mount_output"
 else
-    # Andernfalls schreibe alles in die Pass-Datei
-    echo -e "$RESULTS" >> "$RESULT_DIR/pass.txt"
+    l_output+="\n- Audit: $AUDIT_NUMBER\n\n- /tmp is NOT mounted correctly."
 fi
 
-# Füge die Trennlinie am Ende der Ergebnisse hinzu
-echo -e "$SEPARATOR" >> "$RESULT_DIR/$(if [[ $FAIL_FLAG -eq 1 ]]; then echo 'fail'; else echo 'pass'; fi).txt"
+# Check the systemd service for /tmp
+l_systemd_output=$(systemctl is-enabled tmp.mount)
+if [[ $l_systemd_output == "generated" || $l_systemd_output == "enabled" ]]; then
+    l_output+="\n- systemd service for /tmp is enabled with status: $l_systemd_output"
+else
+    l_output+="\n- systemd service for /tmp is NOT enabled or is masked/disabled."
+fi
+
+# Prepare result report
+if [[ $l_mount_output == *"/tmp tmpfs"* && ($l_systemd_output == "generated" || $l_systemd_output == "enabled") ]]; then
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/pass.txt"
+else
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/fail.txt"
+fi
+
+# Write the result to the file
+{
+    echo -e "$RESULT"
+    # Add a separator line
+    echo -e "-------------------------------------------------"
+} >> "$FILE_NAME"
+
+# Optionally, print results to console for verification (can be commented out)
+echo -e "$RESULT"

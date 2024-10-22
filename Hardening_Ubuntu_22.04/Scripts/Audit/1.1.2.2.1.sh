@@ -1,44 +1,41 @@
 #!/usr/bin/env bash
 
-# Audit-Name
-AUDIT_NAME="1.1.2.2.1"
-
-# Initialisiere Ergebnisverzeichnis
+# Define the result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Stelle sicher, dass das Verzeichnis existiert
+mkdir -p "$RESULT_DIR"  # Create directory if it doesn't exist
 
-# Trennlinie
-SEPARATOR="-------------------------------------------------"
+# Define the audit number
+AUDIT_NUMBER="1.1.2.2.1"
 
-# Flag zur Verfolgung von Fehlern
-FAIL_FLAG=0
+# Initialize output variables
+l_output=""
+l_shm_check=""
 
-# Ergebnisse initialisieren
-RESULTS="Audit: $AUDIT_NAME\n"
+# Check if /dev/shm is mounted
+l_mount_output=$(findmnt -kn /dev/shm)
 
-# Funktion zum Überprüfen, ob /dev/shm gemountet ist
-check_dev_shm_mount() {
-    MOUNT_OUTPUT=$(findmnt -kn /dev/shm)
-
-    if [[ $MOUNT_OUTPUT == *"/dev/shm tmpfs"* ]]; then
-        RESULTS+="\n/dev/shm: PASS\n\n -- INFO --\n/dev/shm ist gemountet als tmpfs\n"
-    else
-        RESULTS+="\n/dev/shm: FAIL\n\n -- INFO --\n/dev/shm ist nicht gemountet\n"
-        FAIL_FLAG=1  # Setze den Fehler-Flag
-    fi
-}
-
-# Starte die Überprüfung
-check_dev_shm_mount
-
-# Ergebnisse speichern
-if [[ $FAIL_FLAG -eq 1 ]]; then
-    # Wenn Fehler aufgetreten sind, schreibe alles in die Fail-Datei
-    echo -e "$RESULTS" >> "$RESULT_DIR/fail.txt"
+if [[ $l_mount_output == *"/dev/shm tmpfs"* ]]; then
+    # If mounted, output the mount options
+    l_output+="\n- /dev/shm is mounted with options: $l_mount_output"
 else
-    # Andernfalls schreibe alles in die Pass-Datei
-    echo -e "$RESULTS" >> "$RESULT_DIR/pass.txt"
+    l_output+="\n- /dev/shm is NOT mounted."
 fi
 
-# Füge die Trennlinie am Ende der Ergebnisse hinzu
-echo -e "$SEPARATOR" >> "$RESULT_DIR/$(if [[ $FAIL_FLAG -eq 1 ]]; then echo 'fail'; else echo 'pass'; fi).txt"
+# Prepare result report
+if [[ $l_mount_output == *"/dev/shm tmpfs"* ]]; then
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/pass.txt"
+else
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/fail.txt"
+fi
+
+# Write the result to the file
+{
+    echo -e "$RESULT"
+    # Add a separator line
+    echo -e "-------------------------------------------------"
+} >> "$FILE_NAME"
+
+# Optionally, print results to console for verification (can be commented out)
+echo -e "$RESULT"

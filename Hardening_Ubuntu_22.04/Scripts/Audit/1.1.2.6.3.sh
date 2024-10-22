@@ -1,55 +1,48 @@
 #!/usr/bin/env bash
 
-# Audit-Name
-AUDIT_NAME="1.1.2.6.3"
-
-# Initialisiere Ergebnisverzeichnis
+# Define the result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Stelle sicher, dass das Verzeichnis existiert
+mkdir -p "$RESULT_DIR"  # Create directory if it doesn't exist
 
-# Trennlinie
-SEPARATOR="-------------------------------------------------"
+# Define the audit number
+AUDIT_NUMBER="1.1.2.6.3"
 
-# Flag zur Verfolgung von Fehlern
-FAIL_FLAG=0
+# Initialize output variable
+l_output=""
 
-# Ergebnisse initialisieren
-RESULTS="Audit: $AUDIT_NAME\n"
+# Check if /var/log is mounted
+l_var_log_check=$(findmnt -kn /var/log)
 
-# Funktion zur Überprüfung, ob /var/log gemountet ist
-check_var_log_mount() {
-    MOUNT_OUTPUT=$(findmnt -kn /var/log)
-    if [[ $MOUNT_OUTPUT == *"/var/log"* ]]; then
-        RESULTS+="\n/var/log: PASS\n\n -- INFO --\n/var/log ist gemountet\n"
+# Verify if /var/log is mounted
+if [ -n "$l_var_log_check" ]; then
+    # Check for the nosuid option
+    l_nosuid_check=$(findmnt -kn /var/log | grep -v 'nosuid')
+    
+    # Determine the result
+    if [ -z "$l_nosuid_check" ]; then
+        l_output+="\n- /var/log has the nosuid option set."
     else
-        RESULTS+="\n/var/log: FAIL\n\n -- INFO --\n/var/log ist nicht gemountet\n"
-        FAIL_FLAG=1  # Setze den Fehler-Flag
+        l_output+="\n- /var/log does NOT have the nosuid option set."
     fi
-}
-
-# Funktion zur Überprüfung, ob die nosuid-Option gesetzt ist
-check_nosuid_option() {
-    NOSUID_CHECK=$(findmnt -kn /var/log | grep -v nosuid)
-    if [ -z "$NOSUID_CHECK" ]; then
-        RESULTS+="Die nosuid-Option ist für /var/log gesetzt: PASS\n"
-    else
-        RESULTS+="Die nosuid-Option ist nicht für /var/log gesetzt: FAIL\n"
-        FAIL_FLAG=1  # Setze den Fehler-Flag
-    fi
-}
-
-# Starte die Überprüfungen
-check_var_log_mount
-check_nosuid_option
-
-# Ergebnisse speichern
-if [[ $FAIL_FLAG -eq 1 ]]; then
-    # Wenn Fehler aufgetreten sind, schreibe alles in die Fail-Datei
-    echo -e "$RESULTS" >> "$RESULT_DIR/fail.txt"
 else
-    # Andernfalls schreibe alles in die Pass-Datei
-    echo -e "$RESULTS" >> "$RESULT_DIR/pass.txt"
+    l_output+="\n- /var/log is NOT mounted."
 fi
 
-# Füge die Trennlinie am Ende der Ergebnisse hinzu
-echo -e "$SEPARATOR" >> "$RESULT_DIR/$(if [[ $FAIL_FLAG -eq 1 ]]; then echo 'fail'; else echo 'pass'; fi).txt"
+# Prepare result report
+if [[ "$l_output" == *"does NOT have the nosuid option set"* || "$l_output" == *"is NOT mounted."* ]]; then
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/fail.txt"
+else
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/pass.txt"
+fi
+
+# Write the result to the file
+{
+    echo -e "$RESULT"
+    # Add a separator line
+    echo -e "-------------------------------------------------"
+} >> "$FILE_NAME"
+
+# Optionally, print results to console for verification (can be commented out)
+echo -e "$RESULT"

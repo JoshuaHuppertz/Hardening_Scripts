@@ -1,57 +1,41 @@
 #!/usr/bin/env bash
 
-# Audit-Name
-AUDIT_NAME="1.1.2.3.3"
-
-# Initialisiere Ergebnisverzeichnis
+# Define the result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Stelle sicher, dass das Verzeichnis existiert
+mkdir -p "$RESULT_DIR"  # Create directory if it doesn't exist
 
-# Trennlinie
-SEPARATOR="-------------------------------------------------"
+# Define the audit number
+AUDIT_NUMBER="1.1.2.3.3"
 
-# Flag zur Verfolgung von Fehlern
-FAIL_FLAG=0
+# Initialize output variables
+l_output=""
+l_nosuid_check=""
 
-# Ergebnisse initialisieren
-RESULTS="Audit: $AUDIT_NAME\n"
+# Check if /home has the nosuid option set
+l_nosuid_check=$(findmnt -kn /home | grep -v 'nosuid')
 
-# Funktion zum Überprüfen, ob /home gemountet ist
-check_home_mount() {
-    MOUNT_OUTPUT=$(findmnt -kn /home)
-
-    if [[ $MOUNT_OUTPUT == *"/home"* ]]; then
-        RESULTS+="\n/home: PASS\n\n -- INFO --\n/home ist gemountet\n"
-    else
-        RESULTS+="\n/home: FAIL\n\n -- INFO --\n/home ist nicht gemountet\n"
-        FAIL_FLAG=1  # Setze den Fehler-Flag
-    fi
-}
-
-# Funktion zum Überprüfen, ob die nosuid-Option gesetzt ist
-check_nosuid_option() {
-    NOSUID_CHECK=$(findmnt -kn /home | grep -v nosuid)
-
-    if [ -z "$NOSUID_CHECK" ]; then
-        RESULTS+="\nnosuid-Option: PASS\n\n -- INFO --\nDie nosuid-Option ist für /home gesetzt\n"
-    else
-        RESULTS+="\nnosuid-Option: FAIL\n\n -- INFO --\nDie nosuid-Option ist nicht für /home gesetzt\n"
-        FAIL_FLAG=1  # Setze den Fehler-Flag
-    fi
-}
-
-# Starte die Überprüfungen
-check_home_mount
-check_nosuid_option
-
-# Ergebnisse speichern
-if [[ $FAIL_FLAG -eq 1 ]]; then
-    # Wenn Fehler aufgetreten sind, schreibe alles in die Fail-Datei
-    echo -e "$RESULTS" >> "$RESULT_DIR/fail.txt"
+# Check if the nosuid option is set correctly
+if [ -z "$l_nosuid_check" ]; then
+    l_output+="\n- The nosuid option is set for /home."
 else
-    # Andernfalls schreibe alles in die Pass-Datei
-    echo -e "$RESULTS" >> "$RESULT_DIR/pass.txt"
+    l_output+="\n- The nosuid option is NOT set for /home."
 fi
 
-# Füge die Trennlinie am Ende der Ergebnisse hinzu
-echo -e "$SEPARATOR" >> "$RESULT_DIR/$(if [[ $FAIL_FLAG -eq 1 ]]; then echo 'fail'; else echo 'pass'; fi).txt"
+# Prepare result report
+if [ -z "$l_nosuid_check" ]; then
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/pass.txt"
+else
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/fail.txt"
+fi
+
+# Write the result to the file
+{
+    echo -e "$RESULT"
+    # Add a separator line
+    echo -e "-------------------------------------------------"
+} >> "$FILE_NAME"
+
+# Optionally, print results to console for verification (can be commented out)
+echo -e "$RESULT"

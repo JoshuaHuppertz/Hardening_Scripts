@@ -1,55 +1,49 @@
 #!/usr/bin/env bash
 
-# Audit-Name
-AUDIT_NAME="1.1.2.7.2"
-
-# Initialisiere Ergebnisverzeichnis
+# Define the result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Stelle sicher, dass das Verzeichnis existiert
+mkdir -p "$RESULT_DIR"  # Create directory if it doesn't exist
 
-# Trennlinie
-SEPARATOR="-------------------------------------------------"
+# Define the audit number
+AUDIT_NUMBER="1.1.2.7.2"
 
-# Flag zur Verfolgung von Fehlern
-FAIL_FLAG=0
+# Initialize output variable
+l_output=""
+l_nodev_check=""
 
-# Ergebnisse initialisieren
-RESULTS="Audit: $AUDIT_NAME\n"
+# Check if /var/log/audit is mounted
+l_var_log_audit_check=$(findmnt -kn /var/log/audit)
 
-# Funktion zur Überprüfung, ob /var/log/audit gemountet ist
-check_var_log_audit_mount() {
-    MOUNT_OUTPUT=$(findmnt -kn /var/log/audit)
-    if [[ $MOUNT_OUTPUT == *"/var/log/audit"* ]]; then
-        RESULTS+="\n/var/log/audit: PASS\n\n -- INFO --\n/var/log/audit ist gemountet\n"
+# Verify if /var/log/audit is mounted
+if [ -n "$l_var_log_audit_check" ]; then
+    # Check if the nodev option is set
+    l_nodev_check=$(findmnt -kn /var/log/audit | grep -v 'nodev')
+
+    # Verify if the nodev option is present
+    if [ -z "$l_nodev_check" ]; then
+        l_output+="\n- The nodev option is set for /var/log/audit."
     else
-        RESULTS+="\n/var/log/audit: FAIL\n\n -- INFO --\n/var/log/audit ist nicht gemountet\n"
-        FAIL_FLAG=1  # Setze den Fehler-Flag
+        l_output+="\n- The nodev option is NOT set for /var/log/audit."
     fi
-}
-
-# Funktion zur Überprüfung, ob die nodev-Option gesetzt ist
-check_nodev_option() {
-    NODEV_CHECK=$(findmnt -kn /var/log/audit | grep -v nodev)
-    if [ -z "$NODEV_CHECK" ]; then
-        RESULTS+="Die nodev-Option ist für /var/log/audit gesetzt: PASS\n"
-    else
-        RESULTS+="Die nodev-Option ist nicht für /var/log/audit gesetzt: FAIL\n"
-        FAIL_FLAG=1  # Setze den Fehler-Flag
-    fi
-}
-
-# Starte die Überprüfungen
-check_var_log_audit_mount
-check_nodev_option
-
-# Ergebnisse speichern
-if [[ $FAIL_FLAG -eq 1 ]]; then
-    # Wenn Fehler aufgetreten sind, schreibe alles in die Fail-Datei
-    echo -e "$RESULTS" >> "$RESULT_DIR/fail.txt"
 else
-    # Andernfalls schreibe alles in die Pass-Datei
-    echo -e "$RESULTS" >> "$RESULT_DIR/pass.txt"
+    l_output+="\n- /var/log/audit is NOT mounted."
 fi
 
-# Füge die Trennlinie am Ende der Ergebnisse hinzu
-echo -e "$SEPARATOR" >> "$RESULT_DIR/$(if [[ $FAIL_FLAG -eq 1 ]]; then echo 'fail'; else echo 'pass'; fi).txt"
+# Prepare result report
+if [[ "$l_output" == *"is NOT set for /var/log/audit."* ]] || [[ "$l_output" == *"is NOT mounted."* ]]; then
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/fail.txt"
+else
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/pass.txt"
+fi
+
+# Write the result to the file
+{
+    echo -e "$RESULT"
+    # Add a separator line
+    echo -e "-------------------------------------------------"
+} >> "$FILE_NAME"
+
+# Optionally, print results to console for verification (can be commented out)
+echo -e "$RESULT"
