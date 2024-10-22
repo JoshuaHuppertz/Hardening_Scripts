@@ -3,7 +3,7 @@
 #/Hardening
 #│
 #└── Hardening_Ubuntu_22.04
-#    ├── automation.sh
+#    ├── Automation.sh
 #    ├── Results
 #    │   ├── pass.txt
 #    │   └── fail.txt
@@ -12,7 +12,7 @@
 #        └── Remediation
 
 # Pfad zu den Härtungsskripten
-HARDENING_Remediation="./Scripts/Audit"
+HARDENING_Audit="./Scripts/Audit"
 HARDENING_Remediation="./Scripts/Remediation"
 
 # Funktion zur Anzeige des Menüs für den Härtegrad
