@@ -74,8 +74,6 @@ execute_scripts() {
             #clear
             
             echo "Audit für Härtegrad 1 ausgewählt."
-            bash "$HARDENING_Audit/1.1.1.1.sh"
-            bash "$HARDENING_Audit/1.1.1.2.sh"
             # 1.1 Filesystem
             # 1.1.1 Configure Filesystem Kernel Modules
             bash "$HARDENING_Audit/1.1.1.1.sh"
@@ -445,12 +443,8 @@ execute_scripts() {
             #bash "$HARDENING_Audit/7.2.8.sh"
             #bash "$HARDENING_Audit/7.2.9.sh"
             #bash "$HARDENING_Audit/7.2.10.sh"
-            
-            esac
             ;;
         2)
-            
-            
             echo "Audit für Härtegrad 2 ausgewählt."
             # 1.1 Filesystem
             # 1.1.1 Configure Filesystem Kernel Modules
@@ -545,9 +539,8 @@ execute_scripts() {
             #bash "$HARDENING_Remediation/6.3.4.8.sh" #Level.2
             #bash "$HARDENING_Remediation/6.3.4.9.sh" #Level.2
             #bash "$HARDENING_Remediation/6.3.4.10.sh" #Level.2
-            ;;    
-    esac
-    ;;
+            ;;
+        esac
     echo "Das ausgewählte Skript wurde ausgeführt."
 }
 select_hardness
