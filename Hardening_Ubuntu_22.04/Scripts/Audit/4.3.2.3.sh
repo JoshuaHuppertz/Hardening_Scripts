@@ -1,34 +1,54 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-echo "Starting iptables outbound and established connections audit..."
+# Define the result directory
+RESULT_DIR="$(dirname "$0")/../../Results"
+mkdir -p "$RESULT_DIR"  # Create directory if it doesn't exist
 
-# Define a status flag
-audit_passed=true
+# Define the audit number
+AUDIT_NUMBER="4.3.2.3"
 
-# Get the current iptables rules
+# Initialize output variables
+l_output=""
+l_output2=""
+
+# Get the output of iptables
 iptables_rules=$(iptables -L -v -n)
 
-# Check for new outbound connections
-echo "Verifying rules for new outbound connections..."
-if echo "$iptables_rules" | grep -qE "ACCEPT .* ct state NEW"; then
-    echo "PASS: Rule for new outbound connections found."
+# Define expected rules for new outbound and established connections
+expected_rules=(
+    "ACCEPT     tcp  --  *      *       0.0.0.0/0            0.0.0.0/0          ct state NEW,RELATED,ESTABLISHED"
+    "ACCEPT     udp  --  *      *       0.0.0.0/0            0.0.0.0/0          ct state NEW,RELATED,ESTABLISHED"
+    "ACCEPT     icmp --  *      *       0.0.0.0/0            0.0.0.0/0          ct state NEW,RELATED,ESTABLISHED"
+)
+
+# Verify expected rules in iptables output
+for rule in "${expected_rules[@]}"; do
+    if echo "$iptables_rules" | grep -q "$rule"; then
+        l_output+="\n - Found expected rule: $rule"
+    else
+        l_output2+="\n - Missing expected rule: $rule"
+    fi
+done
+
+# Prepare the final result
+RESULT=""
+
+# Provide output based on the audit checks
+if [ -z "$l_output2" ]; then
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    echo "FAIL: Rule for new outbound connections NOT found."
-    audit_passed=false
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
+    [ -n "$l_output" ] && RESULT+="\n- Correctly set:\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Check for established connections
-echo "Verifying rules for established connections..."
-if echo "$iptables_rules" | grep -qE "ACCEPT .* ct state ESTABLISHED"; then
-    echo "PASS: Rule for established connections found."
-else
-    echo "FAIL: Rule for established connections NOT found."
-    audit_passed=false
-fi
+# Write the result to the file
+{
+    echo -e "$RESULT"
+    # Add a separator line
+    echo -e "-------------------------------------------------"
+} >> "$FILE_NAME"
 
-# Final audit result
-if [ "$audit_passed" = true ]; then
-    echo "Audit passed: All rules for new and established outbound connections are present."
-else
-    echo "Audit failed: One or more rules for new or established outbound connections are missing."
-fi
+# Optionally print the result to the console
+echo -e "$RESULT"

@@ -1,20 +1,49 @@
 #!/usr/bin/env bash
-{
-    # Überprüfen, ob ufw nicht installiert ist
-    if ! dpkg-query -s ufw &>/dev/null; then
-        echo -e "\n- Audit Result:\n ** PASS **\n- ufw is not installed\n"
-        exit 0
-    fi
 
-    # Überprüfen, ob ufw inaktiv ist
-    ufw_status=$(ufw status | grep 'Status:')
-    systemctl_status=$(systemctl is-enabled ufw.service)
+# Define the result directory
+RESULT_DIR="$(dirname "$0")/../../Results"
+mkdir -p "$RESULT_DIR"  # Create directory if it doesn't exist
 
-    if [[ "$ufw_status" == *"inactive"* && "$systemctl_status" == *"masked"* ]]; then
-        echo -e "\n- Audit Result:\n ** PASS **\n- ufw is inactive and service is masked\n"
+# Define the audit number
+AUDIT_NUMBER="4.2.2"
+
+# Initialize output variables
+l_output=""
+l_output2=""
+
+# Check if UFW is not installed
+if ! dpkg-query -s ufw &>/dev/null; then
+    l_output="ufw is not installed"
+else
+    # If UFW is installed, check if it is disabled and the service is masked
+    ufw_status=$(ufw status 2>/dev/null)
+    ufw_service_status=$(systemctl is-enabled ufw.service 2>/dev/null)
+    
+    if [[ "$ufw_status" == "Status: inactive" && "$ufw_service_status" == "masked" ]]; then
+        l_output="ufw is installed but is inactive and the service is masked"
     else
-        echo -e "\n- Audit Result:\n ** FAIL **\n- ufw is installed or active\n"
-        echo -e "- Current ufw status: $ufw_status"
-        echo -e "- Current systemd service status: $systemctl_status\n"
+        l_output2="ufw is installed, and either active or the service is enabled (expected: inactive and masked)"
     fi
-}
+fi
+
+# Prepare the final result
+RESULT=""
+
+# Provide output based on the audit checks
+if [ -z "$l_output2" ]; then
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n- $l_output\n"
+    FILE_NAME="$RESULT_DIR/pass.txt"
+else
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n- $l_output2\n"
+    FILE_NAME="$RESULT_DIR/fail.txt"
+fi
+
+# Write the result to the file
+{
+    echo -e "$RESULT"
+    # Add a separator line
+    echo -e "-------------------------------------------------"
+} >> "$FILE_NAME"
+
+# Optionally print the result to the console
+echo -e "$RESULT"

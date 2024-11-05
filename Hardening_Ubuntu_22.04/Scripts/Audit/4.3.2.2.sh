@@ -1,45 +1,68 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-echo "Starting iptables rule audit..."
+# Define the result directory
+RESULT_DIR="$(dirname "$0")/../../Results"
+mkdir -p "$RESULT_DIR"  # Create directory if it doesn't exist
 
-# Define a status flag
-audit_passed=true
+# Define the audit number
+AUDIT_NUMBER="4.3.2.2"
 
-# Check for INPUT chain rules
-echo "Verifying INPUT chain rules..."
+# Initialize output variables
+l_output=""
+l_output2=""
+
+# Check INPUT chain
 input_rules=$(iptables -L INPUT -v -n)
+expected_input_rules=(
+    "Chain INPUT (policy DROP 0 packets, 0 bytes)"
+    "ACCEPT all -- lo * 0.0.0.0/0 0.0.0.0/0"
+    "DROP all -- * * 127.0.0.0/8 0.0.0.0/0"
+)
 
-# Verify rule to accept traffic on loopback interface (lo)
-if echo "$input_rules" | grep -qE "ACCEPT .* lo"; then
-    echo "PASS: INPUT chain has rule to ACCEPT traffic on loopback interface."
-else
-    echo "FAIL: INPUT chain is missing rule to ACCEPT traffic on loopback interface."
-    audit_passed=false
-fi
+# Verify expected INPUT rules
+for rule in "${expected_input_rules[@]}"; do
+    if echo "$input_rules" | grep -q "$rule"; then
+        l_output+="\n - Found expected INPUT rule: $rule"
+    else
+        l_output2+="\n - Missing expected INPUT rule: $rule"
+    fi
+done
 
-# Verify rule to drop traffic from 127.0.0.0/8
-if echo "$input_rules" | grep -qE "DROP .* 127.0.0.0/8"; then
-    echo "PASS: INPUT chain has rule to DROP traffic from 127.0.0.0/8."
-else
-    echo "FAIL: INPUT chain is missing rule to DROP traffic from 127.0.0.0/8."
-    audit_passed=false
-fi
-
-# Check for OUTPUT chain rules
-echo "Verifying OUTPUT chain rules..."
+# Check OUTPUT chain
 output_rules=$(iptables -L OUTPUT -v -n)
+expected_output_rules=(
+    "Chain OUTPUT (policy DROP 0 packets, 0 bytes)"
+    "ACCEPT all -- * lo 0.0.0.0/0 0.0.0.0/0"
+)
 
-# Verify rule to accept outgoing traffic to loopback interface (lo)
-if echo "$output_rules" | grep -qE "ACCEPT .* lo"; then
-    echo "PASS: OUTPUT chain has rule to ACCEPT outgoing traffic to loopback interface."
+# Verify expected OUTPUT rules
+for rule in "${expected_output_rules[@]}"; do
+    if echo "$output_rules" | grep -q "$rule"; then
+        l_output+="\n - Found expected OUTPUT rule: $rule"
+    else
+        l_output2+="\n - Missing expected OUTPUT rule: $rule"
+    fi
+done
+
+# Prepare the final result
+RESULT=""
+
+# Provide output based on the audit checks
+if [ -z "$l_output2" ]; then
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    echo "FAIL: OUTPUT chain is missing rule to ACCEPT outgoing traffic to loopback interface."
-    audit_passed=false
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
+    [ -n "$l_output" ] && RESULT+="\n- Correctly set:\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Final audit result
-if [ "$audit_passed" = true ]; then
-    echo "Audit passed: Required rules are present in the INPUT and OUTPUT chains."
-else
-    echo "Audit failed: One or more required rules are missing from the INPUT or OUTPUT chains."
-fi
+# Write the result to the file
+{
+    echo -e "$RESULT"
+    # Add a separator line
+    echo -e "-------------------------------------------------"
+} >> "$FILE_NAME"
+
+# Optionally print the result to the console
+echo -e "$RESULT"

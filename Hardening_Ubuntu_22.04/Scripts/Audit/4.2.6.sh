@@ -1,47 +1,66 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-echo "Starting loopback interface configuration audit..."
+# Define the result directory
+RESULT_DIR="$(dirname "$0")/../../Results"
+mkdir -p "$RESULT_DIR"  # Create directory if it doesn't exist
 
-# Define a status flag
-audit_passed=true
+# Define the audit number
+AUDIT_NUMBER="4.2.6"
 
-# Check if the loopback interface is configured to accept network traffic
-echo "Verifying loopback interface is configured to accept network traffic..."
-lo_accept=$(nft list ruleset | awk '/hook input/,/}/' | grep 'iif "lo" accept')
-if [[ -n "$lo_accept" ]]; then
-    echo "PASS: Loopback interface is configured to accept network traffic."
-else
-    echo "FAIL: Loopback interface is NOT configured to accept network traffic."
-    audit_passed=false
+# Initialize output variables
+l_output=""
+l_output2=""
+
+# Check for loopback interface rules
+loopback_accept=$(nft list ruleset 2>/dev/null | awk '/hook input/,/}/' | grep -E 'iif "lo" accept')
+ipv4_drop=$(nft list ruleset 2>/dev/null | awk '/hook input/,/}/' | grep -E 'ip saddr 127\.0\.0\.0/8 .* drop')
+ipv6_drop=""
+
+# Check if IPv6 is enabled, and if so, check for IPv6 loopback drop rule
+if [[ -f /proc/net/if_inet6 ]]; then
+    ipv6_drop=$(nft list ruleset 2>/dev/null | awk '/hook input/,/}/' | grep -E 'ip6 saddr ::1 .* drop')
 fi
 
-# Verify network traffic from IPv4 loopback interface is configured to drop
-echo "Verifying IPv4 loopback traffic is configured to drop..."
-ipv4_drop=$(nft list ruleset | awk '/hook input/,/}/' | grep 'ip saddr 127.0.0.0/8')
+# Verify rules
+if [[ -n "$loopback_accept" ]]; then
+    l_output+="\n - Loopback interface is configured to accept traffic:\n$loopback_accept"
+else
+    l_output2+="\n - Loopback interface is not configured to accept traffic as expected"
+fi
+
 if [[ -n "$ipv4_drop" ]]; then
-    echo "PASS: IPv4 loopback traffic is configured to drop."
+    l_output+="\n - IPv4 loopback traffic is configured to drop:\n$ipv4_drop"
 else
-    echo "FAIL: IPv4 loopback traffic is NOT configured to drop."
-    audit_passed=false
+    l_output2+="\n - IPv4 loopback traffic is not configured to drop as expected"
 fi
 
-# Check if IPv6 is enabled
-if [ -f /proc/net/if_inet6 ]; then
-    echo "IPv6 is enabled. Verifying IPv6 loopback traffic is configured to drop..."
-    ipv6_drop=$(nft list ruleset | awk '/hook input/,/}/' | grep 'ip6 saddr ::1')
+if [[ -f /proc/net/if_inet6 ]]; then
     if [[ -n "$ipv6_drop" ]]; then
-        echo "PASS: IPv6 loopback traffic is configured to drop."
+        l_output+="\n - IPv6 loopback traffic is configured to drop:\n$ipv6_drop"
     else
-        echo "FAIL: IPv6 loopback traffic is NOT configured to drop."
-        audit_passed=false
+        l_output2+="\n - IPv6 loopback traffic is not configured to drop as expected"
     fi
-else
-    echo "IPv6 is not enabled, skipping IPv6 check."
 fi
 
-# Final audit result
-if [ "$audit_passed" = true ]; then
-    echo "Audit passed: All configurations are correct."
+# Prepare the final result
+RESULT=""
+
+# Provide output based on the audit checks
+if [ -z "$l_output2" ]; then
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    echo "Audit failed: One or more configurations are incorrect."
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
+    [ -n "$l_output" ] && RESULT+="\n- Correctly set:\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/fail.txt"
 fi
+
+# Write the result to the file
+{
+    echo -e "$RESULT"
+    # Add a separator line
+    echo -e "-------------------------------------------------"
+} >> "$FILE_NAME"
+
+# Optionally print the result to the console
+echo -e "$RESULT"

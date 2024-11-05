@@ -1,55 +1,64 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-echo "Starting IPv6 audit..."
+# Define the result directory
+RESULT_DIR="$(dirname "$0")/../../Results"
+mkdir -p "$RESULT_DIR"  # Create directory if it doesn't exist
 
-# Define a status flag
-audit_passed=true
+# Define the audit number
+AUDIT_NUMBER="4.3.3.1"
 
-# Check ip6tables rules
-echo "Verifying ip6tables policies for INPUT, OUTPUT, and FORWARD chains..."
-ip6tables_rules=$(ip6tables -L)
+# Initialize output variables
+l_output=""
+l_output2=""
 
-# Check INPUT chain policy
-if echo "$ip6tables_rules" | grep -q "Chain INPUT (policy DROP\|REJECT)"; then
-    echo "PASS: INPUT chain policy is set to DROP or REJECT."
+# Check the ip6tables policies
+iptables_output=$(ip6tables -L)
+
+# Check for policies on INPUT, FORWARD, OUTPUT chains
+if echo "$iptables_output" | grep -q "Chain INPUT (policy DROP)"; then
+    l_output+="\n - INPUT chain policy is DROP."
 else
-    echo "FAIL: INPUT chain policy is NOT set to DROP or REJECT."
-    audit_passed=false
+    l_output2+="\n - INPUT chain policy is not DROP."
 fi
 
-# Check FORWARD chain policy
-if echo "$ip6tables_rules" | grep -q "Chain FORWARD (policy DROP\|REJECT)"; then
-    echo "PASS: FORWARD chain policy is set to DROP or REJECT."
+if echo "$iptables_output" | grep -q "Chain FORWARD (policy DROP)"; then
+    l_output+="\n - FORWARD chain policy is DROP."
 else
-    echo "FAIL: FORWARD chain policy is NOT set to DROP or REJECT."
-    audit_passed=false
+    l_output2+="\n - FORWARD chain policy is not DROP."
 fi
 
-# Check OUTPUT chain policy
-if echo "$ip6tables_rules" | grep -q "Chain OUTPUT (policy DROP\|REJECT)"; then
-    echo "PASS: OUTPUT chain policy is set to DROP or REJECT."
+if echo "$iptables_output" | grep -q "Chain OUTPUT (policy DROP)"; then
+    l_output+="\n - OUTPUT chain policy is DROP."
 else
-    echo "FAIL: OUTPUT chain policy is NOT set to DROP or REJECT."
-    audit_passed=false
+    l_output2+="\n - OUTPUT chain policy is not DROP."
 fi
 
-# If any chain policy failed, check if IPv6 is enabled
-if [ "$audit_passed" = false ]; then
-    echo "Checking if IPv6 is enabled on the system..."
-
-    # Check if IPv6 is enabled
-    if grep -Pqs '^\h*0\b' /sys/module/ipv6/parameters/disable; then
-        echo " - IPv6 is enabled on the system."
-    else
-        echo " - IPv6 is not enabled on the system."
-    fi
+# Check if IPv6 is enabled
+if grep -Pqs '^\h*0\b' /sys/module/ipv6/parameters/disable; then
+    l_output2+="\n - IPv6 is enabled on the system."
 else
-    echo "All ip6tables policies are correctly configured."
+    l_output+="\n - IPv6 is not enabled on the system."
 fi
 
-# Final audit result
-if [ "$audit_passed" = true ]; then
-    echo "Audit passed: All policies for INPUT, OUTPUT, and FORWARD chains are set correctly."
+# Prepare the final result
+RESULT=""
+
+# Provide output based on the audit checks
+if [ -z "$l_output2" ]; then
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    echo "Audit failed: One or more policies are incorrectly configured."
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
+    [ -n "$l_output" ] && RESULT+="\n- Correctly set:\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/fail.txt"
 fi
+
+# Write the result to the file
+{
+    echo -e "$RESULT"
+    # Add a separator line
+    echo -e "-------------------------------------------------"
+} >> "$FILE_NAME"
+
+# Optionally print the result to the console
+echo -e "$RESULT"

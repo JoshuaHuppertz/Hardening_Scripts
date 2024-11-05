@@ -1,83 +1,63 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
-echo "Starting audit for open IPv6 ports and firewall rules..."
+# Define the result directory
+RESULT_DIR="$(dirname "$0")/../../Results"
+mkdir -p "$RESULT_DIR"  # Create directory if it doesn't exist
 
-# Initialize a status flag for the audit
-audit_passed=true
+# Define the audit number
+AUDIT_NUMBER="4.3.3.4"
 
-# Check for open ports
-echo "Checking for open IPv6 ports..."
+# Initialize output variables
+l_output=""
+l_output2=""
+
+# Check open ports
 open_ports=$(ss -6tuln)
 
-# Display the open ports
-echo "$open_ports"
+# Check firewall rules
+iptables_output=$(ip6tables -L INPUT -v -n)
 
-# Check if any open ports are listening on non-localhost addresses
-if echo "$open_ports" | grep -q 'LISTEN.*:::.*'; then
-    echo "Open ports found on non-localhost addresses."
-else
-    echo "FAIL: No open ports found on non-localhost addresses."
-    audit_passed=false
-fi
-
-# Check the firewall rules
-echo "Checking firewall rules for INPUT chain..."
-firewall_rules=$(ip6tables -L INPUT -v -n)
-
-# Display the firewall rules
-echo "$firewall_rules"
-
-# Verify that all open ports have corresponding firewall rules
-if echo "$firewall_rules" | grep -q 'tcp dpt:22 state NEW'; then
-    echo "PASS: Firewall rule for tcp port 22 (NEW connections) is present."
-else
-    echo "FAIL: Firewall rule for tcp port 22 (NEW connections) is NOT present."
-    audit_passed=false
-fi
-
-# If any conditions failed, check if IPv6 is disabled
-if [ "$audit_passed" = false ]; then
-    echo "Checking if IPv6 is disabled on the system..."
-    
-    output=""
-    grubfile="$(find -L /boot -name 'grub.cfg' -type f)"
-    
-    # Check GRUB configuration for IPv6
-    if [ -f "$grubfile" ] && ! grep "^\s*linux" "$grubfile" | grep -vq "ipv6.disable=1"; then
-        output="IPv6 is NOT disabled in GRUB config."
+# Verify all open ports listening on non-localhost addresses have firewall rules
+if echo "$open_ports" | grep -q 'tcp LISTEN.*:::22'; then
+    if echo "$iptables_output" | grep -q 'tcp dpt:22 state NEW'; then
+        l_output+="\n - Firewall rule for TCP port 22 is present."
     else
-        output="IPv6 is disabled in GRUB config."
-    fi
-    
-    # Check sysctl configuration for IPv6
-    if grep -Eqs "^\s*net\.ipv6\.conf\.all\.disable_ipv6\s*=\s*1\b" /etc/sysctl.conf \
-    /etc/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /run/sysctl.d/*.conf && \
-    grep -Eqs "^\s*net\.ipv6\.conf\.default\.disable_ipv6\s*=\s*1\b" /etc/sysctl.conf \
-    /etc/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /run/sysctl.d/*.conf; then
-        output="IPv6 is disabled in sysctl config."
-    else
-        output="IPv6 is NOT disabled in sysctl config."
-    fi
-
-    # Check sysctl parameters for IPv6
-    if sysctl net.ipv6.conf.all.disable_ipv6 | grep -Eq "^\s*net\.ipv6\.conf\.all\.disable_ipv6\s*=\s*1\b" && \
-       sysctl net.ipv6.conf.default.disable_ipv6 | grep -Eq "^\s*net\.ipv6\.conf\.default\.disable_ipv6\s*=\s*1\b"; then
-        output="IPv6 is disabled in sysctl parameters."
-    fi
-
-    # Output the IPv6 status
-    if [ -n "$output" ]; then
-        echo -e "\n$output"
-    else
-        echo -e "\n*** IPv6 is enabled on the system ***"
+        l_output2+="\n - Missing firewall rule for TCP port 22."
     fi
 else
-    echo "Audit passed: All necessary conditions for open IPv6 ports and firewall rules are satisfied."
+    l_output2+="\n - No open TCP ports on non-localhost addresses found."
 fi
 
-# Final result output
-if [ "$audit_passed" = true ]; then
-    echo "Audit completed successfully. All checks passed."
+# Verify IPv6 is disabled
+output=""
+grubfile="$(find -L /boot -name 'grub.cfg' -type f)"
+[ -f "$grubfile" ] && ! grep "^\s*linux" "$grubfile" | grep -vq ipv6.disable=1 && output="IPv6 disabled in grub config"
+grep -Eqs "^\s*net\.ipv6\.conf\.all\.disable_ipv6\s*=\s*1\b" /etc/sysctl.conf /etc/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /run/sysctl.d/*.conf && grep -Eqs "^\s*net\.ipv6\.conf\.default\.disable_ipv6\s*=\s*1\b" /etc/sysctl.conf /etc/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /run/sysctl.d/*.conf && sysctl net.ipv6.conf.all.disable_ipv6 | grep -Eq "^\s*net\.ipv6\.conf\.all\.disable_ipv6\s*=\s*1\b" && sysctl net.ipv6.conf.default.disable_ipv6 | grep -Eq "^\s*net\.ipv6\.conf\.default\.disable_ipv6\s*=\s*1\b" && output="IPv6 disabled in sysctl config"
+if [ -n "$output" ]; then
+    l_output+="\n$output"
 else
-    echo "Audit failed: One or more checks did not pass."
+    l_output2+="\n*** IPv6 is enabled on the system ***"
 fi
+
+# Prepare the final result
+RESULT=""
+
+# Provide output based on the audit checks
+if [ -z "$l_output2" ]; then
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/pass.txt"
+else
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
+    [ -n "$l_output" ] && RESULT+="\n- Correctly set:\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/fail.txt"
+fi
+
+# Write the result to the file
+{
+    echo -e "$RESULT"
+    # Add a separator line
+    echo -e "-------------------------------------------------"
+} >> "$FILE_NAME"
+
+# Optionally print the result to the console
+echo -e "$RESULT"

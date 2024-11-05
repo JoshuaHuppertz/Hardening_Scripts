@@ -1,31 +1,49 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-echo "Starting iptables and iptables-persistent installation audit..."
+# Define the result directory
+RESULT_DIR="$(dirname "$0")/../../Results"
+mkdir -p "$RESULT_DIR"  # Create directory if it doesn't exist
 
-# Define a status flag
-audit_passed=true
+# Define the audit number
+AUDIT_NUMBER="4.3.1.1"
+
+# Initialize output variables
+l_output=""
+l_output2=""
 
 # Check if iptables is installed
-echo "Verifying if iptables is installed..."
 if dpkg-query -s iptables &>/dev/null; then
-    echo "PASS: iptables is installed."
+    l_output+="\n - iptables is installed."
 else
-    echo "FAIL: iptables is NOT installed."
-    audit_passed=false
+    l_output2+="\n - iptables is not installed."
 fi
 
 # Check if iptables-persistent is installed
-echo "Verifying if iptables-persistent is installed..."
 if dpkg-query -s iptables-persistent &>/dev/null; then
-    echo "PASS: iptables-persistent is installed."
+    l_output+="\n - iptables-persistent is installed."
 else
-    echo "FAIL: iptables-persistent is NOT installed."
-    audit_passed=false
+    l_output2+="\n - iptables-persistent is not installed."
 fi
 
-# Final audit result
-if [ "$audit_passed" = true ]; then
-    echo "Audit passed: Both iptables and iptables-persistent are installed."
+# Prepare the final result
+RESULT=""
+
+# Provide output based on the audit checks
+if [ -z "$l_output2" ]; then
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    echo "Audit failed: One or more packages are missing."
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
+    [ -n "$l_output" ] && RESULT+="\n- Correctly set:\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/fail.txt"
 fi
+
+# Write the result to the file
+{
+    echo -e "$RESULT"
+    # Add a separator line
+    echo -e "-------------------------------------------------"
+} >> "$FILE_NAME"
+
+# Optionally print the result to the console
+echo -e "$RESULT"

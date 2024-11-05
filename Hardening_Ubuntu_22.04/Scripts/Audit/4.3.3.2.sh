@@ -1,72 +1,75 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-echo "Starting IPv6 audit for ip6tables rules..."
+# Define the result directory
+RESULT_DIR="$(dirname "$0")/../../Results"
+mkdir -p "$RESULT_DIR"  # Create directory if it doesn't exist
 
-# Define a status flag
-audit_passed=true
+# Define the audit number
+AUDIT_NUMBER="4.3.3.2"
 
-# Get ip6tables rules for INPUT chain
-echo "Verifying INPUT chain rules..."
-input_rules=$(ip6tables -L INPUT -v -n)
+# Initialize output variables
+l_output=""
+l_output2=""
 
-# Check for the expected INPUT chain rules
-if echo "$input_rules" | grep -q "Chain INPUT (policy DROP"; then
-    echo "PASS: INPUT chain policy is DROP."
-else
-    echo "FAIL: INPUT chain policy is NOT DROP."
-    audit_passed=false
-fi
+# Check ip6tables INPUT chain rules
+input_output=$(ip6tables -L INPUT -v -n)
+expected_input_rules=(
+    "Chain INPUT (policy DROP)"
+    "ACCEPT all lo * ::/0 ::/0"
+    "DROP all * * ::1 ::/0"
+)
 
-if echo "$input_rules" | grep -q "ACCEPT all lo * ::/0 ::/0"; then
-    echo "PASS: Rule for accepting all traffic on loopback interface is present."
-else
-    echo "FAIL: Rule for accepting all traffic on loopback interface is NOT present."
-    audit_passed=false
-fi
-
-if echo "$input_rules" | grep -q "DROP all * * ::1 ::/0"; then
-    echo "PASS: Rule for dropping all traffic from ::1 is present."
-else
-    echo "FAIL: Rule for dropping all traffic from ::1 is NOT present."
-    audit_passed=false
-fi
-
-# Get ip6tables rules for OUTPUT chain
-echo "Verifying OUTPUT chain rules..."
-output_rules=$(ip6tables -L OUTPUT -v -n)
-
-# Check for the expected OUTPUT chain rules
-if echo "$output_rules" | grep -q "Chain OUTPUT (policy DROP"; then
-    echo "PASS: OUTPUT chain policy is DROP."
-else
-    echo "FAIL: OUTPUT chain policy is NOT DROP."
-    audit_passed=false
-fi
-
-if echo "$output_rules" | grep -q "ACCEPT all * lo ::/0 ::/0"; then
-    echo "PASS: Rule for accepting all traffic from loopback interface is present."
-else
-    echo "FAIL: Rule for accepting all traffic from loopback interface is NOT present."
-    audit_passed=false
-fi
-
-# If any chain rule failed, check if IPv6 is enabled
-if [ "$audit_passed" = false ]; then
-    echo "Checking if IPv6 is enabled on the system..."
-
-    # Check if IPv6 is enabled
-    if grep -Pqs '^\h*0\b' /sys/module/ipv6/parameters/disable; then
-        echo " - IPv6 is enabled on the system."
+# Verify INPUT chain rules
+for rule in "${expected_input_rules[@]}"; do
+    if echo "$input_output" | grep -q "$rule"; then
+        l_output+="\n - Found expected INPUT rule: $rule"
     else
-        echo " - IPv6 is not enabled on the system."
+        l_output2+="\n - Missing expected INPUT rule: $rule"
     fi
+done
+
+# Check ip6tables OUTPUT chain rules
+output_output=$(ip6tables -L OUTPUT -v -n)
+expected_output_rules=(
+    "Chain OUTPUT (policy DROP)"
+    "ACCEPT all * lo ::/0 ::/0"
+)
+
+# Verify OUTPUT chain rules
+for rule in "${expected_output_rules[@]}"; do
+    if echo "$output_output" | grep -q "$rule"; then
+        l_output+="\n - Found expected OUTPUT rule: $rule"
+    else
+        l_output2+="\n - Missing expected OUTPUT rule: $rule"
+    fi
+done
+
+# Check if IPv6 is enabled
+if grep -Pqs '^\h*0\b' /sys/module/ipv6/parameters/disable; then
+    l_output2+="\n - IPv6 is enabled on the system."
 else
-    echo "All ip6tables rules are correctly configured."
+    l_output+="\n - IPv6 is not enabled on the system."
 fi
 
-# Final audit result
-if [ "$audit_passed" = true ]; then
-    echo "Audit passed: All expected ip6tables rules are present."
+# Prepare the final result
+RESULT=""
+
+# Provide output based on the audit checks
+if [ -z "$l_output2" ]; then
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    echo "Audit failed: One or more expected ip6tables rules are missing."
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
+    [ -n "$l_output" ] && RESULT+="\n- Correctly set:\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/fail.txt"
 fi
+
+# Write the result to the file
+{
+    echo -e "$RESULT"
+    # Add a separator line
+    echo -e "-------------------------------------------------"
+} >> "$FILE_NAME"
+
+# Optionally print the result to the console
+echo -e "$RESULT"

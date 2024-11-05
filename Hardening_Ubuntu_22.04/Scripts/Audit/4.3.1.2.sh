@@ -1,22 +1,42 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-echo "Starting nftables installation audit..."
+# Define the result directory
+RESULT_DIR="$(dirname "$0")/../../Results"
+mkdir -p "$RESULT_DIR"  # Create directory if it doesn't exist
 
-# Define a status flag
-audit_passed=true
+# Define the audit number
+AUDIT_NUMBER="4.3.1.2"
+
+# Initialize output variables
+l_output=""
+l_output2=""
 
 # Check if nftables is installed
-echo "Verifying if nftables is installed..."
 if dpkg-query -s nftables &>/dev/null; then
-    echo "FAIL: nftables is installed."
-    audit_passed=false
+    l_output2+="\n - nftables is installed."
 else
-    echo "PASS: nftables is NOT installed."
+    l_output+="\n - nftables is not installed."
 fi
 
-# Final audit result
-if [ "$audit_passed" = true ]; then
-    echo "Audit passed: nftables is not installed as expected."
+# Prepare the final result
+RESULT=""
+
+# Provide output based on the audit checks
+if [ -z "$l_output2" ]; then
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    echo "Audit failed: nftables is installed, but it should not be."
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
+    [ -n "$l_output" ] && RESULT+="\n- Correctly set:\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/fail.txt"
 fi
+
+# Write the result to the file
+{
+    echo -e "$RESULT"
+    # Add a separator line
+    echo -e "-------------------------------------------------"
+} >> "$FILE_NAME"
+
+# Optionally print the result to the console
+echo -e "$RESULT"

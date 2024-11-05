@@ -1,40 +1,53 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-echo "Starting open ports and firewall rules audit..."
+# Define the result directory
+RESULT_DIR="$(dirname "$0")/../../Results"
+mkdir -p "$RESULT_DIR"  # Create directory if it doesn't exist
 
-# Define a status flag
-audit_passed=true
+# Define the audit number
+AUDIT_NUMBER="4.3.2.4"
 
-# Get open TCP and UDP ports
-echo "Determining open ports..."
-open_ports=$(ss -4tuln | awk '/LISTEN/ {print $5}' | cut -d':' -f2)
+# Initialize output variables
+l_output=""
+l_output2=""
 
-# Check if any open ports exist
-if [ -z "$open_ports" ]; then
-    echo "No open ports found."
-    exit 0
-fi
+# Determine open ports
+open_ports=$(ss -4tuln)
 
-echo "Open ports found: $open_ports"
-
-# Get iptables rules
-echo "Retrieving firewall rules..."
+# Determine firewall rules
 firewall_rules=$(iptables -L INPUT -v -n)
 
-# Check for firewall rules corresponding to each open port
-for port in $open_ports; do
-    # Check for firewall rule for this port
-    if echo "$firewall_rules" | grep -qE "tcp .* dpt:$port"; then
-        echo "PASS: Firewall rule for TCP port $port exists."
+# Check for open ports listening on non-localhost addresses
+non_local_ports=$(echo "$open_ports" | awk '/LISTEN|UNCONN/ && !/127.0.0.1|::1/' | awk '{print $5}' | cut -d':' -f2)
+
+# Verify that each non-local port has a corresponding firewall rule
+for port in $non_local_ports; do
+    if echo "$firewall_rules" | grep -q "dpt:$port"; then
+        l_output+="\n - Firewall rule found for non-local port: $port"
     else
-        echo "FAIL: No firewall rule for TCP port $port."
-        audit_passed=false
+        l_output2+="\n - Missing firewall rule for non-local port: $port"
     fi
 done
 
-# Final audit result
-if [ "$audit_passed" = true ]; then
-    echo "Audit passed: All open ports have corresponding firewall rules."
+# Prepare the final result
+RESULT=""
+
+# Provide output based on the audit checks
+if [ -z "$l_output2" ]; then
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    echo "Audit failed: One or more open ports do not have corresponding firewall rules."
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
+    [ -n "$l_output" ] && RESULT+="\n- Correctly set:\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/fail.txt"
 fi
+
+# Write the result to the file
+{
+    echo -e "$RESULT"
+    # Add a separator line
+    echo -e "-------------------------------------------------"
+} >> "$FILE_NAME"
+
+# Optionally print the result to the console
+echo -e "$RESULT"

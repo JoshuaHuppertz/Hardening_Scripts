@@ -1,46 +1,61 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-echo "Starting audit for ip6tables rules related to new outbound and established connections..."
+# Define the result directory
+RESULT_DIR="$(dirname "$0")/../../Results"
+mkdir -p "$RESULT_DIR"  # Create directory if it doesn't exist
 
-# Define a status flag
-audit_passed=true
+# Define the audit number
+AUDIT_NUMBER="4.3.3.3"
 
-# Get the current ip6tables rules
-ip6tables_rules=$(ip6tables -L -v -n)
+# Initialize output variables
+l_output=""
+l_output2=""
 
-# Check for new outbound and established connection rules
-echo "$ip6tables_rules" | grep -q "Chain OUTPUT"  # Ensure OUTPUT chain exists
-if echo "$ip6tables_rules" | grep -q "ACCEPT.*ct state established"; then
-    echo "PASS: Rule for accepting established connections is present in OUTPUT chain."
-else
-    echo "FAIL: Rule for accepting established connections is NOT present in OUTPUT chain."
-    audit_passed=false
-fi
+# Check ip6tables rules
+iptables_output=$(ip6tables -L -v -n)
 
-if echo "$ip6tables_rules" | grep -q "ACCEPT.*ct state new"; then
-    echo "PASS: Rule for accepting new connections is present in OUTPUT chain."
-else
-    echo "FAIL: Rule for accepting new connections is NOT present in OUTPUT chain."
-    audit_passed=false
-fi
+# Check for new outbound and established connections
+expected_rules=(
+    "ACCEPT ip6 protocol tcp ct state established,related,new"
+    "ACCEPT ip6 protocol udp ct state established,related,new"
+    "ACCEPT ip6 protocol icmpv6 ct state established,related,new"
+)
 
-# If any chain rule failed, check if IPv6 is enabled
-if [ "$audit_passed" = false ]; then
-    echo "Checking if IPv6 is enabled on the system..."
-
-    # Check if IPv6 is enabled
-    if grep -Pqs '^\h*0\b' /sys/module/ipv6/parameters/disable; then
-        echo " - IPv6 is enabled on the system."
+# Verify the output against expected rules
+for rule in "${expected_rules[@]}"; do
+    if echo "$iptables_output" | grep -q "$rule"; then
+        l_output+="\n - Found expected rule for: $rule"
     else
-        echo " - IPv6 is not enabled on the system."
+        l_output2+="\n - Missing expected rule for: $rule"
     fi
+done
+
+# Check if IPv6 is enabled
+if grep -Pqs '^\h*0\b' /sys/module/ipv6/parameters/disable; then
+    l_output2+="\n - IPv6 is enabled on the system."
 else
-    echo "All necessary ip6tables rules for new and established connections are correctly configured."
+    l_output+="\n - IPv6 is not enabled on the system."
 fi
 
-# Final audit result
-if [ "$audit_passed" = true ]; then
-    echo "Audit passed: All expected ip6tables rules are present for new outbound and established connections."
+# Prepare the final result
+RESULT=""
+
+# Provide output based on the audit checks
+if [ -z "$l_output2" ]; then
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    echo "Audit failed: One or more expected ip6tables rules for new outbound and established connections are missing."
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
+    [ -n "$l_output" ] && RESULT+="\n- Correctly set:\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/fail.txt"
 fi
+
+# Write the result to the file
+{
+    echo -e "$RESULT"
+    # Add a separator line
+    echo -e "-------------------------------------------------"
+} >> "$FILE_NAME"
+
+# Optionally print the result to the console
+echo -e "$RESULT"

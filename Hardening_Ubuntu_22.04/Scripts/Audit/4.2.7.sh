@@ -1,9 +1,15 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-echo "Starting incoming and outgoing connection rules audit..."
+# Define the result directory
+RESULT_DIR="$(dirname "$0")/../../Results"
+mkdir -p "$RESULT_DIR"  # Create directory if it doesn't exist
 
-# Define a status flag
-audit_passed=true
+# Define the audit number
+AUDIT_NUMBER="4.2.7"
+
+# Initialize output variables
+l_output=""
+l_output2=""
 
 # Expected incoming connection rules (site policy)
 expected_incoming=(
@@ -19,37 +25,45 @@ expected_outgoing=(
   "ip protocol icmp ct state established,related,new accept"
 )
 
-# Check established incoming connections
-echo "Verifying incoming connection rules match site policy..."
-incoming_rules=$(nft list ruleset | awk '/hook input/,/}/' | grep -E 'ip protocol (tcp|udp|icmp) ct state')
-
-# Check if all expected incoming rules are present
+# Check for established incoming connection rules
+incoming_rules=$(nft list ruleset 2>/dev/null | awk '/hook input/,/}/' | grep -E 'ip protocol (tcp|udp|icmp) ct state')
 for rule in "${expected_incoming[@]}"; do
   if echo "$incoming_rules" | grep -q "$rule"; then
-    echo "PASS: Found incoming rule: $rule"
+    l_output+="\n - Found incoming rule: $rule"
   else
-    echo "FAIL: Missing incoming rule: $rule"
-    audit_passed=false
+    l_output2+="\n - Missing incoming rule: $rule"
   fi
 done
 
-# Check new and established outbound connections
-echo "Verifying outbound connection rules match site policy..."
-outgoing_rules=$(nft list ruleset | awk '/hook output/,/}/' | grep -E 'ip protocol (tcp|udp|icmp) ct state')
-
-# Check if all expected outgoing rules are present
+# Check for new and established outgoing connection rules
+outgoing_rules=$(nft list ruleset 2>/dev/null | awk '/hook output/,/}/' | grep -E 'ip protocol (tcp|udp|icmp) ct state')
 for rule in "${expected_outgoing[@]}"; do
   if echo "$outgoing_rules" | grep -q "$rule"; then
-    echo "PASS: Found outgoing rule: $rule"
+    l_output+="\n - Found outgoing rule: $rule"
   else
-    echo "FAIL: Missing outgoing rule: $rule"
-    audit_passed=false
+    l_output2+="\n - Missing outgoing rule: $rule"
   fi
 done
 
-# Final audit result
-if [ "$audit_passed" = true ]; then
-    echo "Audit passed: All incoming and outgoing rules match the site policy."
+# Prepare the final result
+RESULT=""
+
+# Provide output based on the audit checks
+if [ -z "$l_output2" ]; then
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    echo "Audit failed: One or more incoming or outgoing rules do not match the site policy."
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
+    [ -n "$l_output" ] && RESULT+="\n- Correctly set:\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/fail.txt"
 fi
+
+# Write the result to the file
+{
+    echo -e "$RESULT"
+    # Add a separator line
+    echo -e "-------------------------------------------------"
+} >> "$FILE_NAME"
+
+# Optionally print the result to the console
+echo -e "$RESULT"
