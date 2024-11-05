@@ -86,38 +86,38 @@ execute_scripts() {
             bash "$HARDENING_Audit/1.1.1.8.sh"
             # 1.1.2 Configure Filesystem Partitions
             # 1.1.2.1 Configure /tmp
-            bash "$HARDENING_Audit/1.1.2.1.1.sh"
-            bash "$HARDENING_Audit/1.1.2.1.2.sh"
-            bash "$HARDENING_Audit/1.1.2.1.3.sh"
-            bash "$HARDENING_Audit/1.1.2.1.4.sh"
+            #bash "$HARDENING_Audit/1.1.2.1.1.sh"
+            #bash "$HARDENING_Audit/1.1.2.1.2.sh"
+            #bash "$HARDENING_Audit/1.1.2.1.3.sh"
+            #bash "$HARDENING_Audit/1.1.2.1.4.sh"
             # 1.1.2.2.1 Configure /dev/shm
-            bash "$HARDENING_Audit/1.1.2.2.1.sh"
-            bash "$HARDENING_Audit/1.1.2.2.2.sh"
-            bash "$HARDENING_Audit/1.1.2.2.3.sh"
-            bash "$HARDENING_Audit/1.1.2.2.4.sh"
+            #bash "$HARDENING_Audit/1.1.2.2.1.sh"
+            #bash "$HARDENING_Audit/1.1.2.2.2.sh"
+            #bash "$HARDENING_Audit/1.1.2.2.3.sh"
+            #bash "$HARDENING_Audit/1.1.2.2.4.sh"
             # 1.1.2.3.1 Configure /home
             #bash "$HARDENING_Audit/1.1.2.3.1.sh" #Level.2 Server
-            bash "$HARDENING_Audit/1.1.2.3.2.sh"
-            bash "$HARDENING_Audit/1.1.2.3.3.sh"
+            #bash "$HARDENING_Audit/1.1.2.3.2.sh"
+            #bash "$HARDENING_Audit/1.1.2.3.3.sh"
             # 1.1.2.4.1 Configure /var
             #bash "$HARDENING_Audit/1.1.2.4.1.sh" #Level.2 Server
-            bash "$HARDENING_Audit/1.1.2.4.2.sh"
-            bash "$HARDENING_Audit/1.1.2.4.3.sh"
+            #bash "$HARDENING_Audit/1.1.2.4.2.sh"
+            #bash "$HARDENING_Audit/1.1.2.4.3.sh"
             # 1.1.2.5.1 Configure /var/tmp
             #bash "$HARDENING_Audit/1.1.2.5.1.sh" #Level.2 Server
-            bash "$HARDENING_Audit/1.1.2.5.2.sh"
-            bash "$HARDENING_Audit/1.1.2.5.3.sh"
-            bash "$HARDENING_Audit/1.1.2.5.4.sh"
+            #bash "$HARDENING_Audit/1.1.2.5.2.sh"
+            #bash "$HARDENING_Audit/1.1.2.5.3.sh"
+            #bash "$HARDENING_Audit/1.1.2.5.4.sh"
             # 1.1.2.6.1 Configure /var/log
             #bash "$HARDENING_Audit/1.1.2.6.1.sh" #Level.2 Server
-            bash "$HARDENING_Audit/1.1.2.6.2.sh"
-            bash "$HARDENING_Audit/1.1.2.6.3.sh"
-            bash "$HARDENING_Audit/1.1.2.6.4.sh"
+            #bash "$HARDENING_Audit/1.1.2.6.2.sh"
+            #bash "$HARDENING_Audit/1.1.2.6.3.sh"
+            #bash "$HARDENING_Audit/1.1.2.6.4.sh"
             # 1.1.2.7.1 Configure /var/log/audit
             #bash "$HARDENING_Audit/1.1.2.7.1.sh" #Level.2 Server
-            bash "$HARDENING_Audit/1.1.2.7.2.sh"
-            bash "$HARDENING_Audit/1.1.2.7.3.sh"
-            bash "$HARDENING_Audit/1.1.2.7.4.sh"
+            #bash "$HARDENING_Audit/1.1.2.7.2.sh"
+            #bash "$HARDENING_Audit/1.1.2.7.3.sh"
+            #bash "$HARDENING_Audit/1.1.2.7.4.sh"
             # 1.2 Package Management
             # 1.2.1 Configure Package Repositories
             #bash "$HARDENING_Audit/1.2.1.1.sh" #Manual
@@ -126,37 +126,37 @@ execute_scripts() {
             #bash "$HARDENING_Audit/1.2.2.1.sh" #Manual
             # 1.3 Mandatory Access Control
             # 1.3.1 Configure AppArmor
-            bash "$HARDENING_Audit/1.3.1.1.sh"
-            bash "$HARDENING_Audit/1.3.1.2.sh"
-            bash "$HARDENING_Audit/1.3.1.3.sh"
+            #bash "$HARDENING_Audit/1.3.1.1.sh"
+            #bash "$HARDENING_Audit/1.3.1.2.sh"
+            #bash "$HARDENING_Audit/1.3.1.3.sh"
             #bash "$HARDENING_Audit/1.3.1.4.sh" #Level.2 Server
             # 1.4 Configure Bootloader
-            bash "$HARDENING_Audit/1.4/1.4.1.sh"
-            bash "$HARDENING_Audit/1.4/1.4.2.sh"
+            #bash "$HARDENING_Audit/1.4/1.4.1.sh"
+            #bash "$HARDENING_Audit/1.4/1.4.2.sh"
             # 1.5 Configure Additional Process Hardening
-            bash "$HARDENING_Audit/1.5.1.sh"
-            bash "$HARDENING_Audit/1.5.2.sh"
-            bash "$HARDENING_Audit/1.5.3.sh"
-            bash "$HARDENING_Audit/1.5.4.sh"
-            bash "$HARDENING_Audit/1.5.5.sh"
+            #bash "$HARDENING_Audit/1.5.1.sh"
+            #bash "$HARDENING_Audit/1.5.2.sh"
+            #bash "$HARDENING_Audit/1.5.3.sh"
+            #bash "$HARDENING_Audit/1.5.4.sh"
+            #bash "$HARDENING_Audit/1.5.5.sh"
             # 1.6  Configure Command Line Warning Banners
-            bash "$HARDENING_Audit/1.6.1.sh"
-            bash "$HARDENING_Audit/1.6.2.sh"
-            bash "$HARDENING_Audit/1.6.3.sh"
-            bash "$HARDENING_Audit/1.6.4.sh"
-            bash "$HARDENING_Audit/1.6.5.sh"
-            bash "$HARDENING_Audit/1.6.6.sh"
+            #bash "$HARDENING_Audit/1.6.1.sh"
+            #bash "$HARDENING_Audit/1.6.2.sh"
+            #bash "$HARDENING_Audit/1.6.3.sh"
+            #bash "$HARDENING_Audit/1.6.4.sh"
+            #bash "$HARDENING_Audit/1.6.5.sh"
+            #bash "$HARDENING_Audit/1.6.6.sh"
             # 1.7 Configure GNOME Display Manager
             #bash "$HARDENING_Audit/1.7.1.sh" #Level.2 Server
-            bash "$HARDENING_Audit/1.7.2.sh"
-            bash "$HARDENING_Audit/1.7.3.sh"
-            bash "$HARDENING_Audit/1.7.4.sh"
-            bash "$HARDENING_Audit/1.7.5.sh"
+            #bash "$HARDENING_Audit/1.7.2.sh"
+            #bash "$HARDENING_Audit/1.7.3.sh"
+            #bash "$HARDENING_Audit/1.7.4.sh"
+            #bash "$HARDENING_Audit/1.7.5.sh"
             #bash "$HARDENING_Audit/1.7.6.sh" #Level.2 Workstation
             #bash "$HARDENING_Audit/1.7.7.sh" #Level.2 Workstation
-            bash "$HARDENING_Audit/1.7.8.sh"
-            bash "$HARDENING_Audit/1.7.9.sh"
-            bash "$HARDENING_Audit/1.7.10.sh"
+            #bash "$HARDENING_Audit/1.7.8.sh"
+            #bash "$HARDENING_Audit/1.7.9.sh"
+            #bash "$HARDENING_Audit/1.7.10.sh"
             #
             # 2.1 Configure Server Services
             #bash "$HARDENING_Audit/2.1.1.sh" #Level.2 Workstation
