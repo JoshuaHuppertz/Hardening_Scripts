@@ -76,48 +76,49 @@ execute_scripts() {
             echo "Audit für Härtegrad 1 ausgewählt."
             # 1.1 Filesystem
             # 1.1.1 Configure Filesystem Kernel Modules
-            bash "$HARDENING_Audit/1.1.1.1.sh"
-            bash "$HARDENING_Audit/1.1.1.2.sh"
-            bash "$HARDENING_Audit/1.1.1.3.sh"
-            bash "$HARDENING_Audit/1.1.1.4.sh"
-            bash "$HARDENING_Audit/1.1.1.5.sh"
+            #bash "$HARDENING_Audit/1.1.1.1.sh"
+            #bash "$HARDENING_Audit/1.1.1.2.sh"
+            #bash "$HARDENING_Audit/1.1.1.3.sh"
+            #bash "$HARDENING_Audit/1.1.1.4.sh"
+            #bash "$HARDENING_Audit/1.1.1.5.sh"
             #bash "$HARDENING_Audit/1.1.1.6.sh" #Level.2 Server
             #bash "$HARDENING_Audit/1.1.1.7.sh" #Level.2 Server
-            bash "$HARDENING_Audit/1.1.1.8.sh"
+            #bash "$HARDENING_Audit/1.1.1.8.sh"
             # 1.1.2 Configure Filesystem Partitions
             # 1.1.2.1 Configure /tmp
-            #bash "$HARDENING_Audit/1.1.2.1.1.sh"
-            #bash "$HARDENING_Audit/1.1.2.1.2.sh"
-            #bash "$HARDENING_Audit/1.1.2.1.3.sh"
-            #bash "$HARDENING_Audit/1.1.2.1.4.sh"
+            #
+            bash "$HARDENING_Audit/1.1.2.1.1.sh"
+            bash "$HARDENING_Audit/1.1.2.1.2.sh"
+            bash "$HARDENING_Audit/1.1.2.1.3.sh"
+            bash "$HARDENING_Audit/1.1.2.1.4.sh"
             # 1.1.2.2.1 Configure /dev/shm
-            #bash "$HARDENING_Audit/1.1.2.2.1.sh"
-            #bash "$HARDENING_Audit/1.1.2.2.2.sh"
-            #bash "$HARDENING_Audit/1.1.2.2.3.sh"
-            #bash "$HARDENING_Audit/1.1.2.2.4.sh"
+            bash "$HARDENING_Audit/1.1.2.2.1.sh"
+            bash "$HARDENING_Audit/1.1.2.2.2.sh"
+            bash "$HARDENING_Audit/1.1.2.2.3.sh"
+            bash "$HARDENING_Audit/1.1.2.2.4.sh"
             # 1.1.2.3.1 Configure /home
-            #bash "$HARDENING_Audit/1.1.2.3.1.sh" #Level.2 Server
-            #bash "$HARDENING_Audit/1.1.2.3.2.sh"
-            #bash "$HARDENING_Audit/1.1.2.3.3.sh"
+            bash "$HARDENING_Audit/1.1.2.3.1.sh" #Level.2 Server
+            bash "$HARDENING_Audit/1.1.2.3.2.sh"
+            bash "$HARDENING_Audit/1.1.2.3.3.sh"
             # 1.1.2.4.1 Configure /var
-            #bash "$HARDENING_Audit/1.1.2.4.1.sh" #Level.2 Server
-            #bash "$HARDENING_Audit/1.1.2.4.2.sh"
-            #bash "$HARDENING_Audit/1.1.2.4.3.sh"
+            bash "$HARDENING_Audit/1.1.2.4.1.sh" #Level.2 Server
+            bash "$HARDENING_Audit/1.1.2.4.2.sh"
+            bash "$HARDENING_Audit/1.1.2.4.3.sh"
             # 1.1.2.5.1 Configure /var/tmp
-            #bash "$HARDENING_Audit/1.1.2.5.1.sh" #Level.2 Server
-            #bash "$HARDENING_Audit/1.1.2.5.2.sh"
-            #bash "$HARDENING_Audit/1.1.2.5.3.sh"
-            #bash "$HARDENING_Audit/1.1.2.5.4.sh"
+            bash "$HARDENING_Audit/1.1.2.5.1.sh" #Level.2 Server
+            bash "$HARDENING_Audit/1.1.2.5.2.sh"
+            bash "$HARDENING_Audit/1.1.2.5.3.sh"
+            bash "$HARDENING_Audit/1.1.2.5.4.sh"
             # 1.1.2.6.1 Configure /var/log
-            #bash "$HARDENING_Audit/1.1.2.6.1.sh" #Level.2 Server
-            #bash "$HARDENING_Audit/1.1.2.6.2.sh"
-            #bash "$HARDENING_Audit/1.1.2.6.3.sh"
-            #bash "$HARDENING_Audit/1.1.2.6.4.sh"
+            bash "$HARDENING_Audit/1.1.2.6.1.sh" #Level.2 Server
+            bash "$HARDENING_Audit/1.1.2.6.2.sh"
+            bash "$HARDENING_Audit/1.1.2.6.3.sh"
+            bash "$HARDENING_Audit/1.1.2.6.4.sh"
             # 1.1.2.7.1 Configure /var/log/audit
-            #bash "$HARDENING_Audit/1.1.2.7.1.sh" #Level.2 Server
-            #bash "$HARDENING_Audit/1.1.2.7.2.sh"
-            #bash "$HARDENING_Audit/1.1.2.7.3.sh"
-            #bash "$HARDENING_Audit/1.1.2.7.4.sh"
+            bash "$HARDENING_Audit/1.1.2.7.1.sh" #Level.2 Server
+            bash "$HARDENING_Audit/1.1.2.7.2.sh"
+            bash "$HARDENING_Audit/1.1.2.7.3.sh"
+            bash "$HARDENING_Audit/1.1.2.7.4.sh"
             # 1.2 Package Management
             # 1.2.1 Configure Package Repositories
             #bash "$HARDENING_Audit/1.2.1.1.sh" #Manual

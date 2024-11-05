@@ -15,9 +15,9 @@ l_systemd_output=""
 # Check the mount options for /tmp
 l_mount_output=$(findmnt -kn /tmp)
 if [[ $l_mount_output == *"/tmp tmpfs"* ]]; then
-    l_output+="\n- Audit: $AUDIT_NUMBER\n\n- /tmp is mounted with options: $l_mount_output"
+    l_output+="\n- /tmp is mounted with options: $l_mount_output"
 else
-    l_output+="\n- Audit: $AUDIT_NUMBER\n\n- /tmp is NOT mounted correctly."
+    l_output+="\n- /tmp is NOT mounted correctly."
 fi
 
 # Check the systemd service for /tmp
@@ -45,4 +45,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally, print results to console for verification (can be commented out)
-echo -e "$RESULT"
+#echo -e "$RESULT"
