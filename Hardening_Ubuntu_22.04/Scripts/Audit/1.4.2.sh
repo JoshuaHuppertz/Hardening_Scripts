@@ -14,8 +14,12 @@ l_check=""
 # Run the stat command and capture the output
 stat_output=$(stat -Lc 'Access: (%#a/%A) Uid: (%u/%U) Gid: (%g/%G)' /boot/grub/grub.cfg)
 
-# Check if the output matches the exact expected conditions
-if [[ "$stat_output" == "Access: (0600/-rw-------) Uid: ( 0/ root) Gid: ( 0/ root)" ]]; then
+# Clean up the stat_output to remove extra spaces for comparison
+cleaned_stat_output=$(echo "$stat_output" | sed 's/[[:space:]]\+/ /g' | sed 's/^\s*//;s/\s*$//')
+
+# Check if the cleaned output matches the expected output
+expected_output="Access: (0600/-rw-------) Uid: (0/root) Gid: (0/root)"
+if [[ "$cleaned_stat_output" == "$expected_output" ]]; then
     l_check="The conditions for permissions and ownership are met."
 else
     l_check="The actual output is:\n$stat_output"
