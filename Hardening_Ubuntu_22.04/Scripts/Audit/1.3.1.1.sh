@@ -27,7 +27,6 @@ else
 fi
 
 # Compile output
-l_output+="\n- Audit: $AUDIT_NUMBER\n"
 l_output+="\n- Result:\n"
 l_output+=" - $l_apparmor_check\n"
 l_output+=" - $l_apparmor_utils_check\n"

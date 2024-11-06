@@ -38,17 +38,16 @@ else
 fi
 
 # Compile output
-l_output+="\n- Audit: $AUDIT_NUMBER\n"
 l_output+="\n- Result:\n"
 l_output+=" - $l_profile_check\n"
 l_output+=" - $l_process_check\n"
 
 # Determine overall result
 if [[ "$l_profile_check" == *"FAIL"* ]] || [[ "$l_process_check" == *"FAIL"* ]]; then
-    RESULT="\n- Audit Result:\n ** FAIL **\n$l_output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 else
-    RESULT="\n- Audit Result:\n ** PASS **\n$l_output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 fi
 
