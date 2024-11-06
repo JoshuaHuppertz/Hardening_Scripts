@@ -23,7 +23,7 @@ fi
 
 # Compile the output
 l_output+="\n- Result:\n"
-l_output+=" - $l_check\n"
+l_output+="- $l_check\n"
 
 # Determine the overall result
 if [[ "$l_check" == *"FAIL"* ]]; then

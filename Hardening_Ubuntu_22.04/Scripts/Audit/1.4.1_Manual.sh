@@ -10,32 +10,41 @@ USERNAME="<username>"  # Replace <username> with the expected superuser name
 
 # Initialize output variables
 l_output=""
-l_superuser_check=""
-l_password_check=""
+superuser_status="PASS"
+password_status="PASS"
+
+# Generate expected output for the audit commands
+expected_superuser_output="set superusers=\"$USERNAME\""
+expected_password_output="password_pbkdf2 $USERNAME grub.pbkdf2.sha512"
 
 # Check for superuser setting
 superuser_output=$(grep "^set superusers" /boot/grub/grub.cfg)
-if [[ "$superuser_output" == "set superusers=\"$USERNAME\"" ]]; then
-    l_superuser_check="Superuser is set to '$USERNAME'."
+if [[ "$superuser_output" != "$expected_superuser_output" ]]; then
+    superuser_status="FAIL"
+    l_output+="- Superuser setting does not match expected username.\n"
 else
-    l_superuser_check="Superuser setting does not match expected username."
+    l_output+="- Superuser is set to '$USERNAME'.\n"
 fi
 
 # Check for password hash
 password_output=$(awk -F. '/^\s*password/ {print $1"."$2"."$3}' /boot/grub/grub.cfg)
-if [[ "$password_output" == "password_pbkdf2 $USERNAME grub.pbkdf2.sha512"* ]]; then
-    l_password_check="Password is correctly set for '$USERNAME'."
+if [[ "$password_output" != "$expected_password_output"* ]]; then
+    password_status="FAIL"
+    l_output+="- Password setting does not match expected hash.\n"
 else
-    l_password_check="Password setting does not match expected hash."
+    l_output+="- Password is correctly set for '$USERNAME'.\n"
 fi
 
-# Compile output
-l_output+="\n- Result:\n"
-l_output+="- $l_superuser_check\n"
-l_output+="- $l_password_check\n"
+# Compile the result in the desired format
+l_output="\n- Result:\n$l_output"
+l_output+="- Commands to run and expected results:\n"
+l_output+="- # grep \"^set superusers\" /boot/grub/grub.cfg\n"
+l_output+="- Expected Output: \"$expected_superuser_output\"\n"
+l_output+="- # awk -F. '/^\\s*password/ {print $1\".\"$2\".\"$3}' /boot/grub/grub.cfg\n"
+l_output+="- Expected Output: \"$expected_password_output\"\n"
 
-# Determine overall result
-if [[ "$l_superuser_check" == *"FAIL"* ]] || [[ "$l_password_check" == *"FAIL"* ]]; then
+# Determine overall result based on statuses
+if [[ "$superuser_status" == "FAIL" ]] || [[ "$password_status" == "FAIL" ]]; then
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 else
@@ -43,7 +52,7 @@ else
     FILE_NAME="$RESULT_DIR/pass.txt"
 fi
 
-# Write the result to the file
+# Write the result to the file and also display it on the console
 {
     echo -e "$RESULT"
     # Add a separator line
@@ -51,4 +60,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally, print results to console for verification (can be commented out)
-#echo -e "$RESULT"
+# echo -e "$RESULT"
