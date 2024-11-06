@@ -44,4 +44,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally, print results to console for verification (can be commented out)
-#echo -e "$RESULT"
+echo -e "$RESULT"
