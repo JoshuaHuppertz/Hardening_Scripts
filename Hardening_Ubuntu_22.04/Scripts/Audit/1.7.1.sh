@@ -16,9 +16,9 @@ check_gdm3_installed() {
         
     # Check if gdm3 is installed
     if dpkg-query -s gdm3 &>/dev/null; then
-        l_output2="\ngdm3 is installed"
+        l_output2="\n\n- gdm3 is installed"
     else
-        l_output="\ngdm3 is not installed"
+        l_output="\n\n- gdm3 is not installed"
     fi
 }
 

@@ -17,7 +17,7 @@ while IFS= read -r l_file; do
     
     # Append the findings to OUTPUT
     if [[ -n "$found" ]]; then
-        OUTPUT+="$found\n"
+        OUTPUT+="\n$found\n"
     fi
 done < <(grep -Psil -- '^\h*\[xdmcp\]' /etc/{gdm3,gdm}/{custom,daemon}.conf)
 
