@@ -14,14 +14,14 @@ l_security_param_check=""
 
 # Check for apparmor=1 in linux lines
 if grep "^\s*linux" /boot/grub/grub.cfg | grep -qv "apparmor=1"; then
-    l_apparmor_param_check="** FAIL **: apparmor=1 parameter is missing in some linux lines"
+    l_apparmor_param_check="apparmor=1 parameter is missing in some linux lines"
 else
     l_apparmor_param_check="apparmor=1 parameter is set in all linux lines"
 fi
 
 # Check for security=apparmor in linux lines
 if grep "^\s*linux" /boot/grub/grub.cfg | grep -qv "security=apparmor"; then
-    l_security_param_check="** FAIL **: security=apparmor parameter is missing in some linux lines"
+    l_security_param_check="security=apparmor parameter is missing in some linux lines"
 else
     l_security_param_check="security=apparmor parameter is set in all linux lines"
 fi

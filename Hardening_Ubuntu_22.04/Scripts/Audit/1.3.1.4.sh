@@ -17,24 +17,24 @@ profile_output=$(apparmor_status | grep profiles)
 if echo "$profile_output" | grep -q "profiles are loaded"; then
     # Check if all profiles are in enforce mode
     if echo "$profile_output" | grep -q "0 profiles are in complain mode"; then
-        l_profile_check="** PASS **: All profiles are loaded and in enforce mode."
+        l_profile_check="- All profiles are loaded and in enforce mode."
     else
-        l_profile_check="** FAIL **: Some profiles are in complain mode."
+        l_profile_check="- Some profiles are in complain mode."
     fi
 else
-    l_profile_check="** FAIL **: No profiles are loaded."
+    l_profile_check="- No profiles are loaded."
 fi
 
 # Check AppArmor processes
 process_output=$(apparmor_status | grep processes)
 if echo "$process_output" | grep -q "processes are defined"; then
     if echo "$process_output" | grep -q "0 processes are unconfined"; then
-        l_process_check="** PASS **: No unconfined processes are present."
+        l_process_check="- No unconfined processes are present."
     else
-        l_process_check="** FAIL **: There are unconfined processes."
+        l_process_check="- There are unconfined processes."
     fi
 else
-    l_process_check="** FAIL **: No processes are defined."
+    l_process_check="- No processes are defined."
 fi
 
 # Compile output
