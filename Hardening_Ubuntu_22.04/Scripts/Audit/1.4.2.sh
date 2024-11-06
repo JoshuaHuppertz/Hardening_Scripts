@@ -43,4 +43,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optional: Ergebnisse zur Überprüfung in der Konsole ausgeben (kann kommentiert werden)
-echo -e "$RESULT"
+#echo -e "$RESULT"
