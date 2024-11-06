@@ -13,73 +13,91 @@ l_output2=""
 l_pkgoutput=""
 l_gdmfile=""
 l_gdmprofile=""
+l_lsbt=""
 
-# Check for GDM and GDM3 packages
-l_pcl="gdm gdm3" # Space separated list of packages to check
-for l_pn in $l_pcl; do
-    if dpkg-query -s "$l_pn" &> /dev/null; then
-        l_pkgoutput="$l_pkgoutput\n - Package: \"$l_pn\" exists on the system\n - checking configuration"
+# Function to check if GDM is installed and verify the banner message settings
+check_gdm_banner() {
+
+    # Check if dpkg-query or rpm is available to query package info
+    if command -v dpkg-query &> /dev/null; then
+        l_pq="dpkg-query -s"
+    elif command -v rpm &> /dev/null; then
+        l_pq="rpm -q"
     fi
-done
 
-if [ -n "$l_pkgoutput" ]; then
-    echo -e "$l_pkgoutput" >> "$RESULT_DIR/output.log"
-    
-    # Look for existing settings and set variables if they exist
-    l_gdmfile="$(grep -Prils '^\h*banner-message-enable\b' /etc/dconf/db/*.d)"
-    
-    if [ -n "$l_gdmfile" ]; then
-        # Set profile name based on dconf db directory ({PROFILE_NAME}.d)
-        l_gdmprofile="$(awk -F\/ '{split($(NF-1),a,".");print a[1]}' <<< "$l_gdmfile")"
+    # List of packages to check (gdm or gdm3)
+    l_pcl="gdm gdm3"
 
-        # Check if banner message is enabled
-        if grep -Pisq '^\h*banner-message-enable=true\b' "$l_gdmfile"; then
-            l_output="$l_output\n - The \"banner-message-enable\" option is enabled in \"$l_gdmfile\""
+    # Check if GDM is installed
+    for l_pn in $l_pcl; do
+        $l_pq "$l_pn" &> /dev/null && l_pkgoutput="$l_pkgoutput\n- Package: \"$l_pn\" exists on the system\n - checking configuration"
+    done
+
+    if [ -n "$l_pkgoutput" ]; then
+        l_output=""  # Reset output for PASS
+        l_output2="" # Reset output for FAIL
+
+        # Look for the existing configuration of banner-message-enable
+        l_gdmfile="$(grep -Prils '^\h*banner-message-enable\b' /etc/dconf/db/*.d)"
+
+        if [ -n "$l_gdmfile" ]; then
+            # Set profile name based on dconf db directory ({PROFILE_NAME}.d)
+            l_gdmprofile="$(awk -F\/ '{split($(NF-1),a,".");print a[1]}' <<< "$l_gdmfile")"
+
+            # Check if banner-message-enable is true
+            if grep -Pisq '^\h*banner-message-enable=true\b' "$l_gdmfile"; then
+                l_output="$l_output\n- The \"banner-message-enable\" option is enabled in \"$l_gdmfile\""
+            else
+                l_output2="$l_output2\n- The \"banner-message-enable\" option is not enabled"
+            fi
+
+            # Check if banner-message-text is set
+            l_lsbt="$(grep -Pios '^\h*banner-message-text=.*$' "$l_gdmfile")"
+            if [ -n "$l_lsbt" ]; then
+                l_output="$l_output\n- The \"banner-message-text\" option is set in \"$l_gdmfile\"\n - banner-message-text is set to:\n - \"$l_lsbt\""
+            else
+                l_output2="$l_output2\n- The \"banner-message-text\" option is not set"
+            fi
+
+            # Check if the profile exists in the dconf profile directory
+            if grep -Pq "^\h*system-db:$l_gdmprofile" /etc/dconf/profile/"$l_gdmprofile"; then
+                l_output="$l_output\n- The \"$l_gdmprofile\" profile exists"
+            else
+                l_output2="$l_output2\n- The \"$l_gdmprofile\" profile doesn't exist"
+            fi
+
+            # Check if the profile exists in the dconf database
+            if [ -f "/etc/dconf/db/$l_gdmprofile" ]; then
+                l_output="$l_output\n- The \"$l_gdmprofile\" profile exists in the dconf database"
+            else
+                l_output2="$l_output2\n- The \"$l_gdmprofile\" profile doesn't exist in the dconf database"
+            fi
         else
-            l_output2="$l_output2\n - The \"banner-message-enable\" option is not enabled"
-        fi
-
-        l_lsbt="$(grep -Pios '^\h*banner-message-text=.*$' "$l_gdmfile")"
-        if [ -n "$l_lsbt" ]; then
-            l_output="$l_output\n - The \"banner-message-text\" option is set in \"$l_gdmfile\"\n - banner-message-text is set to:\n - \"$l_lsbt\""
-        else
-            l_output2="$l_output2\n - The \"banner-message-text\" option is not set"
-        fi
-
-        if grep -Pq "^\h*system-db:$l_gdmprofile" /etc/dconf/profile/"$l_gdmprofile"; then
-            l_output="$l_output\n - The \"$l_gdmprofile\" profile exists"
-        else
-            l_output2="$l_output2\n - The \"$l_gdmprofile\" profile doesn't exist"
-        fi
-
-        if [ -f "/etc/dconf/db/$l_gdmprofile" ]; then
-            l_output="$l_output\n - The \"$l_gdmprofile\" profile exists in the dconf database"
-        else
-            l_output2="$l_output2\n - The \"$l_gdmprofile\" profile doesn't exist in the dconf database"
+            l_output2="$l_output2\n- The \"banner-message-enable\" option isn't configured"
         fi
     else
-        l_output2="$l_output2\n - The \"banner-message-enable\" option isn't configured"
+        # If GDM is not installed, skip the check
+        l_output="\n\n- GNOME Desktop Manager isn't installed\n- Recommendation is Not Applicable\n"
     fi
-else
-    echo -e "\n - GNOME Desktop Manager isn't installed\n - Recommendation is Not Applicable\n- Audit result:\n *** PASS ***\n" >> "$RESULT_DIR/output.log"
-    exit 0
-fi
+}
 
-# Prepare result report
+# Run the GDM banner check
+check_gdm_banner
+
+# Prepare the result message
 if [ -z "$l_output2" ]; then
-    # PASS: No issues found
+    # PASS: If no issues were found
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    # FAIL: Issues found
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
-    [ -n "$l_output" ] && RESULT="$RESULT\n- Correctly set:\n$l_output\n"
+    # FAIL: If there were issues
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n$l_output2\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Write the result to the file
+# Write the result to the file (no output to console)
 {
     echo -e "$RESULT"
-    # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
+

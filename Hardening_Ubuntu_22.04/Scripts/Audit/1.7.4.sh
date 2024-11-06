@@ -11,32 +11,37 @@ AUDIT_NUMBER="1.7.4"
 l_output=""
 l_output2=""
 
-# Get current lock-delay and idle-delay values
-lock_delay=$(gsettings get org.gnome.desktop.screensaver lock-delay)
-idle_delay=$(gsettings get org.gnome.desktop.session idle-delay)
+# Check if GNOME is installed
+if dpkg-query -l | grep -q "gnome"; then
+    # Get current lock-delay and idle-delay values
+    lock_delay=$(gsettings get org.gnome.desktop.screensaver lock-delay 2>/dev/null)
+    idle_delay=$(gsettings get org.gnome.desktop.session idle-delay 2>/dev/null)
 
-# Process lock-delay
-if [[ "$lock_delay" =~ ^uint32\ ([0-9]+) ]]; then
-    lock_value="${BASH_REMATCH[1]}"
-    if [ "$lock_value" -le 5 ]; then
-        l_output="$l_output\n - lock-delay is set to $lock_value seconds (which is compliant)"
+    # Process lock-delay
+    if [[ "$lock_delay" =~ ^uint32\ ([0-9]+) ]]; then
+        lock_value="${BASH_REMATCH[1]}"
+        if [ "$lock_value" -le 5 ]; then
+            l_output="$l_output\n- lock-delay is set to $lock_value seconds (which is compliant)"
+        else
+            l_output2="$l_output2\n- lock-delay is set to $lock_value seconds (which is not compliant, should be 5 seconds or less)"
+        fi
     else
-        l_output2="$l_output2\n - lock-delay is set to $lock_value seconds (which is not compliant, should be 5 seconds or less)"
+        l_output2="$l_output2\n- lock-delay is not set correctly or is disabled"
+    fi
+
+    # Process idle-delay
+    if [[ "$idle_delay" =~ ^uint32\ ([0-9]+) ]]; then
+        idle_value="${BASH_REMATCH[1]}"
+        if [ "$idle_value" -le 900 ]; then
+            l_output="$l_output\n- idle-delay is set to $idle_value seconds (which is compliant)"
+        else
+            l_output2="$l_output2\n- idle-delay is set to $idle_value seconds (which is not compliant, should be 900 seconds or less)"
+        fi
+    else
+        l_output2="$l_output2\n- idle-delay is not set correctly or is disabled"
     fi
 else
-    l_output2="$l_output2\n - lock-delay is not set correctly or is disabled"
-fi
-
-# Process idle-delay
-if [[ "$idle_delay" =~ ^uint32\ ([0-9]+) ]]; then
-    idle_value="${BASH_REMATCH[1]}"
-    if [ "$idle_value" -le 900 ]; then
-        l_output="$l_output\n - idle-delay is set to $idle_value seconds (which is compliant)"
-    else
-        l_output2="$l_output2\n - idle-delay is set to $idle_value seconds (which is not compliant, should be 900 seconds or less)"
-    fi
-else
-    l_output2="$l_output2\n - idle-delay is not set correctly or is disabled"
+    l_output="\n\n- GNOME Desktop Manager isn't installed\n- Recommendation is Not Applicable"
 fi
 
 # Prepare result report
@@ -46,7 +51,7 @@ if [ -z "$l_output2" ]; then
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
     # FAIL: Issues found
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n$l_output2\n"
     [ -n "$l_output" ] && RESULT="$RESULT\n- Correctly set:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi

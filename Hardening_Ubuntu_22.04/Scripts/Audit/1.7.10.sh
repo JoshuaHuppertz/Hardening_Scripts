@@ -26,7 +26,7 @@ if [[ -z "$OUTPUT" ]]; then
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n No issues found in [xdmcp] section.\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$OUTPUT\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n$OUTPUT\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 

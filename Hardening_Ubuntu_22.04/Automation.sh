@@ -132,21 +132,21 @@ execute_scripts() {
             #bash "$HARDENING_Audit/1.3.1.3.sh"
             #bash "$HARDENING_Audit/1.3.1.4.sh" #Level.2 Server
             # 1.4 Configure Bootloader
-            bash "$HARDENING_Audit/1.4.1.sh"
-            bash "$HARDENING_Audit/1.4.2.sh"
+            #bash "$HARDENING_Audit/1.4.1.sh"
+            #bash "$HARDENING_Audit/1.4.2.sh"
             # 1.5 Configure Additional Process Hardening
-            bash "$HARDENING_Audit/1.5.1.sh"
-            bash "$HARDENING_Audit/1.5.2.sh"
-            bash "$HARDENING_Audit/1.5.3.sh"
-            bash "$HARDENING_Audit/1.5.4.sh"
-            bash "$HARDENING_Audit/1.5.5.sh"
+            #bash "$HARDENING_Audit/1.5.1.sh"
+            #bash "$HARDENING_Audit/1.5.2.sh"
+            #bash "$HARDENING_Audit/1.5.3.sh"
+            #bash "$HARDENING_Audit/1.5.4.sh"
+            #bash "$HARDENING_Audit/1.5.5.sh"
             # 1.6  Configure Command Line Warning Banners
-            bash "$HARDENING_Audit/1.6.1.sh"
-            bash "$HARDENING_Audit/1.6.2.sh"
-            bash "$HARDENING_Audit/1.6.3.sh"
-            bash "$HARDENING_Audit/1.6.4.sh"
-            bash "$HARDENING_Audit/1.6.5.sh"
-            bash "$HARDENING_Audit/1.6.6.sh"
+            #bash "$HARDENING_Audit/1.6.1.sh"
+            #bash "$HARDENING_Audit/1.6.2.sh"
+            #bash "$HARDENING_Audit/1.6.3.sh"
+            #bash "$HARDENING_Audit/1.6.4.sh"
+            #bash "$HARDENING_Audit/1.6.5.sh"
+            #bash "$HARDENING_Audit/1.6.6.sh"
             # 1.7 Configure GNOME Display Manager
             bash "$HARDENING_Audit/1.7.1.sh" #Level.2 Server
             bash "$HARDENING_Audit/1.7.2.sh"

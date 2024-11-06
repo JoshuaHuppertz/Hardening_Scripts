@@ -13,13 +13,12 @@ l_output2=""
 
 # Function to check if gdm3 is installed
 check_gdm3_installed() {
-    echo -e "\n- Checking if gdm3 is installed"
-    
+        
     # Check if gdm3 is installed
     if dpkg-query -s gdm3 &>/dev/null; then
-        l_output2="gdm3 is installed"
+        l_output2="\ngdm3 is installed"
     else
-        l_output="gdm3 is not installed"
+        l_output="\ngdm3 is not installed"
     fi
 }
 
@@ -33,7 +32,7 @@ if [ -z "$l_output2" ]; then
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
     # FAIL: gdm3 is installed
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n$l_output2\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
