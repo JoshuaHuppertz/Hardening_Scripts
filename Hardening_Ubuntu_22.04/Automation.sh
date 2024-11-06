@@ -148,23 +148,23 @@ execute_scripts() {
             #bash "$HARDENING_Audit/1.6.5.sh"
             #bash "$HARDENING_Audit/1.6.6.sh"
             # 1.7 Configure GNOME Display Manager
-            bash "$HARDENING_Audit/1.7.1.sh" #Level.2 Server
-            bash "$HARDENING_Audit/1.7.2.sh"
-            bash "$HARDENING_Audit/1.7.3.sh"
-            bash "$HARDENING_Audit/1.7.4.sh"
-            bash "$HARDENING_Audit/1.7.5.sh"
-            bash "$HARDENING_Audit/1.7.6.sh" #Level.2 Workstation
-            bash "$HARDENING_Audit/1.7.7.sh" #Level.2 Workstation
-            bash "$HARDENING_Audit/1.7.8.sh"
-            bash "$HARDENING_Audit/1.7.9.sh"
-            bash "$HARDENING_Audit/1.7.10.sh"
+            #bash "$HARDENING_Audit/1.7.1.sh" #Level.2 Server
+            #bash "$HARDENING_Audit/1.7.2.sh"
+            #bash "$HARDENING_Audit/1.7.3.sh"
+            #bash "$HARDENING_Audit/1.7.4.sh"
+            #bash "$HARDENING_Audit/1.7.5.sh"
+            #bash "$HARDENING_Audit/1.7.6.sh" #Level.2 Workstation
+            #bash "$HARDENING_Audit/1.7.7.sh" #Level.2 Workstation
+            #bash "$HARDENING_Audit/1.7.8.sh"
+            #bash "$HARDENING_Audit/1.7.9.sh"
+            #bash "$HARDENING_Audit/1.7.10.sh"
             #
             # 2.1 Configure Server Services
-            #bash "$HARDENING_Audit/2.1.1.sh" #Level.2 Workstation
-            #bash "$HARDENING_Audit/2.1.2.sh" #Level.2 Workstation
-            #bash "$HARDENING_Audit/2.1.3.sh"
-            #bash "$HARDENING_Audit/2.1.4.sh"
-            #bash "$HARDENING_Audit/2.1.5.sh"
+            bash "$HARDENING_Audit/2.1.1.sh" #Level.2 Workstation
+            bash "$HARDENING_Audit/2.1.2.sh" #Level.2 Workstation
+            bash "$HARDENING_Audit/2.1.3.sh"
+            bash "$HARDENING_Audit/2.1.4.sh"
+            bash "$HARDENING_Audit/2.1.5.sh"
             #bash "$HARDENING_Audit/2.1.6.sh"
             #bash "$HARDENING_Audit/2.1.7.sh"
             #bash "$HARDENING_Audit/2.1.8.sh"

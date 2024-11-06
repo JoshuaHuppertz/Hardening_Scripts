@@ -87,11 +87,11 @@ check_gdm_banner
 # Prepare the result message
 if [ -z "$l_output2" ]; then
     # PASS: If no issues were found
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
     # FAIL: If there were issues
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n$l_output2"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n$l_output2\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
