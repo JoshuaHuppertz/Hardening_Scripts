@@ -21,11 +21,15 @@ else
 fi
 
 # Check the systemd service for /tmp
-l_systemd_output=$(systemctl is-enabled tmp.mount)
-if [[ $l_systemd_output == "generated" || $l_systemd_output == "enabled" ]]; then
-    l_output+="\n- systemd service for /tmp is enabled with status: $l_systemd_output"
+l_systemd_output=$(systemctl is-enabled tmp.mount 2>/dev/null)
+if [[ $? -ne 0 ]]; then
+    l_systemd_output="no-unit-found"
 else
-    l_output+="\n- systemd service for /tmp is NOT enabled or is masked/disabled."
+    if [[ $l_systemd_output == "generated" || $l_systemd_output == "enabled" ]]; then
+        l_output+="\n- systemd service for /tmp is enabled with status: $l_systemd_output"
+    else
+        l_output+="\n- systemd service for /tmp is NOT enabled or is masked/disabled."
+    fi
 fi
 
 # Prepare result report
@@ -45,4 +49,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally, print results to console for verification (can be commented out)
-echo -e "$RESULT"
+#echo -e "$RESULT"
