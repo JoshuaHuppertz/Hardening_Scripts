@@ -121,10 +121,10 @@ execute_scripts() {
             #bash "$HARDENING_Audit/1.1.2.7.4.sh"
             # 1.2 Package Management
             # 1.2.1 Configure Package Repositories
-            bash "$HARDENING_Audit/1.2.1.1.sh" #Manual
-            bash "$HARDENING_Audit/1.2.1.2.sh" #Manual
+            #bash "$HARDENING_Audit/1.2.1.1.sh" #Manual
+            #bash "$HARDENING_Audit/1.2.1.2.sh" #Manual
             # 1.2.2 Configure Package Updates
-            bash "$HARDENING_Audit/1.2.2.1.sh" #Manual
+            #bash "$HARDENING_Audit/1.2.2.1.sh" #Manual
             # 1.3 Mandatory Access Control
             # 1.3.1 Configure AppArmor
             bash "$HARDENING_Audit/1.3.1.1.sh"
