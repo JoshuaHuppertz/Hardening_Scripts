@@ -16,7 +16,7 @@ check_apport() {
     # Check if Apport is installed
     if dpkg-query -s apport &> /dev/null; then
         # Check if Apport is enabled
-        if grep -Psi -- '^\h*enabled\h*=\h*[^0]\b' /etc/default/apport; then
+        if grep -Psi -- '^\h*enabled\h*=\h*[^0]\b' /etc/default/apport &> /dev/null; then
             l_output2="$l_output2\n - Apport is enabled."
         else
             l_output="$l_output\n - Apport is not enabled."
@@ -46,7 +46,7 @@ if [ -z "$l_output2" ]; then
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
     # FAIL: Issues found
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n$l_output2\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -56,3 +56,6 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
+
+# Optional: Do not print the result to the console (currently it is redirected to the file only)
+# echo -e "$RESULT"

@@ -67,7 +67,7 @@ if [ -z "$l_output2" ]; then
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
     # FAIL: Issues found
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n$l_output2\n"
     [ -n "$l_output" ] && RESULT="$RESULT\n- Correctly set:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi

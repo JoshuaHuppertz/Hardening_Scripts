@@ -2,7 +2,7 @@
 
 # Define the result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Create the directory if it doesn't exist
+mkdir -p "$RESULT_DIR"  # Create directory if it doesn't exist
 
 # Define the audit number
 AUDIT_NUMBER="1.4.2"
@@ -12,13 +12,15 @@ l_output=""
 l_check=""
 
 # Run the stat command and capture the output
-stat_output=$(stat -Lc 'Access: (%#a/%A) Uid: (%u/%U) Gid: (%g/%G)' /boot/grub/grub.cfg)
+stat_output=$(stat -Lc 'Access: (%#a/%A) Uid: ( %u/ %U) Gid: ( %g/ %G)' /boot/grub/grub.cfg)
 
 # Clean up the stat_output to remove extra spaces for comparison
 cleaned_stat_output=$(echo "$stat_output" | sed 's/[[:space:]]\+/ /g' | sed 's/^\s*//;s/\s*$//')
 
-# Check if the cleaned output matches the expected output
+# Define the expected output string for a valid result
 expected_output="Access: (0600/-rw-------) Uid: (0/root) Gid: (0/root)"
+
+# Check if the cleaned output matches the expected output
 if [[ "$cleaned_stat_output" == "$expected_output" ]]; then
     l_check="The conditions for permissions and ownership are met."
 else
@@ -38,7 +40,7 @@ else
     FILE_NAME="$RESULT_DIR/pass.txt"
 fi
 
-# Write the result to the file
+# Write the result to the file and also display it on the console
 {
     echo -e "$RESULT"
     # Add a separator line
