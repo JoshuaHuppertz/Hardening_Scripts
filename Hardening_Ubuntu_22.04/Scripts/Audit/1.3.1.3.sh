@@ -13,7 +13,7 @@ l_profile_check=""
 l_process_check=""
 
 # Check AppArmor profiles
-profile_output=$(apparmor_status | grep profiles)
+profile_output=$(sudo apparmor_status | grep profiles)
 if echo "$profile_output" | grep -q "profiles are loaded"; then
     # Check if profiles are in enforce or complain mode
     if echo "$profile_output" | grep -qE "profiles are in enforce mode|profiles are in complain mode"; then
@@ -26,7 +26,7 @@ else
 fi
 
 # Check AppArmor processes
-process_output=$(apparmor_status | grep processes)
+process_output=$(sudo apparmor_status | grep processes)
 if echo "$process_output" | grep -q "processes are defined"; then
     if echo "$process_output" | grep -q "0 processes are unconfined"; then
         l_process_check="No unconfined processes are present."
@@ -51,12 +51,12 @@ else
     FILE_NAME="$RESULT_DIR/pass.txt"
 fi
 
-# Write the result to the file
+# Write the result to the file and also display it on the console
 {
     echo -e "$RESULT"
     # Add a separator line
     echo -e "-------------------------------------------------"
-} >> "$FILE_NAME"
+} | tee -a "$FILE_NAME"
 
 # Optionally, print results to console for verification (can be commented out)
-#echo -e "$RESULT"
+# echo -e "$RESULT"
