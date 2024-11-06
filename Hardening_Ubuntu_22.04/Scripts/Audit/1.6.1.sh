@@ -9,37 +9,48 @@ AUDIT_NUMBER="1.6.1"
 
 # Initialize output variables
 l_output=""
-l_output2=""
+l_check_motd=""
+l_check_grep=""
 
 # Function to check the contents of /etc/motd
-check_motd_contents() {
-    echo -e "\n- Checking contents of /etc/motd"
+check_motd() {
+    # Get the contents of /etc/motd
     motd_content=$(cat /etc/motd)
 
-    # Verify that the contents match site policy (you can customize this check)
-    # For now, we'll just display the contents. You can replace this with actual policy checks.
-    echo -e "$motd_content" >> "$RESULT_DIR/motd_contents.txt"
-
-    # Check for unwanted escape sequences
-    if grep -E -i "(\\\v|\\\r|\\\m|\\\s|$(grep '^ID=' /etc/os-release | cut -d= -f2 | sed -e 's/"//g'))" /etc/motd; then
-        l_output2="$l_output2\n - Unwanted patterns found in /etc/motd."
+    # Verify if it matches the site policy (you should replace this condition with the actual policy check)
+    if [[ "$motd_content" == *"Your site policy message here"* ]]; then
+        l_check_motd="The contents of /etc/motd match site policy."
     else
-        l_output="$l_output\n - No unwanted patterns found in /etc/motd."
+        l_check_motd="The contents of /etc/motd do not match site policy."
+    fi
+}
+
+# Function to check for specific strings in /etc/motd
+check_grep() {
+    # Verify no results are returned for the grep command
+    if grep -E -i "(\\\v|\\\r|\\\m|\\\s|$(grep '^ID=' /etc/os-release | cut -d= -f2 | sed -e 's/"//g'))" /etc/motd &> /dev/null; then
+        l_check_grep="Unexpected content found in /etc/motd."
+    else
+        l_check_grep="No unexpected content found in /etc/motd."
     fi
 }
 
 # Run the checks
-check_motd_contents
+check_motd
+check_grep
 
-# Prepare result report
-if [ -z "$l_output2" ]; then
-    # PASS: No issues found
+# Compile the output
+l_output+="\n- Result:\n"
+l_output+="- $l_check_motd\n"
+l_output+="- $l_check_grep\n"
+
+# Determine the overall result
+if [[ "$l_check_motd" == *"FAIL"* ]] || [[ "$l_check_grep" == *"FAIL"* ]]; then
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n$l_output\n"
+    FILE_NAME="$RESULT_DIR/fail.txt"
+else
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
-else
-    # FAIL: Issues found
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
-    FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
 # Write the result to the file
@@ -48,3 +59,6 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
+
+# Optional: Do not print the result to the console (currently it is redirected to the file only)
+# echo -e "$RESULT"
