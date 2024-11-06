@@ -1,46 +1,45 @@
 #!/usr/bin/env bash
 
-# Definiere das Ergebnisverzeichnis
+# Define the result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Verzeichnis erstellen, falls es nicht existiert
+mkdir -p "$RESULT_DIR"  # Create the directory if it doesn't exist
 
-# Definiere die Audit-Nummer
+# Define the audit number
 AUDIT_NUMBER="1.4.2"
 
-# Initialisiere die Ausgabewerte
+# Initialize output variables
 l_output=""
 l_check=""
 
-# Führe den stat-Befehl aus und erfasse die Ausgabe
+# Run the stat command and capture the output
 stat_output=$(stat -Lc 'Access: (%#a/%A) Uid: (%u/%U) Gid: (%g/%G)' /boot/grub/grub.cfg)
 
-# Überprüfe, ob die Ausgabe genau den gewünschten Bedingungen entspricht
+# Check if the output matches the exact expected conditions
 if [[ "$stat_output" == "Access: (0600/-rw-------) Uid: ( 0/ root) Gid: ( 0/ root)" ]]; then
-    l_check="** PASS **: Die Bedingungen für die Berechtigungen und den Eigentümer sind erfüllt."
+    l_check="The conditions for permissions and ownership are met."
 else
-    l_check="** FAIL **: Die tatsächliche Ausgabe ist:\n$stat_output"
+    l_check="The actual output is:\n$stat_output"
 fi
 
-# Kompiliere die Ausgabe
-l_output+="\n- Audit: $AUDIT_NUMBER\n"
-l_output+="\n- Ergebnis:\n"
+# Compile the output
+l_output+="\n- Result:\n"
 l_output+=" - $l_check\n"
 
-# Bestimme das Gesamtergebnis
+# Determine the overall result
 if [[ "$l_check" == *"FAIL"* ]]; then
-    RESULT="\n- Audit Ergebnis:\n ** FAIL **\n$l_output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 else
-    RESULT="\n- Audit Ergebnis:\n ** PASS **\n$l_output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 fi
 
-# Schreibe das Ergebnis in die Datei
+# Write the result to the file
 {
     echo -e "$RESULT"
-    # Füge eine Trennlinie hinzu
+    # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optional: Ergebnisse zur Überprüfung in der Konsole ausgeben (kann kommentiert werden)
-#echo -e "$RESULT"
+# Optionally, print results to the console for verification (can be commented out)
+# echo -e "$RESULT"

@@ -56,7 +56,7 @@ fi
     echo -e "$RESULT"
     # Add a separator line
     echo -e "-------------------------------------------------"
-} | tee -a "$FILE_NAME"
+} >> "$FILE_NAME"
 
 # Optionally, print results to console for verification (can be commented out)
 # echo -e "$RESULT"
