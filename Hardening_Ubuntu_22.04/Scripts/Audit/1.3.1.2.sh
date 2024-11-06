@@ -28,8 +28,8 @@ fi
 
 # Compile output
 l_output+="\n- Result:\n"
-l_output+=" - $l_apparmor_param_check\n"
-l_output+=" - $l_security_param_check\n"
+l_output+="- $l_apparmor_param_check\n"
+l_output+="- $l_security_param_check\n"
 
 # Determine overall result
 if [[ "$l_apparmor_param_check" == *"FAIL"* ]] || [[ "$l_security_param_check" == *"FAIL"* ]]; then

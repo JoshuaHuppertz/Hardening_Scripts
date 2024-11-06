@@ -28,8 +28,8 @@ fi
 
 # Compile output
 l_output+="\n- Result:\n"
-l_output+=" - $l_apparmor_check\n"
-l_output+=" - $l_apparmor_utils_check\n"
+l_output+="- $l_apparmor_check\n"
+l_output+="- $l_apparmor_utils_check\n"
 
 # Prepare result report
 if [[ "$l_apparmor_check" == *"not installed"* ]] || [[ "$l_apparmor_utils_check" == *"not installed"* ]]; then
