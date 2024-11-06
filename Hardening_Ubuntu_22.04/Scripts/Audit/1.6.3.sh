@@ -14,21 +14,26 @@ l_check_grep_net=""
 
 # Function to check the contents of /etc/issue.net
 check_issue_net() {
-    # Get the contents of /etc/issue.net
-    issue_net_content=$(cat /etc/issue.net)
+    # Check if /etc/issue.net exists
+    if [ -e /etc/issue.net ]; then
+        # Get the contents of /etc/issue.net
+        issue_net_content=$(cat /etc/issue.net)
 
-    # Verify if it matches the site policy (replace this with actual policy check)
-    if [[ "$issue_net_content" == *"Your site policy message here"* ]]; then
-        l_check_issue_net="The contents of /etc/issue.net match site policy."
+        # Verify if it matches the site policy (replace this with actual policy check)
+        if [[ "$issue_net_content" == *"Your site policy message here"* ]]; then
+            l_check_issue_net="The contents of /etc/issue.net match site policy."
+        else
+            l_check_issue_net="The contents of /etc/issue.net do not match site policy."
+        fi
     else
-        l_check_issue_net="The contents of /etc/issue.net do not match site policy."
+        l_check_issue_net="No /etc/issue.net file found."
     fi
 }
 
 # Function to check for specific strings in /etc/issue.net
 check_grep_net() {
     # Verify no results are returned for the grep command
-    if grep -E -i "(\\\v|\\\r|\\\m|\\\s|$(grep '^ID=' /etc/os-release | cut -d= -f2 | sed -e 's/"//g'))" /etc/issue.net &> /dev/null; then
+    if [ -e /etc/issue.net ] && grep -E -i "(\\\v|\\\r|\\\m|\\\s|$(grep '^ID=' /etc/os-release | cut -d= -f2 | sed -e 's/"//g'))" /etc/issue.net &> /dev/null; then
         l_check_grep_net="Unexpected content found in /etc/issue.net."
     else
         l_check_grep_net="No unexpected content found in /etc/issue.net."

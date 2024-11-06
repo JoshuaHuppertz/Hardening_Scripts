@@ -14,14 +14,19 @@ l_check_grep=""
 
 # Function to check the contents of /etc/motd
 check_motd() {
-    # Get the contents of /etc/motd
-    motd_content=$(cat /etc/motd)
+    # Check if /etc/motd exists
+    if [ -e /etc/motd ]; then
+        # Get the contents of /etc/motd
+        motd_content=$(cat /etc/motd)
 
-    # Verify if it matches the site policy (you should replace this condition with the actual policy check)
-    if [[ "$motd_content" == *"Your site policy message here"* ]]; then
-        l_check_motd="The contents of /etc/motd match site policy."
+        # Verify if it matches the site policy (you should replace this condition with the actual policy check)
+        if [[ "$motd_content" == *"Your site policy message here"* ]]; then
+            l_check_motd="The contents of /etc/motd match site policy."
+        else
+            l_check_motd="The contents of /etc/motd do not match site policy."
+        fi
     else
-        l_check_motd="The contents of /etc/motd do not match site policy."
+        l_check_motd="No /etc/motd file found."
     fi
 }
 

@@ -14,14 +14,19 @@ l_check_grep=""
 
 # Function to check the contents of /etc/issue
 check_issue() {
-    # Get the contents of /etc/issue
-    issue_content=$(cat /etc/issue)
+    # Check if /etc/issue exists
+    if [ -e /etc/issue ]; then
+        # Get the contents of /etc/issue
+        issue_content=$(cat /etc/issue)
 
-    # Verify if it matches the site policy (you should replace this condition with the actual policy check)
-    if [[ "$issue_content" == *"Your site policy message here"* ]]; then
-        l_check_issue="The contents of /etc/issue match site policy."
+        # Verify if it matches the site policy (you should replace this condition with the actual policy check)
+        if [[ "$issue_content" == *"Your site policy message here"* ]]; then
+            l_check_issue="The contents of /etc/issue match site policy."
+        else
+            l_check_issue="The contents of /etc/issue do not match site policy."
+        fi
     else
-        l_check_issue="The contents of /etc/issue do not match site policy."
+        l_check_issue="No /etc/issue file found."
     fi
 }
 
