@@ -40,7 +40,7 @@ fi
 RESULT=""
 
 if [[ -z "$output_imapd" && -z "$output_pop3d" ]]; then
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n Neither dovecot-imapd nor dovecot-pop3d is installed.\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n\n- Neither dovecot-imapd nor dovecot-pop3d is installed.\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n"

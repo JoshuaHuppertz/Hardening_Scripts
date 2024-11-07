@@ -34,7 +34,7 @@ fi
 RESULT=""
 
 if [[ -z "$output_tftpd_hpa_installed" ]]; then
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n tftpd-hpa is not installed.\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n\n- tftpd-hpa is not installed.\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n"

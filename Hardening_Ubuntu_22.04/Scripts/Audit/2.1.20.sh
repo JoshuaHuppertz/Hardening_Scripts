@@ -19,7 +19,7 @@ fi
 RESULT=""
 
 if [[ -z "$output_xserver_installed" ]]; then
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n The xserver-common package is not installed.\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n\n- The xserver-common package is not installed.\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n"

@@ -32,7 +32,7 @@ fi
 RESULT=""
 
 if [[ -z "$output_non_loopback_ports" ]]; then
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n All checked ports are not listening on non-loopback interfaces.\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n\n- All checked ports are not listening on non-loopback interfaces.\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n"
@@ -49,4 +49,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"
