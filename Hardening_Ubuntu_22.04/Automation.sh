@@ -160,35 +160,35 @@ execute_scripts() {
             #bash "$HARDENING_Audit/1.7.10.sh"
             #
             # 2.1 Configure Server Services
-            bash "$HARDENING_Audit/2.1.1.sh" #Level.2 Workstation
-            bash "$HARDENING_Audit/2.1.2.sh" #Level.2 Workstation
-            bash "$HARDENING_Audit/2.1.3.sh"
-            bash "$HARDENING_Audit/2.1.4.sh"
-            bash "$HARDENING_Audit/2.1.5.sh"
-            bash "$HARDENING_Audit/2.1.6.sh"
-            bash "$HARDENING_Audit/2.1.7.sh"
-            bash "$HARDENING_Audit/2.1.8.sh"
-            bash "$HARDENING_Audit/2.1.9.sh"
-            bash "$HARDENING_Audit/2.1.10.sh"
-            bash "$HARDENING_Audit/2.1.11.sh" #Level.2 Workstation
-            bash "$HARDENING_Audit/2.1.12.sh"
-            bash "$HARDENING_Audit/2.1.13.sh"
-            bash "$HARDENING_Audit/2.1.14.sh"
-            bash "$HARDENING_Audit/2.1.15.sh"
-            bash "$HARDENING_Audit/2.1.16.sh"
-            bash "$HARDENING_Audit/2.1.17.sh"
-            bash "$HARDENING_Audit/2.1.18.sh"
-            bash "$HARDENING_Audit/2.1.19.sh"
-            bash "$HARDENING_Audit/2.1.20.sh" #Level.2 Server
-            bash "$HARDENING_Audit/2.1.21.sh"
-            bash "$HARDENING_Audit/2.1.22.sh" #Manual
+            #bash "$HARDENING_Audit/2.1.1.sh" #Level.2 Workstation
+            #bash "$HARDENING_Audit/2.1.2.sh" #Level.2 Workstation
+            #bash "$HARDENING_Audit/2.1.3.sh"
+            #bash "$HARDENING_Audit/2.1.4.sh"
+            #bash "$HARDENING_Audit/2.1.5.sh"
+            #bash "$HARDENING_Audit/2.1.6.sh"
+            #bash "$HARDENING_Audit/2.1.7.sh"
+            #bash "$HARDENING_Audit/2.1.8.sh"
+            #bash "$HARDENING_Audit/2.1.9.sh"
+            #bash "$HARDENING_Audit/2.1.10.sh"
+            #bash "$HARDENING_Audit/2.1.11.sh" #Level.2 Workstation
+            #bash "$HARDENING_Audit/2.1.12.sh"
+            #bash "$HARDENING_Audit/2.1.13.sh"
+            #bash "$HARDENING_Audit/2.1.14.sh"
+            #bash "$HARDENING_Audit/2.1.15.sh"
+            #bash "$HARDENING_Audit/2.1.16.sh"
+            #bash "$HARDENING_Audit/2.1.17.sh"
+            #bash "$HARDENING_Audit/2.1.18.sh"
+            #bash "$HARDENING_Audit/2.1.19.sh"
+            #bash "$HARDENING_Audit/2.1.20.sh" #Level.2 Server
+            #bash "$HARDENING_Audit/2.1.21_Manual.sh"
+            #bash "$HARDENING_Audit/2.1.22.sh" #Manual
             # 2.2  Configure Client Services
-            #bash "$HARDENING_Audit/2.2.1.sh"
-            #bash "$HARDENING_Audit/2.2.2.sh"
-            #bash "$HARDENING_Audit/2.2.3.sh"
-            #bash "$HARDENING_Audit/2.2.4.sh"
-            #bash "$HARDENING_Audit/2.2.5.sh"
-            #bash "$HARDENING_Audit/2.2.6.sh"
+            bash "$HARDENING_Audit/2.2.1.sh"
+            bash "$HARDENING_Audit/2.2.2.sh"
+            bash "$HARDENING_Audit/2.2.3.sh"
+            bash "$HARDENING_Audit/2.2.4.sh"
+            bash "$HARDENING_Audit/2.2.5.sh"
+            bash "$HARDENING_Audit/2.2.6.sh"
             # 2.3 Configure Time Synchronization
             # 2.3.1 Ensure time synchronization is in use
             #bash "$HARDENING_Audit/2.3.1.1.sh"

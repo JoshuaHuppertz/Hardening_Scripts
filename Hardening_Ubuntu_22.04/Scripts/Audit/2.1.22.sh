@@ -22,8 +22,8 @@ else
     RESULT+=" - Reason: The following services are listening on the system:\n"
     RESULT+="$ss_output\n"
     RESULT+="\n- Recommended Actions:\n"
-    RESULT+="  1. Review the services to ensure they are required and approved by local site policy.\n"
-    RESULT+="  2. If a service is not required, remove the package or, if necessary, stop and mask the service and/or socket.\n"
+    RESULT+="1. Review the services to ensure they are required and approved by local site policy.\n"
+    RESULT+="2. If a service is not required, remove the package or, if necessary, stop and mask the service and/or socket.\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 

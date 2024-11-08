@@ -57,22 +57,22 @@ if [[ -z "$output_apache_installed" && -z "$output_nginx_installed" ]]; then
 else
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n"
     if [[ -n "$output_apache_installed" ]]; then
-        RESULT+=" - Reason: $output_apache_installed\n"
+        RESULT+="- Reason: $output_apache_installed\n"
     fi
     if [[ -n "$output_nginx_installed" ]]; then
-        RESULT+=" - Reason: $output_nginx_installed\n"
+        RESULT+="- Reason: $output_nginx_installed\n"
     fi
     if [[ -n "$output_apache_enabled" ]]; then
-        RESULT+=" - Reason: $output_apache_enabled\n"
+        RESULT+="- Reason: $output_apache_enabled\n"
     fi
     if [[ -n "$output_nginx_enabled" ]]; then
-        RESULT+=" - Reason: $output_nginx_enabled\n"
+        RESULT+="- Reason: $output_nginx_enabled\n"
     fi
     if [[ -n "$output_apache_active" ]]; then
-        RESULT+=" - Reason: $output_apache_active\n"
+        RESULT+="- Reason: $output_apache_active\n"
     fi
     if [[ -n "$output_nginx_active" ]]; then
-        RESULT+=" - Reason: $output_nginx_active\n"
+        RESULT+="- Reason: $output_nginx_active\n"
     fi
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi

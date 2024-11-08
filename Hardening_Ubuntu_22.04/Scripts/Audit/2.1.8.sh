@@ -45,16 +45,16 @@ if [[ -z "$output_imapd" && -z "$output_pop3d" ]]; then
 else
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n"
     if [[ -n "$output_imapd" ]]; then
-        RESULT+=" - Reason: $output_imapd\n"
+        RESULT+="- Reason: $output_imapd\n"
     fi
     if [[ -n "$output_pop3d" ]]; then
-        RESULT+=" - Reason: $output_pop3d\n"
+        RESULT+="- Reason: $output_pop3d\n"
     fi
     if [[ -n "$output_enabled" ]]; then
-        RESULT+=" - Reason: $output_enabled\n"
+        RESULT+="- Reason: $output_enabled\n"
     fi
     if [[ -n "$output_active" ]]; then
-        RESULT+=" - Reason: $output_active\n"
+        RESULT+="- Reason: $output_active\n"
     fi
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
