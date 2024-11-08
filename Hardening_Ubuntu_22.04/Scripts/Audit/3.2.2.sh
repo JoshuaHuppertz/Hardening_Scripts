@@ -24,18 +24,18 @@ module_loadable_chk() {
     l_loadable="$(modprobe -n -v "$l_mname")"
     [ "$(wc -l <<< "$l_loadable")" -gt "1" ] && l_loadable="$(grep -P -- "(^\h*install|\b$l_mname)\b" <<< "$l_loadable")"
     if grep -Pq -- '^\h*install \/bin\/(true|false)' <<< "$l_loadable"; then
-        l_output="$l_output\n - module: \"$l_mname\" is not loadable: \"$l_loadable\""
+        l_output="$l_output\n- module: \"$l_mname\" is not loadable: \"$l_loadable\""
     else
-        l_output2="$l_output2\n - module: \"$l_mname\" is loadable: \"$l_loadable\""
+        l_output2="$l_output2\n- module: \"$l_mname\" is loadable: \"$l_loadable\""
     fi
 }
 
 module_loaded_chk() {
     # Check if the module is currently loaded
     if ! lsmod | grep "$l_mname" > /dev/null 2>&1; then
-        l_output="$l_output\n - module: \"$l_mname\" is not loaded"
+        l_output="$l_output\n- module: \"$l_mname\" is not loaded"
     else
-        l_output2="$l_output2\n - module: \"$l_mname\" is loaded"
+        l_output2="$l_output2\n- module: \"$l_mname\" is loaded"
     fi
 }
 
@@ -43,9 +43,9 @@ module_deny_chk() {
     # Check if the module is deny listed
     l_dl="y"
     if modprobe --showconfig | grep -Pq -- '^\h*blacklist\h+'"$l_mpname"'\b'; then
-        l_output="$l_output\n - module: \"$l_mname\" is deny listed in: \"$(grep -Pls -- "^\h*blacklist\h+$l_mname\b" $l_searchloc)\""
+        l_output="$l_output\n- module: \"$l_mname\" is deny listed in: \"$(grep -Pls -- "^\h*blacklist\h+$l_mname\b" $l_searchloc)\""
     else
-        l_output2="$l_output2\n - module: \"$l_mname\" is not deny listed"
+        l_output2="$l_output2\n- module: \"$l_mname\" is not deny listed"
     fi
 }
 
@@ -59,7 +59,7 @@ for l_mdir in $l_mpath; do
             module_loaded_chk
         fi
     else
-        l_output="$l_output\n - module: \"$l_mname\" doesn't exist in \"$l_mdir\""
+        l_output="$l_output\n- module: \"$l_mname\" doesn't exist in \"$l_mdir\""
     fi
 done
 
@@ -68,14 +68,14 @@ RESULT=""
 
 # Report results. If no failures output in l_output2, we pass
 if [ -n "$l_output3" ]; then
-    RESULT+="\n\n -- INFO --\n - module: \"$l_mname\" exists in:$l_output3"
+    RESULT+="\n\n -- INFO --\n- module: \"$l_mname\" exists in:$l_output3"
 fi
 
 if [ -z "$l_output2" ]; then
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Reason(s) for audit failure:\n$l_output2\n"
     [ -n "$l_output" ] && RESULT+="\n- Correctly set:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
@@ -88,4 +88,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

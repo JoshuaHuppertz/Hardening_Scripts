@@ -9,10 +9,10 @@ AUDIT_NUMBER="3.1.1"
 
 # Check if IPv6 is enabled
 if grep -Pqs '^\h*0\b' /sys/module/ipv6/parameters/disable; then
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n - IPv6 is enabled\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n- IPv6 is enabled\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - IPv6 is not enabled\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- IPv6 is not enabled\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -24,4 +24,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

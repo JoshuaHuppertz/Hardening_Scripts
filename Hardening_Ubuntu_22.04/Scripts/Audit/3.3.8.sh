@@ -21,9 +21,9 @@ l_ufwscf="$([ -f /etc/default/ufw ] && awk -F= '/^\s*IPT_SYSCTL=/ {print $2}' /e
 kernel_parameter_chk() {
     l_krp="$(sysctl "$l_kpname" | awk -F= '{print $2}' | xargs)" # Check running configuration
     if [ "$l_krp" = "$l_kpvalue" ]; then
-        l_output="$l_output\n - \"$l_kpname\" is correctly set to \"$l_krp\" in the running configuration"
+        l_output="$l_output\n- \"$l_kpname\" is correctly set to \"$l_krp\" in the running configuration"
     else
-        l_output2="$l_output2\n - \"$l_kpname\" is incorrectly set to \"$l_krp\" in the running configuration and should have a value of: \"$l_kpvalue\""
+        l_output2="$l_output2\n- \"$l_kpname\" is incorrectly set to \"$l_krp\" in the running configuration and should have a value of: \"$l_kpvalue\""
     fi
 
     # Check durable setting (files)
@@ -50,13 +50,13 @@ kernel_parameter_chk() {
         while IFS="=" read -r l_fkpname l_fkpvalue; do
             l_fkpname="${l_fkpname// /}"; l_fkpvalue="${l_fkpvalue// /}"
             if [ "$l_fkpvalue" = "$l_kpvalue" ]; then
-                l_output="$l_output\n - \"$l_kpname\" is correctly set to \"$l_fkpvalue\" in \"$(printf '%s' "${A_out[@]}")\""
+                l_output="$l_output\n- \"$l_kpname\" is correctly set to \"$l_fkpvalue\" in \"$(printf '%s' "${A_out[@]}")\""
             else
-                l_output2="$l_output2\n - \"$l_kpname\" is incorrectly set to \"$l_fkpvalue\" in \"$(printf '%s' "${A_out[@]}")\" and should have a value of: \"$l_kpvalue\""
+                l_output2="$l_output2\n- \"$l_kpname\" is incorrectly set to \"$l_fkpvalue\" in \"$(printf '%s' "${A_out[@]}")\" and should have a value of: \"$l_kpvalue\""
             fi
         done < <(grep -Po -- "^\h*$l_kpname\h*=\h*\H+" "${A_out[@]}")
     else
-        l_output2="$l_output2\n - \"$l_kpname\" is not set in an included file\n ** Note: \"$l_kpname\" May be set in a file that's ignored by load procedure **"
+        l_output2="$l_output2\n- \"$l_kpname\" is not set in an included file\n ** Note: \"$l_kpname\" May be set in a file that's ignored by load procedure **"
     fi
 }
 
@@ -64,7 +64,7 @@ kernel_parameter_chk() {
 while IFS="=" read -r l_kpname l_kpvalue; do
     l_kpname="${l_kpname// /}"; l_kpvalue="${l_kpvalue// /}"
     if ! grep -Pqs '^\h*0\b' /sys/module/ipv6/parameters/disable && grep -q '^net.ipv6.' <<< "$l_kpname"; then
-        l_output="$l_output\n - IPv6 is disabled on the system, \"$l_kpname\" is not applicable"
+        l_output="$l_output\n- IPv6 is disabled on the system, \"$l_kpname\" is not applicable"
     else
         kernel_parameter_chk
     fi
@@ -78,7 +78,7 @@ if [ -z "$l_output2" ]; then
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Reason(s) for audit failure:\n$l_output2\n"
     [ -n "$l_output" ] && RESULT+="\n- Correctly set:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
@@ -91,4 +91,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

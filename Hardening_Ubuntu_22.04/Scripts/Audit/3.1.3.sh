@@ -9,10 +9,10 @@ AUDIT_NUMBER="3.1.3"
 
 # Check if bluez package is installed
 if dpkg-query -s bluez &>/dev/null; then
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - bluez is installed\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- bluez is installed\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 else
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n - bluez is not installed\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n- bluez is not installed\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 fi
 
@@ -20,13 +20,13 @@ fi
 if [ "$RESULT" == *"PASS"* ]; then
     # Check if bluetooth.service is enabled
     if systemctl is-enabled bluetooth.service 2>/dev/null | grep -q 'enabled'; then
-        RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - bluetooth.service is enabled\n"
+        RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- bluetooth.service is enabled\n"
         FILE_NAME="$RESULT_DIR/fail.txt"
     fi
 
     # Check if bluetooth.service is active
     if systemctl is-active bluetooth.service 2>/dev/null | grep -q '^active'; then
-        RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - bluetooth.service is active\n"
+        RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- bluetooth.service is active\n"
         FILE_NAME="$RESULT_DIR/fail.txt"
     fi
 fi
@@ -39,4 +39,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"
