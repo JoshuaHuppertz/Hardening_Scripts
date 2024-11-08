@@ -19,11 +19,11 @@ fi
 RESULT=""
 
 if [[ -z "$output_ldap_utils_installed" ]]; then
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n The ldap-utils package is not installed.\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n- The ldap-utils package is not installed.\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n"
-    RESULT+=" - Reason: $output_ldap_utils_installed\n"
+    RESULT+="- Reason: $output_ldap_utils_installed\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -35,4 +35,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

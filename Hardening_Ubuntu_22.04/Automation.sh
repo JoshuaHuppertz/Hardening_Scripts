@@ -183,22 +183,22 @@ execute_scripts() {
             #bash "$HARDENING_Audit/2.1.21_Manual.sh"
             #bash "$HARDENING_Audit/2.1.22.sh" #Manual
             # 2.2  Configure Client Services
-            bash "$HARDENING_Audit/2.2.1.sh"
-            bash "$HARDENING_Audit/2.2.2.sh"
-            bash "$HARDENING_Audit/2.2.3.sh"
-            bash "$HARDENING_Audit/2.2.4.sh"
-            bash "$HARDENING_Audit/2.2.5.sh"
-            bash "$HARDENING_Audit/2.2.6.sh"
+            #bash "$HARDENING_Audit/2.2.1.sh"
+            #bash "$HARDENING_Audit/2.2.2.sh"
+            #bash "$HARDENING_Audit/2.2.3.sh"
+            #bash "$HARDENING_Audit/2.2.4.sh"
+            #bash "$HARDENING_Audit/2.2.5.sh"
+            #bash "$HARDENING_Audit/2.2.6.sh"
             # 2.3 Configure Time Synchronization
             # 2.3.1 Ensure time synchronization is in use
-            #bash "$HARDENING_Audit/2.3.1.1.sh"
+            bash "$HARDENING_Audit/2.3.1.1.sh"
             # 2.3.2 Configure systemd-timesyncd
-            #bash "$HARDENING_Audit/2.3.2.1.sh"
-            #bash "$HARDENING_Audit/2.3.2.2.sh" #Manual
+            bash "$HARDENING_Audit/2.3.2.1.sh"
+            bash "$HARDENING_Audit/2.3.2.2.sh" #Manual
             # 2.3.3 Configure chrony
-            #bash "$HARDENING_Audit/2.3.3.1.sh" #Manual
-            #bash "$HARDENING_Audit/2.3.3.2.sh"
-            #bash "$HARDENING_Audit/2.3.3.3.sh"
+            bash "$HARDENING_Audit/2.3.3.1.sh" #Manual
+            bash "$HARDENING_Audit/2.3.3.2.sh"
+            bash "$HARDENING_Audit/2.3.3.3.sh"
             # 2.4 Job Schedulers
             # 2.4.1 Configure cron
             #bash "$HARDENING_Audit/2.4.1.1.sh"
