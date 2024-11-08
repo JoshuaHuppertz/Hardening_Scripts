@@ -12,9 +12,9 @@ l_output=""
 
 # Check if chronyd is running as _chrony user
 if ps -ef | awk '(/[c]hronyd/ && $1!="_chrony") { print $1 }' | read -r; then
-    l_output="chronyd is running as a user other than _chrony."
+    l_output="- chronyd is running as a user other than _chrony."
 else
-    l_output="chronyd is correctly running as the _chrony user."
+    l_output="- chronyd is correctly running as the _chrony user."
 fi
 
 # Prepare the result report
@@ -36,4 +36,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"
