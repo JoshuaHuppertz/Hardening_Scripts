@@ -20,13 +20,13 @@ if [ -e "/etc/cron.allow" ]; then
         FILE_NAME="$RESULT_DIR/pass.txt"
     else
         RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n"
-        RESULT+=" - Reason: /etc/cron.allow does not have the correct permissions or ownership.\n"
-        RESULT+=" - Current Status: \n$cron_allow_stat\n"
+        RESULT+="- Reason: /etc/cron.allow does not have the correct permissions or ownership.\n"
+        RESULT+="- Current Status: \n$cron_allow_stat\n"
         FILE_NAME="$RESULT_DIR/fail.txt"
     fi
 else
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n"
-    RESULT+=" - Reason: /etc/cron.allow does not exist.\n"
+    RESULT+="- Reason: /etc/cron.allow does not exist.\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -35,13 +35,13 @@ if [ -e "/etc/cron.deny" ]; then
     cron_deny_stat=$(stat -Lc 'Access: (%a/%A) Owner: (%U) Group: (%G)' /etc/cron.deny 2>/dev/null)
     
     if [[ "$cron_deny_stat" =~ "Access: (640/-rw-r-----)" ]] && [[ "$cron_deny_stat" =~ "Owner: (root)" ]] && [[ "$cron_deny_stat" =~ "Group: (root)" ]]; then
-        RESULT+="\n - /etc/cron.deny exists and permissions are correctly set.\n"
+        RESULT+="\n- /etc/cron.deny exists and permissions are correctly set.\n"
     else
-        RESULT+="\n - /etc/cron.deny exists but does not have the correct permissions or ownership.\n"
-        RESULT+=" - Current Status: \n$cron_deny_stat\n"
+        RESULT+="\n- /etc/cron.deny exists but does not have the correct permissions or ownership.\n"
+        RESULT+="- Current Status: \n$cron_deny_stat\n"
     fi
 else
-    RESULT+="\n - /etc/cron.deny does not exist, which is acceptable.\n"
+    RESULT+="\n- /etc/cron.deny does not exist, which is acceptable.\n"
 fi
 
 # Write the result to the file
@@ -52,4 +52,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

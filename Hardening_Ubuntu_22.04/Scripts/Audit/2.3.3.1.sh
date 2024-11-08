@@ -34,7 +34,7 @@ config_file_parameter_chk() {
             l_output="$l_output\n - \"$l_chrony_parameter\" is set in \"$l_file\"\n"
         done
     else
-        l_output2="$l_output2\n - No 'server' or 'pool' settings found in Chrony configuration files\n"
+        l_output2="$l_output2\n- No 'server' or 'pool' settings found in Chrony configuration files\n"
     fi
 }
 
@@ -48,7 +48,7 @@ if [ -z "$l_output2" ]; then
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Reason(s) for audit failure:\n$l_output2\n"
     [ -n "$l_output" ] && RESULT+="\n- Correctly set:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
@@ -61,4 +61,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

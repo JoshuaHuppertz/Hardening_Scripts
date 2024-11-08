@@ -34,13 +34,13 @@ config_file_parameter_chk() {
             l_systemd_file_parameter_name="${l_systemd_file_parameter_name// /}"
             l_systemd_file_parameter_value="${l_systemd_file_parameter_value// /}"
             if grep -Piq "^\h*$l_systemd_file_parameter_value\b" <<< "$l_systemd_file_parameter_value"; then
-                l_output="$l_output\n - \"$l_systemd_parameter_name\" is correctly set to \"$l_systemd_file_parameter_value\" in \"$(printf '%s' "${A_out[@]}")\"\n"
+                l_output="$l_output\n- \"$l_systemd_parameter_name\" is correctly set to \"$l_systemd_file_parameter_value\" in \"$(printf '%s' "${A_out[@]}")\"\n"
             else
-                l_output2="$l_output2\n - \"$l_systemd_parameter_name\" is incorrectly set to \"$l_systemd_file_parameter_value\" in \"$(printf '%s' "${A_out[@]}")\" and should have a value matching: \"$l_systemd_file_parameter_value\"\n"
+                l_output2="$l_output2\n- \"$l_systemd_parameter_name\" is incorrectly set to \"$l_systemd_file_parameter_value\" in \"$(printf '%s' "${A_out[@]}")\" and should have a value matching: \"$l_systemd_file_parameter_value\"\n"
             fi
         done < <(grep -Pio -- "^\h*$l_systemd_parameter_name\h*=\h*\H+" "${A_out[@]}")
     else
-        l_output2="$l_output2\n - \"$l_systemd_parameter_name\" is not set in an included file\n ** Note: \"$l_systemd_parameter_name\" May be set in a file that's ignored by load procedure **\n"
+        l_output2="$l_output2\n- \"$l_systemd_parameter_name\" is not set in an included file\n ** Note: \"$l_systemd_parameter_name\" May be set in a file that's ignored by load procedure **\n"
     fi
 }
 
@@ -58,7 +58,7 @@ if [ -z "$l_output2" ]; then # Provide output from checks
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reasons for audit failure:\n$l_output2"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Reasons for audit failure:\n$l_output2"
     [ -n "$l_output" ] && RESULT+="\n- Correctly set:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
@@ -71,4 +71,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

@@ -19,12 +19,12 @@ cron_active=$(systemctl list-units | awk '$1~/^crond?\.service/{print $3}')
 RESULT=""
 
 if [[ "$cron_enabled" == "enabled" ]] && [[ "$cron_active" == "active" ]]; then
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n Cron is enabled and active on the system.\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n- Cron is enabled and active on the system.\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n"
-    [[ "$cron_enabled" != "enabled" ]] && RESULT+=" - Reason: Cron service is not enabled.\n"
-    [[ "$cron_active" != "active" ]] && RESULT+=" - Reason: Cron service is not active.\n"
+    [[ "$cron_enabled" != "enabled" ]] && RESULT+="- Reason: Cron service is not enabled.\n"
+    [[ "$cron_active" != "active" ]] && RESULT+="- Reason: Cron service is not active.\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -36,4 +36,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

@@ -20,12 +20,12 @@ if systemctl is-active --quiet systemd-timesyncd.service; then
         FILE_NAME="$RESULT_DIR/pass.txt"
     else
         l_output2="systemd-timesyncd.service is not enabled."
-        RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason: $l_output2\n"
+        RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Reason: $l_output2\n"
         FILE_NAME="$RESULT_DIR/fail.txt"
     fi
 else
     l_output2="systemd-timesyncd.service is not active."
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason: $l_output2\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Reason: $l_output2\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -37,4 +37,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

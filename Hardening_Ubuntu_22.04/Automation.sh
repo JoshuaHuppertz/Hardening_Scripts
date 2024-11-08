@@ -201,16 +201,16 @@ execute_scripts() {
             bash "$HARDENING_Audit/2.3.3.3.sh"
             # 2.4 Job Schedulers
             # 2.4.1 Configure cron
-            #bash "$HARDENING_Audit/2.4.1.1.sh"
-            #bash "$HARDENING_Audit//2.4.1.2.sh"
-            #bash "$HARDENING_Audit/2.4.1.3.sh"
-            #bash "$HARDENING_Audit/2.4.1.4.sh"
-            #bash "$HARDENING_Audit/2.4.1.5.sh"
-            #bash "$HARDENING_Audit/2.4.1.6.sh"
-            #bash "$HARDENING_Audit/2.4.1.7.sh"
-            #bash "$HARDENING_Audit/2.4.1.8.sh"
+            bash "$HARDENING_Audit/2.4.1.1.sh"
+            bash "$HARDENING_Audit//2.4.1.2.sh"
+            bash "$HARDENING_Audit/2.4.1.3.sh"
+            bash "$HARDENING_Audit/2.4.1.4.sh"
+            bash "$HARDENING_Audit/2.4.1.5.sh"
+            bash "$HARDENING_Audit/2.4.1.6.sh"
+            bash "$HARDENING_Audit/2.4.1.7.sh"
+            bash "$HARDENING_Audit/2.4.1.8.sh"
             # 2.4.2 Configure at
-            #bash "$HARDENING_Audit/2.4.2.1.sh"
+            bash "$HARDENING_Audit/2.4.2.1.sh"
             #
             # 3.1 Configure Network Devices
             #bash "$HARDENING_Audit/3.1.1.sh"  #Manual

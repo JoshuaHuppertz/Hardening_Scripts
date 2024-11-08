@@ -20,13 +20,13 @@ if [ -f "/etc/at.allow" ]; then
         FILE_NAME="$RESULT_DIR/pass.txt"
     else
         RESULT+="- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n"
-        RESULT+=" - Reason: /etc/at.allow does not have the correct permissions or ownership.\n"
-        RESULT+=" - Current Status: \n$at_allow_stat\n"
+        RESULT+="- Reason: /etc/at.allow does not have the correct permissions or ownership.\n"
+        RESULT+="- Current Status: \n$at_allow_stat\n"
         FILE_NAME="$RESULT_DIR/fail.txt"
     fi
 else
     RESULT+="- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n"
-    RESULT+=" - Reason: /etc/at.allow does not exist.\n"
+    RESULT+="- Reason: /etc/at.allow does not exist.\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -35,21 +35,21 @@ if [ -f "/etc/at.deny" ]; then
     at_deny_stat=$(stat -Lc 'Access: (%a/%A) Owner: (%U) Group: (%G)' /etc/at.deny 2>/dev/null)
     
     if [[ "$at_deny_stat" == "Access: (640/-rw-r-----)" && ("$at_deny_stat" == *"Group: (daemon)" || "$at_deny_stat" == *"Group: (root)") ]]; then
-        RESULT+="\n - /etc/at.deny exists and permissions are correctly set.\n"
+        RESULT+="\n- /etc/at.deny exists and permissions are correctly set.\n"
     else
-        RESULT+="\n - /etc/at.deny exists but does not have the correct permissions or ownership.\n"
-        RESULT+=" - Current Status: \n$at_deny_stat\n"
+        RESULT+="\n- /etc/at.deny exists but does not have the correct permissions or ownership.\n"
+        RESULT+="- Current Status: \n$at_deny_stat\n"
     fi
 else
-    RESULT+="\n - /etc/at.deny does not exist, which is acceptable.\n"
+    RESULT+="\n- /etc/at.deny does not exist, which is acceptable.\n"
 fi
 
 # Write the result to the file
 {
-    printf "%s" "$RESULT"
+    echo -e "$RESULT"
     # Add a separator line
-    printf "-------------------------------------------------\n"
+    echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-printf "%s" "$RESULT"
+#echo -e "$RESULT"

@@ -19,8 +19,8 @@ if [[ "$cron_weekly_stat" =~ "Access: (700/drwx------)" ]] && [[ "$cron_weekly_s
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n"
-    RESULT+=" - Reason: /etc/cron.weekly permissions are incorrectly set or not owned by root.\n"
-    RESULT+=" - Current Status: \n$cron_weekly_stat\n"
+    RESULT+="- Reason: /etc/cron.weekly permissions are incorrectly set or not owned by root.\n"
+    RESULT+="- Current Status: \n$cron_weekly_stat\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -32,4 +32,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"
