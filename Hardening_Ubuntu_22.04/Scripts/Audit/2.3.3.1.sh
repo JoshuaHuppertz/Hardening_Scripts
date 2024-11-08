@@ -17,6 +17,11 @@ l_chrony_config_dir="/etc/chrony"     # Chrony configuration directory
 config_file_parameter_chk() {
     unset A_out
     declare -A A_out
+    if [ ! -d "$l_chrony_config_dir" ]; then
+        l_output2="$l_output2\n- Directory $l_chrony_config_dir does not exist"
+        return
+    fi
+
     while read -r l_out; do
         if [ -n "$l_out" ]; then
             if [[ $l_out =~ ^\s*# ]]; then
@@ -60,5 +65,5 @@ fi
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optionally print the result to the console
-#echo -e "$RESULT"
+# Remove the line that prints to the console
+#echo -e "$RESULT"  # COMMENTED OUT to disable console output

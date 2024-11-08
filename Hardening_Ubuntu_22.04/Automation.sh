@@ -191,48 +191,48 @@ execute_scripts() {
             #bash "$HARDENING_Audit/2.2.6.sh"
             # 2.3 Configure Time Synchronization
             # 2.3.1 Ensure time synchronization is in use
-            bash "$HARDENING_Audit/2.3.1.1.sh"
+            #bash "$HARDENING_Audit/2.3.1.1.sh"
             # 2.3.2 Configure systemd-timesyncd
-            bash "$HARDENING_Audit/2.3.2.1.sh"
-            bash "$HARDENING_Audit/2.3.2.2.sh" #Manual
+            #bash "$HARDENING_Audit/2.3.2.1.sh"
+            #bash "$HARDENING_Audit/2.3.2.2.sh" #Manual
             # 2.3.3 Configure chrony
             bash "$HARDENING_Audit/2.3.3.1.sh" #Manual
-            bash "$HARDENING_Audit/2.3.3.2.sh"
-            bash "$HARDENING_Audit/2.3.3.3.sh"
+            #bash "$HARDENING_Audit/2.3.3.2.sh"
+            #bash "$HARDENING_Audit/2.3.3.3.sh"
             # 2.4 Job Schedulers
             # 2.4.1 Configure cron
-            bash "$HARDENING_Audit/2.4.1.1.sh"
-            bash "$HARDENING_Audit//2.4.1.2.sh"
-            bash "$HARDENING_Audit/2.4.1.3.sh"
-            bash "$HARDENING_Audit/2.4.1.4.sh"
-            bash "$HARDENING_Audit/2.4.1.5.sh"
-            bash "$HARDENING_Audit/2.4.1.6.sh"
-            bash "$HARDENING_Audit/2.4.1.7.sh"
-            bash "$HARDENING_Audit/2.4.1.8.sh"
+            #bash "$HARDENING_Audit/2.4.1.1.sh"
+            #bash "$HARDENING_Audit/2.4.1.2.sh"
+            #bash "$HARDENING_Audit/2.4.1.3.sh"
+            #bash "$HARDENING_Audit/2.4.1.4.sh"
+            #bash "$HARDENING_Audit/2.4.1.5.sh"
+            #bash "$HARDENING_Audit/2.4.1.6.sh"
+            #bash "$HARDENING_Audit/2.4.1.7.sh"
+            #bash "$HARDENING_Audit/2.4.1.8.sh"
             # 2.4.2 Configure at
-            bash "$HARDENING_Audit/2.4.2.1.sh"
+            #bash "$HARDENING_Audit/2.4.2.1.sh"
             #
             # 3.1 Configure Network Devices
-            #bash "$HARDENING_Audit/3.1.1.sh"  #Manual
-            #bash "$HARDENING_Audit/3.1.2.sh"
-            #bash "$HARDENING_Audit/3.1.3.sh" #Level.2 Workstation
+            bash "$HARDENING_Audit/3.1.1.sh"  #Manual
+            bash "$HARDENING_Audit/3.1.2.sh"
+            bash "$HARDENING_Audit/3.1.3.sh" #Level.2 Workstation
             # 3.2 Configure Network Kernel Modules
-            #bash "$HARDENING_Audit/3.2.1.sh"  #Level.2
-            #bash "$HARDENING_Audit/3.2.2.sh"  #Level.2
-            #bash "$HARDENING_Audit/3.2.3.sh"  #Level.2
-            #bash "$HARDENING_Audit/3.2.4.sh"  #Level.2
+            bash "$HARDENING_Audit/3.2.1.sh"  #Level.2
+            bash "$HARDENING_Audit/3.2.2.sh"  #Level.2
+            bash "$HARDENING_Audit/3.2.3.sh"  #Level.2
+            bash "$HARDENING_Audit/3.2.4.sh"  #Level.2
             # 3.3 Configure Network Kernel Parameters
-            #bash "$HARDENING_Audit/3.3.1.sh"
-            #bash "$HARDENING_Audit/3.3.2.sh"
-            #bash "$HARDENING_Audit/3.3.3.sh"
-            #bash "$HARDENING_Audit/3.3.4.sh"
-            #bash "$HARDENING_Audit/3.3.5.sh"
-            #bash "$HARDENING_Audit/3.3.6.sh"
-            #bash "$HARDENING_Audit/3.3.7.sh"
-            #bash "$HARDENING_Audit/3.3.8.sh"
-            #bash "$HARDENING_Audit/3.3.9.sh"
-            #bash "$HARDENING_Audit/3.3.10.sh"
-            #bash "$HARDENING_Audit/3.3.11.sh"
+            bash "$HARDENING_Audit/3.3.1.sh"
+            bash "$HARDENING_Audit/3.3.2.sh"
+            bash "$HARDENING_Audit/3.3.3.sh"
+            bash "$HARDENING_Audit/3.3.4.sh"
+            bash "$HARDENING_Audit/3.3.5.sh"
+            bash "$HARDENING_Audit/3.3.6.sh"
+            bash "$HARDENING_Audit/3.3.7.sh"
+            bash "$HARDENING_Audit/3.3.8.sh"
+            bash "$HARDENING_Audit/3.3.9.sh"
+            bash "$HARDENING_Audit/3.3.10.sh"
+            bash "$HARDENING_Audit/3.3.11.sh"
             #
             # 4.1 Configure UncomplicatedFirewall
             #bash "$HARDENING_Audit/4.1.1.sh"
