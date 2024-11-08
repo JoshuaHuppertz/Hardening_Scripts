@@ -66,11 +66,6 @@ done
 # Prepare the final result
 RESULT=""
 
-# Report results. If no failures output in l_output2, we pass
-if [ -n "$l_output3" ]; then
-    RESULT+="\n\n -- INFO --\n- module: \"$l_mname\" exists in:$l_output3"
-fi
-
 if [ -z "$l_output2" ]; then
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
@@ -78,6 +73,10 @@ else
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Reason(s) for audit failure:\n$l_output2\n"
     [ -n "$l_output" ] && RESULT+="\n- Correctly set:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
+fi
+
+if [ -n "$l_output3" ]; then
+    RESULT+="\n\n -- INFO --\n- module: \"$l_mname\" exists in:$l_output3"
 fi
 
 # Write the result to the file
