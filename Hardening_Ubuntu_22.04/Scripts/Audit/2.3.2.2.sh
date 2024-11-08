@@ -15,11 +15,11 @@ l_output2=""
 if systemctl is-active --quiet systemd-timesyncd.service; then
     # Check if systemd-timesyncd is enabled
     if systemctl is-enabled --quiet systemd-timesyncd.service; then
-        l_output="systemd-timesyncd.service is enabled and active."
+        l_output="- systemd-timesyncd.service is enabled and active."
         RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
         FILE_NAME="$RESULT_DIR/pass.txt"
     else
-        l_output2="systemd-timesyncd.service is not enabled."
+        l_output2="- systemd-timesyncd.service is not enabled."
         RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Reason: $l_output2\n"
         FILE_NAME="$RESULT_DIR/fail.txt"
     fi
