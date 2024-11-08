@@ -132,7 +132,7 @@ execute_scripts() {
             bash "$HARDENING_Audit/1.3.1.3.sh"
             bash "$HARDENING_Audit/1.3.1.4.sh" #Level.2 Server
             # 1.4 Configure Bootloader
-            bash "$HARDENING_Audit/1.4.1.sh"
+            bash "$HARDENING_Audit/1.4.1_Manual.sh"
             bash "$HARDENING_Audit/1.4.2.sh"
             # 1.5 Configure Additional Process Hardening
             bash "$HARDENING_Audit/1.5.1.sh"
