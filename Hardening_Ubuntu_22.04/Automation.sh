@@ -76,141 +76,141 @@ execute_scripts() {
             echo "Audit für Härtegrad 1 ausgewählt."
             # 1.1 Filesystem
             # 1.1.1 Configure Filesystem Kernel Modules
-            bash "$HARDENING_Audit/1.1.1.1.sh"
-            bash "$HARDENING_Audit/1.1.1.2.sh"
-            bash "$HARDENING_Audit/1.1.1.3.sh"
-            bash "$HARDENING_Audit/1.1.1.4.sh"
-            bash "$HARDENING_Audit/1.1.1.5.sh"
-            bash "$HARDENING_Audit/1.1.1.6.sh" #Level.2 Server
-            bash "$HARDENING_Audit/1.1.1.7.sh" #Level.2 Server
-            bash "$HARDENING_Audit/1.1.1.8.sh"
+            #bash "$HARDENING_Audit/1.1.1.1.sh"
+            #bash "$HARDENING_Audit/1.1.1.2.sh"
+            #bash "$HARDENING_Audit/1.1.1.3.sh"
+            #bash "$HARDENING_Audit/1.1.1.4.sh"
+            #bash "$HARDENING_Audit/1.1.1.5.sh"
+            #bash "$HARDENING_Audit/1.1.1.6.sh" #Level.2 Server
+            #bash "$HARDENING_Audit/1.1.1.7.sh" #Level.2 Server
+            #bash "$HARDENING_Audit/1.1.1.8.sh"
             # 1.1.2 Configure Filesystem Partitions
             # 1.1.2.1 Configure /tmp
             #
-            bash "$HARDENING_Audit/1.1.2.1.1.sh"
-            bash "$HARDENING_Audit/1.1.2.1.2.sh"
-            bash "$HARDENING_Audit/1.1.2.1.3.sh"
-            bash "$HARDENING_Audit/1.1.2.1.4.sh"
+            #bash "$HARDENING_Audit/1.1.2.1.1.sh"
+            #bash "$HARDENING_Audit/1.1.2.1.2.sh"
+            #bash "$HARDENING_Audit/1.1.2.1.3.sh"
+            #bash "$HARDENING_Audit/1.1.2.1.4.sh"
             # 1.1.2.2.1 Configure /dev/shm
-            bash "$HARDENING_Audit/1.1.2.2.1.sh"
-            bash "$HARDENING_Audit/1.1.2.2.2.sh"
-            bash "$HARDENING_Audit/1.1.2.2.3.sh"
-            bash "$HARDENING_Audit/1.1.2.2.4.sh"
+            #bash "$HARDENING_Audit/1.1.2.2.1.sh"
+            #bash "$HARDENING_Audit/1.1.2.2.2.sh"
+            #bash "$HARDENING_Audit/1.1.2.2.3.sh"
+            #bash "$HARDENING_Audit/1.1.2.2.4.sh"
             # 1.1.2.3.1 Configure /home
-            bash "$HARDENING_Audit/1.1.2.3.1.sh" #Level.2 Server
-            bash "$HARDENING_Audit/1.1.2.3.2.sh"
-            bash "$HARDENING_Audit/1.1.2.3.3.sh"
+            #bash "$HARDENING_Audit/1.1.2.3.1.sh" #Level.2 Server
+            #bash "$HARDENING_Audit/1.1.2.3.2.sh"
+            #bash "$HARDENING_Audit/1.1.2.3.3.sh"
             # 1.1.2.4.1 Configure /var
-            bash "$HARDENING_Audit/1.1.2.4.1.sh" #Level.2 Server
-            bash "$HARDENING_Audit/1.1.2.4.2.sh"
-            bash "$HARDENING_Audit/1.1.2.4.3.sh"
+            #bash "$HARDENING_Audit/1.1.2.4.1.sh" #Level.2 Server
+            #bash "$HARDENING_Audit/1.1.2.4.2.sh"
+            #bash "$HARDENING_Audit/1.1.2.4.3.sh"
             # 1.1.2.5.1 Configure /var/tmp
-            bash "$HARDENING_Audit/1.1.2.5.1.sh" #Level.2 Server
-            bash "$HARDENING_Audit/1.1.2.5.2.sh"
-            bash "$HARDENING_Audit/1.1.2.5.3.sh"
-            bash "$HARDENING_Audit/1.1.2.5.4.sh"
+            #bash "$HARDENING_Audit/1.1.2.5.1.sh" #Level.2 Server
+            #bash "$HARDENING_Audit/1.1.2.5.2.sh"
+            #bash "$HARDENING_Audit/1.1.2.5.3.sh"
+            #bash "$HARDENING_Audit/1.1.2.5.4.sh"
             # 1.1.2.6.1 Configure /var/log
-            bash "$HARDENING_Audit/1.1.2.6.1.sh" #Level.2 Server
-            bash "$HARDENING_Audit/1.1.2.6.2.sh"
-            bash "$HARDENING_Audit/1.1.2.6.3.sh"
-            bash "$HARDENING_Audit/1.1.2.6.4.sh"
+            #bash "$HARDENING_Audit/1.1.2.6.1.sh" #Level.2 Server
+            #bash "$HARDENING_Audit/1.1.2.6.2.sh"
+            #bash "$HARDENING_Audit/1.1.2.6.3.sh"
+            #bash "$HARDENING_Audit/1.1.2.6.4.sh"
             # 1.1.2.7.1 Configure /var/log/audit
-            bash "$HARDENING_Audit/1.1.2.7.1.sh" #Level.2 Server
-            bash "$HARDENING_Audit/1.1.2.7.2.sh"
-            bash "$HARDENING_Audit/1.1.2.7.3.sh"
-            bash "$HARDENING_Audit/1.1.2.7.4.sh"
+            #bash "$HARDENING_Audit/1.1.2.7.1.sh" #Level.2 Server
+            #bash "$HARDENING_Audit/1.1.2.7.2.sh"
+            #bash "$HARDENING_Audit/1.1.2.7.3.sh"
+            #bash "$HARDENING_Audit/1.1.2.7.4.sh"
             # 1.2 Package Management
             # 1.2.1 Configure Package Repositories
-            bash "$HARDENING_Audit/1.2.1.1.sh" #Manual
-            bash "$HARDENING_Audit/1.2.1.2.sh" #Manual
+            #bash "$HARDENING_Audit/1.2.1.1.sh" #Manual
+            #bash "$HARDENING_Audit/1.2.1.2.sh" #Manual
             # 1.2.2 Configure Package Updates
-            bash "$HARDENING_Audit/1.2.2.1.sh" #Manual
+            #bash "$HARDENING_Audit/1.2.2.1.sh" #Manual
             # 1.3 Mandatory Access Control
             # 1.3.1 Configure AppArmor
-            bash "$HARDENING_Audit/1.3.1.1.sh"
-            bash "$HARDENING_Audit/1.3.1.2.sh"
-            bash "$HARDENING_Audit/1.3.1.3.sh"
-            bash "$HARDENING_Audit/1.3.1.4.sh" #Level.2 Server
+            #bash "$HARDENING_Audit/1.3.1.1.sh"
+            #bash "$HARDENING_Audit/1.3.1.2.sh"
+            #bash "$HARDENING_Audit/1.3.1.3.sh"
+            #bash "$HARDENING_Audit/1.3.1.4.sh" #Level.2 Server
             # 1.4 Configure Bootloader
-            bash "$HARDENING_Audit/1.4.1_Manual.sh"
-            bash "$HARDENING_Audit/1.4.2.sh"
+            #bash "$HARDENING_Audit/1.4.1_Manual.sh"
+            #bash "$HARDENING_Audit/1.4.2.sh"
             # 1.5 Configure Additional Process Hardening
-            bash "$HARDENING_Audit/1.5.1.sh"
-            bash "$HARDENING_Audit/1.5.2.sh"
-            bash "$HARDENING_Audit/1.5.3.sh"
-            bash "$HARDENING_Audit/1.5.4.sh"
-            bash "$HARDENING_Audit/1.5.5.sh"
+            #bash "$HARDENING_Audit/1.5.1.sh"
+            #bash "$HARDENING_Audit/1.5.2.sh"
+            #bash "$HARDENING_Audit/1.5.3.sh"
+            #bash "$HARDENING_Audit/1.5.4.sh"
+            #bash "$HARDENING_Audit/1.5.5.sh"
             # 1.6  Configure Command Line Warning Banners
-            bash "$HARDENING_Audit/1.6.1.sh"
-            bash "$HARDENING_Audit/1.6.2.sh"
-            bash "$HARDENING_Audit/1.6.3.sh"
-            bash "$HARDENING_Audit/1.6.4.sh"
-            bash "$HARDENING_Audit/1.6.5.sh"
-            bash "$HARDENING_Audit/1.6.6.sh"
+            #bash "$HARDENING_Audit/1.6.1.sh"
+            #bash "$HARDENING_Audit/1.6.2.sh"
+            #bash "$HARDENING_Audit/1.6.3.sh"
+            #bash "$HARDENING_Audit/1.6.4.sh"
+            #bash "$HARDENING_Audit/1.6.5.sh"
+            #bash "$HARDENING_Audit/1.6.6.sh"
             # 1.7 Configure GNOME Display Manager
-            bash "$HARDENING_Audit/1.7.1.sh" #Level.2 Server
-            bash "$HARDENING_Audit/1.7.2.sh"
-            bash "$HARDENING_Audit/1.7.3.sh"
-            bash "$HARDENING_Audit/1.7.4.sh"
-            bash "$HARDENING_Audit/1.7.5.sh"
-            bash "$HARDENING_Audit/1.7.6.sh" #Level.2 Workstation
-            bash "$HARDENING_Audit/1.7.7.sh" #Level.2 Workstation
-            bash "$HARDENING_Audit/1.7.8.sh"
-            bash "$HARDENING_Audit/1.7.9.sh"
-            bash "$HARDENING_Audit/1.7.10.sh"
+            #bash "$HARDENING_Audit/1.7.1.sh" #Level.2 Server
+            #bash "$HARDENING_Audit/1.7.2.sh"
+            #bash "$HARDENING_Audit/1.7.3.sh"
+            #bash "$HARDENING_Audit/1.7.4.sh"
+            #bash "$HARDENING_Audit/1.7.5.sh"
+            #bash "$HARDENING_Audit/1.7.6.sh" #Level.2 Workstation
+            #bash "$HARDENING_Audit/1.7.7.sh" #Level.2 Workstation
+            #bash "$HARDENING_Audit/1.7.8.sh"
+            #bash "$HARDENING_Audit/1.7.9.sh"
+            #bash "$HARDENING_Audit/1.7.10.sh"
             #
             # 2.1 Configure Server Services
-            bash "$HARDENING_Audit/2.1.1.sh" #Level.2 Workstation
-            bash "$HARDENING_Audit/2.1.2.sh" #Level.2 Workstation
-            bash "$HARDENING_Audit/2.1.3.sh"
-            bash "$HARDENING_Audit/2.1.4.sh"
-            bash "$HARDENING_Audit/2.1.5.sh"
-            bash "$HARDENING_Audit/2.1.6.sh"
-            bash "$HARDENING_Audit/2.1.7.sh"
-            bash "$HARDENING_Audit/2.1.8.sh"
-            bash "$HARDENING_Audit/2.1.9.sh"
-            bash "$HARDENING_Audit/2.1.10.sh"
-            bash "$HARDENING_Audit/2.1.11.sh" #Level.2 Workstation
-            bash "$HARDENING_Audit/2.1.12.sh"
-            bash "$HARDENING_Audit/2.1.13.sh"
-            bash "$HARDENING_Audit/2.1.14.sh"
-            bash "$HARDENING_Audit/2.1.15.sh"
-            bash "$HARDENING_Audit/2.1.16.sh"
-            bash "$HARDENING_Audit/2.1.17.sh"
-            bash "$HARDENING_Audit/2.1.18.sh"
-            bash "$HARDENING_Audit/2.1.19.sh"
-            bash "$HARDENING_Audit/2.1.20.sh" #Level.2 Server
-            bash "$HARDENING_Audit/2.1.21_Manual.sh"
-            bash "$HARDENING_Audit/2.1.22.sh" #Manual
+            #bash "$HARDENING_Audit/2.1.1.sh" #Level.2 Workstation
+            #bash "$HARDENING_Audit/2.1.2.sh" #Level.2 Workstation
+            #bash "$HARDENING_Audit/2.1.3.sh"
+            #bash "$HARDENING_Audit/2.1.4.sh"
+            #bash "$HARDENING_Audit/2.1.5.sh"
+            #bash "$HARDENING_Audit/2.1.6.sh"
+            #bash "$HARDENING_Audit/2.1.7.sh"
+            #bash "$HARDENING_Audit/2.1.8.sh"
+            #bash "$HARDENING_Audit/2.1.9.sh"
+            #bash "$HARDENING_Audit/2.1.10.sh"
+            #bash "$HARDENING_Audit/2.1.11.sh" #Level.2 Workstation
+            #bash "$HARDENING_Audit/2.1.12.sh"
+            #bash "$HARDENING_Audit/2.1.13.sh"
+            #bash "$HARDENING_Audit/2.1.14.sh"
+            #bash "$HARDENING_Audit/2.1.15.sh"
+            #bash "$HARDENING_Audit/2.1.16.sh"
+            #bash "$HARDENING_Audit/2.1.17.sh"
+            #bash "$HARDENING_Audit/2.1.18.sh"
+            #bash "$HARDENING_Audit/2.1.19.sh"
+            #bash "$HARDENING_Audit/2.1.20.sh" #Level.2 Server
+            #bash "$HARDENING_Audit/2.1.21_Manual.sh"
+            #bash "$HARDENING_Audit/2.1.22.sh" #Manual
             # 2.2  Configure Client Services
-            bash "$HARDENING_Audit/2.2.1.sh"
-            bash "$HARDENING_Audit/2.2.2.sh"
-            bash "$HARDENING_Audit/2.2.3.sh"
-            bash "$HARDENING_Audit/2.2.4.sh"
-            bash "$HARDENING_Audit/2.2.5.sh"
-            bash "$HARDENING_Audit/2.2.6.sh"
+            #bash "$HARDENING_Audit/2.2.1.sh"
+            #bash "$HARDENING_Audit/2.2.2.sh"
+            #bash "$HARDENING_Audit/2.2.3.sh"
+            #bash "$HARDENING_Audit/2.2.4.sh"
+            #bash "$HARDENING_Audit/2.2.5.sh"
+            #bash "$HARDENING_Audit/2.2.6.sh"
             # 2.3 Configure Time Synchronization
             # 2.3.1 Ensure time synchronization is in use
-            bash "$HARDENING_Audit/2.3.1.1.sh"
+            #bash "$HARDENING_Audit/2.3.1.1.sh"
             # 2.3.2 Configure systemd-timesyncd
-            bash "$HARDENING_Audit/2.3.2.1.sh"
-            bash "$HARDENING_Audit/2.3.2.2.sh" #Manual
+            #bash "$HARDENING_Audit/2.3.2.1.sh"
+            #bash "$HARDENING_Audit/2.3.2.2.sh" #Manual
             # 2.3.3 Configure chrony
-            bash "$HARDENING_Audit/2.3.3.1.sh" #Manual
-            bash "$HARDENING_Audit/2.3.3.2.sh"
-            bash "$HARDENING_Audit/2.3.3.3.sh"
+            #bash "$HARDENING_Audit/2.3.3.1.sh" #Manual
+            #bash "$HARDENING_Audit/2.3.3.2.sh"
+            #bash "$HARDENING_Audit/2.3.3.3.sh"
             # 2.4 Job Schedulers
             # 2.4.1 Configure cron
-            bash "$HARDENING_Audit/2.4.1.1.sh"
-            bash "$HARDENING_Audit/2.4.1.2.sh"
-            bash "$HARDENING_Audit/2.4.1.3.sh"
-            bash "$HARDENING_Audit/2.4.1.4.sh"
-            bash "$HARDENING_Audit/2.4.1.5.sh"
-            bash "$HARDENING_Audit/2.4.1.6.sh"
-            bash "$HARDENING_Audit/2.4.1.7.sh"
-            bash "$HARDENING_Audit/2.4.1.8.sh"
+            #bash "$HARDENING_Audit/2.4.1.1.sh"
+            #bash "$HARDENING_Audit/2.4.1.2.sh"
+            #bash "$HARDENING_Audit/2.4.1.3.sh"
+            #bash "$HARDENING_Audit/2.4.1.4.sh"
+            #bash "$HARDENING_Audit/2.4.1.5.sh"
+            #bash "$HARDENING_Audit/2.4.1.6.sh"
+            #bash "$HARDENING_Audit/2.4.1.7.sh"
+            #bash "$HARDENING_Audit/2.4.1.8.sh"
             # 2.4.2 Configure at
-            bash "$HARDENING_Audit/2.4.2.1.sh"
+            #bash "$HARDENING_Audit/2.4.2.1.sh"
             #
             # 3.1 Configure Network Devices
             bash "$HARDENING_Audit/3.1.1.sh"  #Manual
@@ -542,6 +542,6 @@ execute_scripts() {
             #bash "$HARDENING_Remediation/6.3.4.10.sh" #Level.2
             ;;
         esac
-    echo "Das ausgewählte Skript wurde ausgeführt."
+    echo ""
 }
 select_hardness

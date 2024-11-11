@@ -15,7 +15,8 @@ output_non_loopback_ports=""
 a_port_list=("25" "465" "587")
 
 # Check if inet_interfaces is not set to all
-if [ "$(postconf -n inet_interfaces)" != "inet_interfaces = all" ]; then
+# Redirect stderr to /dev/null to suppress error messages (e.g., 'main.cf not found')
+if [ "$(postconf -n inet_interfaces 2>/dev/null)" != "inet_interfaces = all" ]; then
     for l_port_number in "${a_port_list[@]}"; do
         # Check if the port is listening on a non-loopback network interface
         if ss -plntu | grep -P -- ':'"$l_port_number"'\b' | grep -Pvq -- '\h+(127\.0\.0\.1|\[?::1\]?):'"$l_port_number"'\b'; then
@@ -41,12 +42,12 @@ else
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Write the result to the file
+# Write the result to the file (no console output)
 {
     echo -e "$RESULT"
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optionally print the result to the console
-#echo -e "$RESULT"
+# Remove the option for console printing (comment or delete the line below)
+# echo -e "$RESULT"  # This is removed to ensure there's no console output
