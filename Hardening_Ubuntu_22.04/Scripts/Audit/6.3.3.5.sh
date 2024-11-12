@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 
-# Ergebnisverzeichnis festlegen
+# Set result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Verzeichnis erstellen, falls es nicht existiert
+mkdir -p "$RESULT_DIR"  # Create directory if it doesn't exist
 
-# Auditnummer festlegen
+# Set audit number
 AUDIT_NUMBER="6.3.3.5"
 
-# Ergebnisvariablen initialisieren
+# Initialize result variables
 l_output=""
 l_output2=""
 
-# On-Disk-Konfiguration überprüfen
+# Check On-Disk configuration
 on_disk_rules=$(awk '/^ *-a *always,exit/ \
 && / -F *arch=b(32|64)/ \
 && / -S/ \
@@ -33,12 +33,12 @@ expected_on_disk_rules="\
 -w /etc/netplan -p wa -k system-locale"
 
 if [[ "$on_disk_rules" == *"$expected_on_disk_rules"* && "$file_rules" == *"$expected_on_disk_rules"* ]]; then
-    l_output+="\n - On-Disk-Regeln sind korrekt konfiguriert:\n$on_disk_rules\n$file_rules"
+    l_output+="\n- On-Disk rules are correctly configured:\n$on_disk_rules\n$file_rules"
 else
-    l_output2+="\n - Fehler in den On-Disk-Regeln:\n$on_disk_rules\n$file_rules"
+    l_output2+="\n- Error in On-Disk rules:\n$on_disk_rules\n$file_rules"
 fi
 
-# Running-Konfiguration überprüfen
+# Check Running configuration
 running_rules=$(auditctl -l | awk '/^ *-a *always,exit/ \
 && / -F *arch=b(32|64)/ \
 && / -S/ \
@@ -52,26 +52,26 @@ running_file_rules=$(auditctl -l | awk '/^ *-w/ \
 
 if [[ "$running_rules" == *"-a always,exit -F arch=b64 -S sethostname,setdomainname -k system-locale"* && \
       "$running_file_rules" == *"-w /etc/issue -p wa -k system-locale"* ]]; then
-    l_output+="\n - Running-Regeln sind korrekt konfiguriert:\n$running_rules\n$running_file_rules"
+    l_output+="\n- Running rules are correctly configured:\n$running_rules\n$running_file_rules"
 else
-    l_output2+="\n - Fehler in den Running-Regeln:\n$running_rules\n$running_file_rules"
+    l_output2+="\n- Error in Running rules:\n$running_rules\n$running_file_rules"
 fi
 
-# Ergebnis überprüfen und ausgeben
+# Check and output result
 if [ -z "$l_output2" ]; then
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** PASS **\n$l_output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** FAIL **\n - Gründe für das Fehlschlagen der Prüfung:\n$l_output2\n"
-    [ -n "$l_output" ] && RESULT+="\n- Erfolgreich konfiguriert:\n$l_output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Reasons for failure:\n$l_output2\n"
+    [ -n "$l_output" ] && RESULT+="\n- Successfully configured:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Ergebnis in die entsprechende Datei schreiben
+# Write the result to the appropriate file
 {
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optional: Ergebnis in der Konsole ausgeben
-echo -e "$RESULT"
+# Optional: Output result to the console
+#echo -e "$RESULT"

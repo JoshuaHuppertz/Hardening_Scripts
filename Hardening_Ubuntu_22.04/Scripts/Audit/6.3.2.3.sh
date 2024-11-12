@@ -1,49 +1,49 @@
 #!/usr/bin/env bash
 
-# Ergebnisverzeichnis festlegen
+# Set result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Verzeichnis erstellen, falls es nicht existiert
+mkdir -p "$RESULT_DIR"  # Create the directory if it doesn't exist
 
-# Auditnummer festlegen
+# Set audit number
 AUDIT_NUMBER="6.3.2.3"
 
-# Ergebnisvariablen initialisieren
+# Initialize result variables
 l_output=""
 l_output2=""
 
-# Überprüfen, ob disk_full_action auf halt oder single gesetzt ist
+# Check if disk_full_action is set to halt or single
 l_disk_full_action_output=$(grep -Pi '^\s*disk_full_action\s*=\s*(halt|single)\b' /etc/audit/auditd.conf)
 
 if [ -n "$l_disk_full_action_output" ]; then
-    l_output+="\n - Der Parameter 'disk_full_action' ist korrekt gesetzt: $l_disk_full_action_output."
+    l_output+="\n- The 'disk_full_action' parameter is correctly set: $l_disk_full_action_output."
 else
-    l_output2+="\n - Der Parameter 'disk_full_action' ist nicht gesetzt oder falsch konfiguriert (er sollte auf halt oder single gesetzt sein)."
+    l_output2+="\n- The 'disk_full_action' parameter is not set or is misconfigured (it should be set to halt or single)."
 fi
 
-# Überprüfen, ob disk_error_action auf syslog, single oder halt gesetzt ist
+# Check if disk_error_action is set to syslog, single, or halt
 l_disk_error_action_output=$(grep -Pi '^\s*disk_error_action\s*=\s*(syslog|single|halt)\b' /etc/audit/auditd.conf)
 
 if [ -n "$l_disk_error_action_output" ]; then
-    l_output+="\n - Der Parameter 'disk_error_action' ist korrekt gesetzt: $l_disk_error_action_output."
+    l_output+="\n- The 'disk_error_action' parameter is correctly set: $l_disk_error_action_output."
 else
-    l_output2+="\n - Der Parameter 'disk_error_action' ist nicht gesetzt oder falsch konfiguriert (er sollte auf syslog, single oder halt gesetzt sein)."
+    l_output2+="\n- The 'disk_error_action' parameter is not set or is misconfigured (it should be set to syslog, single, or halt)."
 fi
 
-# Ergebnis überprüfen und ausgeben
+# Check results and output
 if [ -z "$l_output2" ]; then
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** PASS **\n$l_output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** FAIL **\n - Gründe für das Fehlschlagen der Prüfung:\n$l_output2\n"
-    [ -n "$l_output" ] && RESULT+="\n- Erfolgreich konfiguriert:\n$l_output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Reasons for failure:\n$l_output2\n"
+    [ -n "$l_output" ] && RESULT+="\n- Successfully configured:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Ergebnis in die entsprechende Datei schreiben
+# Write result to the corresponding file
 {
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optional: Ergebnis in der Konsole ausgeben
-echo -e "$RESULT"
+# Optional: Output result to the console
+#echo -e "$RESULT"

@@ -1,43 +1,43 @@
 #!/usr/bin/env bash
 
-# Ergebnisverzeichnis festlegen
+# Set the result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Verzeichnis erstellen, falls es nicht existiert
+mkdir -p "$RESULT_DIR"  # Create the directory if it doesn't exist
 
-# Auditnummer festlegen
+# Set the audit number
 AUDIT_NUMBER="6.2.2.1"
 
-# Ergebnisvariablen initialisieren
+# Initialize result variables
 l_output=""
 l_output2=""
 
-# Min. UID aus der Konfigurationsdatei holen
+# Get the minimum UID from the configuration file
 l_uidmin="$(awk '/^\s*UID_MIN/{print $2}' /etc/login.defs)"
 
-# Funktion zur Überprüfung der Datei-Berechtigungen und Eigentümerschaft
+# Function to check file permissions and ownership
 file_test_chk() {
     l_op2=""
     if [ $(( l_mode & perm_mask )) -gt 0 ]; then
-        l_op2="$l_op2\n - Mode: \"$l_mode\" sollte \"$maxperm\" oder restriktiver sein"
+        l_op2="$l_op2\n- Mode: \"$l_mode\" should be \"$maxperm\" or more restrictive"
     fi
     if [[ ! "$l_user" =~ $l_auser ]]; then
-        l_op2="$l_op2\n - Eigentümer: \"$l_user\" sollte sein \"${l_auser//|/ oder }\""
+        l_op2="$l_op2\n- Owner: \"$l_user\" should be \"${l_auser//|/ or }\""
     fi
     if [[ ! "$l_group" =~ $l_agroup ]]; then
-        l_op2="$l_op2\n - Gruppeneigentum: \"$l_group\" sollte sein \"${l_agroup//|/ oder }\""
+        l_op2="$l_op2\n- Group ownership: \"$l_group\" should be \"${l_agroup//|/ or }\""
     fi
-    [ -n "$l_op2" ] && l_output2="$l_output2\n - Datei: \"$l_fname\" hat:$l_op2\n"
+    [ -n "$l_op2" ] && l_output2="$l_output2\n- File: \"$l_fname\" has:$l_op2\n"
 }
 
-# Array zurücksetzen
-unset a_file && a_file=() # Array zurücksetzen und initialisieren
+# Reset the array
+unset a_file && a_file=() # Reset and initialize the array
 
-# Dateien in /var/log/ mit möglichen Fehlern auflisten
+# List files in /var/log/ with potential issues
 while IFS= read -r -d $'\0' l_file; do
     [ -e "$l_file" ] && a_file+=("$(stat -Lc '%n^%#a^%U^%u^%G^%g' "$l_file")")
 done < <(find -L /var/log -type f \( -perm /0137 -o ! -user root -o ! -group root \) -print0)
 
-# Überprüfung der Dateieigenschaften
+# Check file properties
 while IFS="^" read -r l_fname l_mode l_user l_uid l_group l_gid; do
     l_bname="$(basename "$l_fname")"
     case "$l_bname" in
@@ -98,24 +98,24 @@ while IFS="^" read -r l_fname l_mode l_user l_uid l_group l_gid; do
     esac
 done <<< "$(printf '%s\n' "${a_file[@]}")"
 
-# Array zurücksetzen
-unset a_file # Array zurücksetzen
+# Reset the array
+unset a_file # Reset the array
 
-# Ergebnisse überprüfen und ausgeben
+# Check the results and output them
 if [ -z "$l_output2" ]; then
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** PASS **\n- Alle Dateien in \"/var/log/\" haben angemessene Berechtigungen und Eigentum\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n- All files in \"/var/log/\" have appropriate permissions and ownership\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** FAIL **\n - Gründe für das Fehlschlagen der Prüfung:\n$l_output2\n"
-    [ -n "$l_output" ] && RESULT+="\n- Erfolgreich konfiguriert:\n$l_output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Reasons for failing the check:\n$l_output2\n"
+    [ -n "$l_output" ] && RESULT+="\n- Successfully configured:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Ergebnis in die entsprechende Datei schreiben
+# Write the result to the corresponding file
 {
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optional: Ergebnis in der Konsole ausgeben
-echo -e "$RESULT"
+# Optionally: Output the result to the console
+#echo -e "$RESULT"

@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 
-# Ergebnisverzeichnis festlegen
+# Set result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Verzeichnis erstellen, falls es nicht existiert
+mkdir -p "$RESULT_DIR"  # Create the directory if it doesn't exist
 
-# Auditnummer festlegen
+# Set audit number
 AUDIT_NUMBER="6.3.3.19"
 
-# Ergebnisvariablen initialisieren
+# Initialize result variables
 l_output=""
 l_output2=""
 
-# On-Disk-Konfiguration überprüfen
+# Check on-disk configuration
 on_disk_output=""
 
-# On-Disk-Regeln für Kernel-Module prüfen
+# Check on-disk rules for kernel modules
 if awk '/^ *-a *always,exit/ \
 &&/ -F *arch=b(32|64)/ \
 &&(/ -F auid!=unset/||/ -F auid!=-1/||/ -F auid!=4294967295/) \
@@ -28,7 +28,7 @@ else
     on_disk_output+="Warning: On-disk audit rules for kernel modules not found.\n"
 fi
 
-# UID_MIN für kmod prüfen
+# Check UID_MIN for kmod
 UID_MIN=$(awk '/^\s*UID_MIN/{print $2}' /etc/login.defs)
 if [ -n "${UID_MIN}" ]; then
     if awk "/^ *-a *always,exit/ \
@@ -45,20 +45,20 @@ else
     on_disk_output+="ERROR: Variable 'UID_MIN' is unset.\n"
 fi
 
-# Überprüfung der On-Disk-Konfigurationsergebnisse
+# Check results of on-disk configuration
 if [[ "$on_disk_output" == *"Warning:"* || "$on_disk_output" == *"ERROR:"* ]]; then
-    l_output2+="\n - Fehler in der On-Disk-Konfiguration:\n$on_disk_output"
+    l_output2+="\n- Error in the on-disk configuration:\n$on_disk_output"
 else
-    l_output+="\n - On-Disk-Regeln sind korrekt konfiguriert:\n$on_disk_output"
+    l_output+="\n- On-disk rules are correctly configured:\n$on_disk_output"
 fi
 
-# Running-Konfiguration überprüfen
+# Check running configuration
 running_output=""
 
-# Aktive Audit-Regeln für Kernel-Module überprüfen
+# Check active audit rules for kernel modules
 if auditctl -l | awk '/^ *-a *always,exit/ \
 &&/ -F *arch=b(32|64)/ \
-&&(/ -F auid!=unset/||/ -F auid!=-1/||/ -F auid!=4294967295/) \
+&&(/ -F auid!=unset/||/ -F auid!=-1/||/ -F *auid!=4294967295/) \
 &&/ -S/ \
 &&(/init_module/ \
 ||/finit_module/ \
@@ -69,7 +69,7 @@ else
     running_output+="Warning: Running audit rules for kernel modules not found.\n"
 fi
 
-# UID_MIN für kmod überprüfen
+# Check UID_MIN for kmod
 if [ -n "${UID_MIN}" ]; then
     if auditctl -l | awk "/^ *-a *always,exit/ \
     &&(/ -F *auid!=unset/||/ -F *auid!=-1/||/ -F *auid!=4294967295/) \
@@ -85,14 +85,14 @@ else
     running_output+="ERROR: Variable 'UID_MIN' is unset.\n"
 fi
 
-# Überprüfung der Running-Konfigurationsergebnisse
+# Check results of running configuration
 if [[ "$running_output" == *"Warning:"* || "$running_output" == *"ERROR:"* ]]; then
-    l_output2+="\n - Fehler in der Running-Konfiguration:\n$running_output"
+    l_output2+="\n- Error in the running configuration:\n$running_output"
 else
-    l_output+="\n - Running-Regeln sind korrekt konfiguriert:\n$running_output"
+    l_output+="\n- Running rules are correctly configured:\n$running_output"
 fi
 
-# Symlink-Überprüfung
+# Symlink check
 symlink_output=""
 S_LINKS=$(ls -l /usr/sbin/lsmod /usr/sbin/rmmod /usr/sbin/insmod /usr/sbin/modinfo /usr/sbin/modprobe /usr/sbin/depmod | grep -vE " -> (\.\./)?bin/kmod" || true)
 if [[ "${S_LINKS}" != "" ]]; then
@@ -101,28 +101,28 @@ else
     symlink_output="OK: All symlinks are correctly pointing to /usr/bin/kmod.\n"
 fi
 
-# Überprüfung der Symlink-Ergebnisse
+# Check symlink results
 if [[ "$symlink_output" == *"Issue with symlinks:"* ]]; then
-    l_output2+="\n - Fehler in den Symlinks:\n$symlink_output"
+    l_output2+="\n- Error in symlinks:\n$symlink_output"
 else
-    l_output+="\n - Symlinks sind korrekt konfiguriert:\n$symlink_output"
+    l_output+="\n- Symlinks are correctly configured:\n$symlink_output"
 fi
 
-# Ergebnis überprüfen und ausgeben
+# Check and output the final result
 if [ -z "$l_output2" ]; then
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** PASS **\n$l_output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** FAIL **\n - Gründe für das Fehlschlagen der Prüfung:\n$l_output2\n"
-    [ -n "$l_output" ] && RESULT+="\n- Erfolgreich konfiguriert:\n$l_output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Reasons for failure:\n$l_output2\n"
+    [ -n "$l_output" ] && RESULT+="\n- Successfully configured:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Ergebnis in die entsprechende Datei schreiben
+# Write result to the appropriate file
 {
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optional: Ergebnis in der Konsole ausgeben
-echo -e "$RESULT"
+# Optional: Output the result to the console
+#echo -e "$RESULT"

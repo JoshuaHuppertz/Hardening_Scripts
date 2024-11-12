@@ -14,17 +14,17 @@ l_output2=""
 # Überprüfen, ob systemd-journal-upload aktiviert ist
 l_enabled=$(systemctl is-enabled systemd-journal-upload.service 2>/dev/null)
 if [ "$l_enabled" == "enabled" ]; then
-    l_output+="\n - systemd-journal-upload.service is enabled."
+    l_output+="\n- systemd-journal-upload.service is enabled."
 else
-    l_output2+="\n - systemd-journal-upload.service is not enabled."
+    l_output2+="\n- systemd-journal-upload.service is not enabled."
 fi
 
 # Überprüfen, ob systemd-journal-upload aktiv ist
 l_active=$(systemctl is-active systemd-journal-upload.service 2>/dev/null)
 if [ "$l_active" == "active" ]; then
-    l_output+="\n - systemd-journal-upload.service is active."
+    l_output+="\n- systemd-journal-upload.service is active."
 else
-    l_output2+="\n - systemd-journal-upload.service is not active."
+    l_output2+="\n- systemd-journal-upload.service is not active."
 fi
 
 # Ergebnis überprüfen und ausgeben
@@ -44,4 +44,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optional: Ergebnis in der Konsole ausgeben
-echo -e "$RESULT"
+#echo -e "$RESULT"

@@ -1,42 +1,42 @@
 #!/usr/bin/env bash
 
-# Ergebnisverzeichnis festlegen
+# Set result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Verzeichnis erstellen, falls es nicht existiert
+mkdir -p "$RESULT_DIR"  # Create the directory if it doesn't exist
 
-# Auditnummer festlegen
+# Set audit number
 AUDIT_NUMBER="6.3.3.21"
 
-# Ergebnisvariablen initialisieren
+# Initialize result variables
 l_output=""
 l_output2=""
 
-# Überprüfen, ob die Regeln korrekt zusammengeführt wurden
+# Check if the rules were successfully merged
 merged_output=$(augenrules --check 2>&1)
 
-# Überprüfen des Ergebnisses
+# Check the result
 if echo "$merged_output" | grep -q "No change"; then
-    l_output+="\n- Regeln wurden erfolgreich zusammengeführt und keine Änderungen erforderlich.\n"
+    l_output+="\n- Rules have been successfully merged and no changes were required.\n"
 else
-    l_output2+="\n- Warnung: Es gab Änderungen in den Regeln.\n"
+    l_output2+="\n- Warning: There were changes in the rules.\n"
     l_output2+="$merged_output\n"
 fi
 
-# Ergebnis überprüfen und ausgeben
+# Check and output the result
 if [ -z "$l_output2" ]; then
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** PASS **\n$l_output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** FAIL **\n - Gründe für das Fehlschlagen der Prüfung:\n$l_output2\n"
-    [ -n "$l_output" ] && RESULT+="\n- Erfolgreich konfiguriert:\n$l_output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Reasons for failure:\n$l_output2\n"
+    [ -n "$l_output" ] && RESULT+="\n- Successfully configured:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Ergebnis in die entsprechende Datei schreiben
+# Write the result to the appropriate file
 {
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optional: Ergebnis in der Konsole ausgeben
-echo -e "$RESULT"
+# Optional: Output the result to the console
+#echo -e "$RESULT"

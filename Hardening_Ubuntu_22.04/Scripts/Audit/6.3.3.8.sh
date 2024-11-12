@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 
-# Ergebnisverzeichnis festlegen
+# Set the result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Verzeichnis erstellen, falls es nicht existiert
+mkdir -p "$RESULT_DIR"  # Create the directory if it doesn't exist
 
-# Auditnummer festlegen
+# Set the audit number
 AUDIT_NUMBER="6.3.3.8"
 
-# Ergebnisvariablen initialisieren
+# Initialize result variables
 l_output=""
 l_output2=""
 
-# On-Disk-Konfiguration überprüfen
+# Check the on-disk configuration
 on_disk_output=""
 
-# On-Disk-Regeln prüfen
+# Check for on-disk audit rules
 if awk '/^ *-w/ \
 &&(/\/etc\/group/ \
 ||/\/etc\/passwd/ \
@@ -31,17 +31,17 @@ else
     on_disk_output+="Warning: On-disk audit rules not found for identity files.\n"
 fi
 
-# Überprüfung der On-Disk-Konfigurationsergebnisse
+# Check the on-disk configuration results
 if [[ "$on_disk_output" == *"Warning:"* ]]; then
-    l_output2+="\n - Fehler in der On-Disk-Konfiguration:\n$on_disk_output"
+    l_output2+="\n- Error in on-disk configuration:\n$on_disk_output"
 else
-    l_output+="\n - On-Disk-Regeln sind korrekt konfiguriert:\n$on_disk_output"
+    l_output+="\n- On-disk rules are correctly configured:\n$on_disk_output"
 fi
 
-# Running-Konfiguration überprüfen
+# Check the running configuration
 running_output=""
 
-# Aktive Audit-Regeln überprüfen
+# Check active audit rules
 if auditctl -l | awk '/^ *-w/ \
 &&(/\/etc\/group/ \
 ||/\/etc\/passwd/ \
@@ -58,28 +58,28 @@ else
     running_output+="Warning: Running audit rules not found for identity files.\n"
 fi
 
-# Überprüfung der Running-Konfigurationsergebnisse
+# Check the running configuration results
 if [[ "$running_output" == *"Warning:"* || "$running_output" == *"ERROR:"* ]]; then
-    l_output2+="\n - Fehler in der Running-Konfiguration:\n$running_output"
+    l_output2+="\n- Error in running configuration:\n$running_output"
 else
-    l_output+="\n - Running-Regeln sind korrekt konfiguriert:\n$running_output"
+    l_output+="\n- Running rules are correctly configured:\n$running_output"
 fi
 
-# Ergebnis überprüfen und ausgeben
+# Check and output the final result
 if [ -z "$l_output2" ]; then
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** PASS **\n$l_output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** FAIL **\n - Gründe für das Fehlschlagen der Prüfung:\n$l_output2\n"
-    [ -n "$l_output" ] && RESULT+="\n- Erfolgreich konfiguriert:\n$l_output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Reasons for failure:\n$l_output2\n"
+    [ -n "$l_output" ] && RESULT+="\n- Successfully configured:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Ergebnis in die entsprechende Datei schreiben
+# Write the result to the appropriate file
 {
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optional: Ergebnis in der Konsole ausgeben
-echo -e "$RESULT"
+# Optionally, print the result to the console
+#echo -e "$RESULT"

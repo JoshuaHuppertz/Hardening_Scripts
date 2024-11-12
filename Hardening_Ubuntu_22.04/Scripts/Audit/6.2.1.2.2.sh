@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 
-# Ergebnisverzeichnis festlegen
+# Set the result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Verzeichnis erstellen, falls es nicht existiert
+mkdir -p "$RESULT_DIR"  # Create the directory if it doesn't exist
 
-# Auditnummer festlegen
+# Set the audit number
 AUDIT_NUMBER="6.2.1.2.2"
 
-# Ergebnisvariablen initialisieren
+# Initialize result variables
 l_output=""
 l_output2=""
 
-# Überprüfen der Konfiguration für systemd-journal-upload
+# Check the configuration for systemd-journal-upload
 l_config_file="/etc/systemd/journal-upload.conf"
 
-# Überprüfen, ob die Konfigurationsdatei existiert
+# Check if the configuration file exists
 if [ -f "$l_config_file" ]; then
     l_check_output=$(grep -P "^ *URL=|^ *ServerKeyFile=|^ *ServerCertificateFile=|^ *TrustedCertificateFile=" "$l_config_file")
     
@@ -27,20 +27,20 @@ else
     l_output2="Configuration file $l_config_file not found."
 fi
 
-# Ergebnis überprüfen und ausgeben
+# Check the result and output
 if [ -z "$l_output2" ]; then
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** PASS **\n$l_output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** FAIL **\n$l_output2\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n$l_output2\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Ergebnis in die entsprechende Datei schreiben
+# Write the result to the corresponding file
 {
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optional: Ergebnis in der Konsole ausgeben
-echo -e "$RESULT"
+# Optionally: Output the result to the console
+#echo -e "$RESULT"

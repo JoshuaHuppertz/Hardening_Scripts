@@ -1,40 +1,40 @@
 #!/usr/bin/env bash
 
-# Ergebnisverzeichnis festlegen
+# Set result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Verzeichnis erstellen, falls es nicht existiert
+mkdir -p "$RESULT_DIR"  # Create the directory if it doesn't exist
 
-# Auditnummer festlegen
+# Set audit number
 AUDIT_NUMBER="6.3.1.3"
 
-# Ergebnisvariablen initialisieren
+# Initialize result variables
 l_output=""
 l_output2=""
 
-# Überprüfen, ob audit=1 in grub.cfg vorhanden ist
+# Check if 'audit=1' is present in grub.cfg
 l_audit_output=$(find /boot -type f -name 'grub.cfg' -exec grep -Ph -- '^\h*linux' {} + | grep 'audit=1')
 
 if [ -z "$l_audit_output" ]; then
-    l_output+="\n - Der Parameter 'audit=1' ist nicht in grub.cfg vorhanden."
+    l_output+="\n- The parameter 'audit=1' is not present in grub.cfg."
 else
-    l_output2+="\n - Der Parameter 'audit=1' ist in grub.cfg vorhanden."
+    l_output2+="\n- The parameter 'audit=1' is present in grub.cfg."
 fi
 
-# Ergebnis überprüfen und ausgeben
+# Check results and output
 if [ -z "$l_output2" ]; then
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** PASS **\n$l_output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** FAIL **\n - Gründe für das Fehlschlagen der Prüfung:\n$l_output2\n"
-    [ -n "$l_output" ] && RESULT+="\n- Erfolgreich konfiguriert:\n$l_output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Reasons for failure:\n$l_output2\n"
+    [ -n "$l_output" ] && RESULT+="\n- Successfully configured:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Ergebnis in die entsprechende Datei schreiben
+# Write the result to the corresponding file
 {
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optional: Ergebnis in der Konsole ausgeben
-echo -e "$RESULT"
+# Optional: Output the result to the console
+#echo -e "$RESULT"

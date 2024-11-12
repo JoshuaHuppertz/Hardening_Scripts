@@ -27,9 +27,9 @@ f_parameter_chk() {
             done
         fi
     done
-    [ -n "$l_out" ] && l_output="$l_output\n - Parameter: \"$l_parameter_name\":$l_out"
-    [ -z "$l_out2" ] && l_output="$l_output\n - and includes \"$(printf '%s+' "${a_items[@]}")\""
-    [ -n "$l_out2" ] && l_output2="$l_output2\n - Parameter: \"$l_parameter_name\":$l_out2"
+    [ -n "$l_out" ] && l_output="$l_output\n- Parameter: \"$l_parameter_name\":$l_out"
+    [ -z "$l_out2" ] && l_output="$l_output\n- and includes \"$(printf '%s+' "${a_items[@]}")\""
+    [ -n "$l_out2" ] && l_output2="$l_output2\n- Parameter: \"$l_parameter_name\":$l_out2"
     [[ -z "$l_out" && -z "$l_out2" ]] && l_output2="$l_output2\n - Parameter: \"$l_parameter_name\" is not configured"
 }
 
