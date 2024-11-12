@@ -31,7 +31,7 @@ RESULT=""
 
 # Determine PASS or FAIL based on the output
 if [[ -z "$output" ]]; then
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\nNo users have a future password change date."
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n- No users have a future password change date."
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n$output"
@@ -45,4 +45,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

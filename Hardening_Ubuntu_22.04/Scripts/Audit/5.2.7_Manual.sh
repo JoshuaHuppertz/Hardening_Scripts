@@ -17,10 +17,10 @@ CHECK_PAM_WHEEL() {
     # Check for pam_wheel configuration in /etc/pam.d/su
     if output=$(grep -Pi '^\h*auth\h+(?:required|requisite)\h+pam_wheel\.so\h+(?:[^#\n\r]+\h+)?((?!\2)(use_uid\b|group=\H+\b))\h+(?:[^#\n\r]+\h+)?((?!\1)(use_uid\b|group=\H+\b))(h+.*)?$' /etc/pam.d/su); then
         if [ -n "$output" ]; then
-            l_output+="\n - pam_wheel is configured correctly: $output"
+            l_output+="\n- pam_wheel is configured correctly: $output"
             group_name=$(echo "$output" | grep -oP "group=\K\H+")
         else
-            l_output+="\n - pam_wheel is NOT configured correctly in /etc/pam.d/su."
+            l_output+="\n- pam_wheel is NOT configured correctly in /etc/pam.d/su."
         fi
     fi
 }
@@ -33,13 +33,13 @@ CHECK_GROUP_USERS() {
             if [[ "$group_check" == *":"* ]]; then
                 user_count=$(echo "$group_check" | awk -F: '{print $4}' | tr ',' '\n' | wc -l)
                 if [ "$user_count" -gt 0 ]; then
-                    l_output+="\n - Group $group_name contains users: $group_check"
+                    l_output+="\n- Group $group_name contains users: $group_check"
                 else
-                    l_output+="\n - Group $group_name is empty."
+                    l_output+="\n- Group $group_name is empty."
                 fi
             fi
         else
-            l_output+="\n - Group $group_name does not exist."
+            l_output+="\n- Group $group_name does not exist."
         fi
     fi
 }
@@ -53,7 +53,7 @@ RESULT=""
 
 # Determine PASS or FAIL based on the output
 if [[ $l_output == *"NOT configured correctly"* || $l_output == *"contains users"* ]]; then
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - * Reasons for audit failure * :$l_output"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- * Reasons for audit failure * :$l_output"
     FILE_NAME="$RESULT_DIR/fail.txt"
 else
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output"
@@ -67,4 +67,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

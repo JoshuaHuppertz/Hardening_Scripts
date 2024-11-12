@@ -15,9 +15,9 @@ l_output2=""
 CHECK_AUTHENTICATE() {
     # Check for any !authenticate entries
     if grep -r "^[^#].*\!authenticate" /etc/sudoers*; then
-        l_output2+="\n - !authenticate entries found in the sudoers configuration."
+        l_output2+="\n- !authenticate entries found in the sudoers configuration."
     else
-        l_output+="\n - No !authenticate entries found."
+        l_output+="\n- No !authenticate entries found."
     fi
 }
 
@@ -32,7 +32,7 @@ if [ -z "$l_output2" ]; then
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - * Reasons for audit failure * :$l_output2"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- * Reasons for audit failure * :$l_output2"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -43,4 +43,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

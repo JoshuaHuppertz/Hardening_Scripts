@@ -23,10 +23,10 @@ RESULT=""
 
 # Determine PASS or FAIL based on the output
 if [[ "$output" == "root:0" || -z "$output" ]]; then
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\nOnly the 'root' group has GID 0."
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n- Only the 'root' group has GID 0."
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\nThe following groups have GID 0:\n$output"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- The following groups have GID 0:\n$output"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -37,4 +37,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

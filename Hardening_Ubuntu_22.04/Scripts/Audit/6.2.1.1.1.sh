@@ -1,47 +1,47 @@
 #!/usr/bin/env bash
 
-# Ergebnisverzeichnis festlegen
+# Set result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Verzeichnis erstellen, falls es nicht existiert
+mkdir -p "$RESULT_DIR"  # Create directory if it doesn't exist
 
-# Auditnummer festlegen
+# Set audit number
 AUDIT_NUMBER="6.2.1.1.1"
 
-# Ergebnisvariablen initialisieren
+# Initialize result variables
 l_output=""
 l_output2=""
 
-# Überprüfen, ob systemd-journald aktiviert ist
+# Check if systemd-journald is enabled
 enabled_status=$(systemctl is-enabled systemd-journald.service 2>/dev/null)
 if [[ "$enabled_status" == "static" ]]; then
-    l_output="systemd-journald ist aktiviert: $enabled_status"
+    l_output="systemd-journald is enabled: $enabled_status"
 else
-    l_output2="systemd-journald ist nicht statisch oder aktiviert: $enabled_status"
+    l_output2="systemd-journald is not static or enabled: $enabled_status"
 fi
 
-# Überprüfen, ob systemd-journald aktiv ist
+# Check if systemd-journald is active
 active_status=$(systemctl is-active systemd-journald.service 2>/dev/null)
 if [[ "$active_status" == "active" ]]; then
-    l_output="$l_output\nsystemd-journald ist aktiv: $active_status"
+    l_output="$l_output\nsystemd-journald is active: $active_status"
 else
-    l_output2="$l_output2\nsystemd-journald ist nicht aktiv: $active_status"
+    l_output2="$l_output2\nsystemd-journald is not active: $active_status"
 fi
 
-# Ergebnis überprüfen und ausgeben
+# Check results and output
 if [ -z "$l_output2" ]; then
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** PASS **\n - * Korrekt konfiguriert * :$l_output"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n - * Correctly Configured * :$l_output"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** FAIL **\n - * Gründe für das Fehlschlagen der Prüfung * :$l_output2\n"
-    [ -n "$l_output" ] && RESULT+="\n - * Korrekt konfiguriert * :\n$l_output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - * Reasons for Failure * :$l_output2\n"
+    [ -n "$l_output" ] && RESULT+="\n - * Correctly Configured * :\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Ergebnis in die entsprechende Datei schreiben
+# Write result to the corresponding file
 {
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optional: Ergebnis in der Konsole ausgeben
-echo -e "$RESULT"
+# Optionally, print the result to the console
+#echo -e "$RESULT"

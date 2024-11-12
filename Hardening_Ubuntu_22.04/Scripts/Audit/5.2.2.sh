@@ -15,14 +15,14 @@ l_output2=""
 CHECK_USE_PTY() {
     # Check if Defaults use_pty is set
     if grep -rPi -- '^\h*Defaults\h+([^#\n\r]+,)?use_pty(,\h*\h+\h*)*\h*(#.*)?$' /etc/sudoers*; then
-        l_output+="\n - /etc/sudoers: Defaults use_pty is set."
+        l_output+="\n- /etc/sudoers: Defaults use_pty is set."
     else
-        l_output2+="\n - /etc/sudoers: Defaults use_pty is not set."
+        l_output2+="\n- /etc/sudoers: Defaults use_pty is not set."
     fi
 
     # Check if Defaults !use_pty is not set
     if grep -rPi -- '^\h*Defaults\h+([^#\n\r]+,)?!use_pty(,\h*\h+\h*)*\h*(#.*)?$' /etc/sudoers*; then
-        l_output2+="\n - /etc/sudoers: Defaults !use_pty is set, which is not allowed."
+        l_output2+="\n- /etc/sudoers: Defaults !use_pty is set, which is not allowed."
     fi
 }
 
@@ -37,7 +37,7 @@ if [ -z "$l_output2" ]; then
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - * Reasons for audit failure * :$l_output2"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- * Reasons for audit failure * :$l_output2"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -48,4 +48,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

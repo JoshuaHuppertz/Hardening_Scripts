@@ -13,9 +13,9 @@ l_output2=""
 
 # Check if UFW is installed
 if dpkg-query -s ufw &>/dev/null; then
-    l_output=" - ufw is installed"
+    l_output="- ufw is installed"
 else
-    l_output2=" - ufw is not installed"
+    l_output2="- ufw is not installed"
 fi
 
 # Prepare the final result
@@ -26,7 +26,7 @@ if [ -z "$l_output2" ]; then
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Reason(s) for audit failure:\n$l_output2\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -38,4 +38,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

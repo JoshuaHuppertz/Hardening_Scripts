@@ -1,29 +1,29 @@
 #!/usr/bin/env bash
 
-# Ergebnisverzeichnis festlegen
+# Define the result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Verzeichnis erstellen, falls es nicht existiert
+mkdir -p "$RESULT_DIR"  # Create directory if it doesn't exist
 
-# Auditnummer festlegen
+# Define the audit number
 AUDIT_NUMBER="5.4.3.1"
 
-# Überprüfen, ob 'nologin' in /etc/shells vorhanden ist
+# Check if 'nologin' is present in /etc/shells
 output=$(grep '/nologin\b' /etc/shells)
 
-# Ergebnis überprüfen und ausgeben
+# Check the result and output
 if [ -z "$output" ]; then
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n *** PASS ***\n - 'nologin' ist nicht in der /etc/shells Datei aufgeführt.\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n *** PASS ***\n- 'nologin' is not listed in the /etc/shells file.\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** FAIL **\n - * Gründe für das Fehlschlagen der Prüfung * :\n$output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- * Reasons for failure * :\n$output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Ergebnis in die entsprechende Datei schreiben
+# Write the result to the appropriate file
 {
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optional: Ergebnis in der Konsole ausgeben
-echo -e "$RESULT"
+# Optionally, print the result to the console
+#echo -e "$RESULT"

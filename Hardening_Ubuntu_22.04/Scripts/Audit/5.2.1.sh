@@ -14,11 +14,11 @@ l_output2=""
 # Function to check for sudo and sudo-ldap installation
 CHECK_SUDO_INSTALLATION() {
     if dpkg-query -s sudo &>/dev/null; then
-        l_output+="\n - sudo is installed."
+        l_output+="\n- sudo is installed."
     elif dpkg-query -s sudo-ldap &>/dev/null; then
-        l_output+="\n - sudo-ldap is installed."
+        l_output+="\n- sudo-ldap is installed."
     else
-        l_output2+="\n - Neither sudo nor sudo-ldap is installed."
+        l_output2+="\n- Neither sudo nor sudo-ldap is installed."
     fi
 }
 
@@ -33,7 +33,7 @@ if [ -z "$l_output2" ]; then
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - * Reasons for audit failure * :$l_output2"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- * Reasons for audit failure * :$l_output2"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -44,4 +44,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

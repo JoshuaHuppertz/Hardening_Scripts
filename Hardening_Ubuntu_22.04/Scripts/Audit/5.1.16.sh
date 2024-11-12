@@ -23,12 +23,12 @@ CHECK_MAX_AUTH_TRIES() {
         value=$(echo "$auth_output" | awk '{print $2}')
 
         if [ "$value" -gt "$max_auth_tries" ]; then
-            l_output2+="\n - MaxAuthTries is set to $value, which exceeds the limit of $max_auth_tries."
+            l_output2+="\n- MaxAuthTries is set to $value, which exceeds the limit of $max_auth_tries."
         else
-            l_output+="\n - MaxAuthTries is correctly set to $value."
+            l_output+="\n- MaxAuthTries is correctly set to $value."
         fi
     else
-        l_output2+="\n - MaxAuthTries setting not found."
+        l_output2+="\n- MaxAuthTries setting not found."
     fi
 }
 
@@ -43,7 +43,7 @@ if [ -z "$l_output2" ]; then
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - * Reasons for audit failure * :$l_output2"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- * Reasons for audit failure * :$l_output2"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -54,4 +54,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

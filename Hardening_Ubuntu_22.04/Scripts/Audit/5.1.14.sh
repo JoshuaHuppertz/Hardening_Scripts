@@ -23,12 +23,12 @@ CHECK_LOG_LEVEL() {
 
         # Validate that the log level is VERBOSE or INFO
         if [[ "$log_level_value" == "VERBOSE" || "$log_level_value" == "INFO" ]]; then
-            l_output+="\n - LogLevel is correctly configured to $log_level_value."
+            l_output+="\n- LogLevel is correctly configured to $log_level_value."
         else
-            l_output2+="\n - Invalid LogLevel: $log_level_value (should be VERBOSE or INFO)."
+            l_output2+="\n- Invalid LogLevel: $log_level_value (should be VERBOSE or INFO)."
         fi
     else
-        l_output2+="\n - LogLevel not found in SSHD configuration."
+        l_output2+="\n- LogLevel not found in SSHD configuration."
     fi
 }
 
@@ -43,8 +43,8 @@ if [ -z "$l_output2" ]; then
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - * Reasons for audit failure * :$l_output2"
-    [ -n "$l_output" ] && RESULT+="\n\n - * Additional findings * :$l_output\n"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- * Reasons for audit failure * :$l_output2"
+    [ -n "$l_output" ] && RESULT+="\n\n- * Additional findings * :$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -55,4 +55,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

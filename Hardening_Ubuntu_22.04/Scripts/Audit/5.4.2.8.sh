@@ -1,40 +1,40 @@
 #!/usr/bin/env bash
 
-# Ergebnisverzeichnis festlegen
+# Define the result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Verzeichnis erstellen, falls es nicht existiert
+mkdir -p "$RESULT_DIR"  # Create directory if it doesn't exist
 
-# Auditnummer festlegen
+# Define the audit number
 AUDIT_NUMBER="5.4.2.8"
 
-# Gültige Shells abrufen
-l_valid_shells="^($(awk -F\/ '$NF != "nologin" {print}' /etc/shells | sed -r '/^\//{s,/,\\\\/,g;p}' | paste -s -d '|' - ))$"
+# Retrieve valid shells
+l_valid_shells="^($(awk -F\/ '$NF != \"nologin\" {print}' /etc/shells | sed -r '/^\//{s,/,\\\\/,g;p}' | paste -s -d '|' - ))$"
 
-# Überprüfung aller Nicht-Root-Konten ohne gültige Shells
+# Check all non-root accounts without valid shells
 output=""
 while IFS= read -r l_user; do
-    # Überprüfen, ob das Konto gesperrt ist
+    # Check if the account is locked
     result=$(passwd -S "$l_user" | awk '$2 !~ /^L/ {print "Account: \"" $1 "\" does not have a valid login shell and is not locked"}')
     if [ -n "$result" ]; then
         output+="$result\n"
     fi
 done < <(awk -v pat="$l_valid_shells" -F: '($1 != "root" && $(NF) !~ pat) {print $1}' /etc/passwd)
 
-# Ergebnis ausgeben und in die passende Datei schreiben
+# Prepare the result and write to the appropriate file
 RESULT=""
 if [ -z "$output" ]; then
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n *** PASS ***\n - Alle Nicht-Root-Konten ohne gültige Login-Shell sind gesperrt.\n"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n *** PASS ***\n- All non-root accounts without a valid login shell are locked.\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** FAIL **\n - * Gründe für das Fehlschlagen der Prüfung * :\n$output\n"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- * Reasons for failure * :\n$output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Ergebnis in die entsprechende Datei schreiben
+# Write the result to the appropriate file
 {
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optional: Ergebnis in der Konsole ausgeben
-echo -e "$RESULT"
+# Optionally, print the result to the console
+#echo -e "$RESULT"

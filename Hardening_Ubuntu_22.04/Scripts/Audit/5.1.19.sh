@@ -17,9 +17,9 @@ CHECK_PERMIT_EMPTY_PASSWORDS() {
     permit_empty_passwords_output=$(sshd -T 2>/dev/null | grep permitemptypasswords)
 
     if [[ $permit_empty_passwords_output == *"no"* ]]; then
-        l_output+="\n - PermitEmptyPasswords is correctly set to no."
+        l_output+="\n- PermitEmptyPasswords is correctly set to no."
     else
-        l_output2+="\n - PermitEmptyPasswords is not set to no. Current value: ${permit_empty_passwords_output:-not found}."
+        l_output2+="\n- PermitEmptyPasswords is not set to no. Current value: ${permit_empty_passwords_output:-not found}."
     fi
 }
 
@@ -34,7 +34,7 @@ if [ -z "$l_output2" ]; then
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - * Reasons for audit failure * :$l_output2"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- * Reasons for audit failure * :$l_output2"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -45,4 +45,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

@@ -13,27 +13,27 @@ l_output2=""
 
 # Check if ufw is installed
 if dpkg-query -s ufw &>/dev/null; then
-    l_output2+="\n - ufw is installed."
+    l_output2+="\n- ufw is installed."
 else
-    l_output+="\n - ufw is not installed."
+    l_output+="\n- ufw is not installed."
 fi
 
 # Check if ufw is disabled
 ufw_status=$(ufw status | awk '/^Status:/ {print $2}')
 
 if [[ "$ufw_status" == "inactive" ]]; then
-    l_output+="\n - ufw is disabled."
+    l_output+="\n- ufw is disabled."
 else
-    l_output2+="\n - ufw is active."
+    l_output2+="\n- ufw is active."
 fi
 
 # Check if ufw service is masked
 ufw_service_status=$(systemctl is-enabled ufw 2>/dev/null)
 
 if [[ "$ufw_service_status" == "masked" ]]; then
-    l_output+="\n - ufw service is masked."
+    l_output+="\n- ufw service is masked."
 else
-    l_output2+="\n - ufw service is not masked."
+    l_output2+="\n- ufw service is not masked."
 fi
 
 # Prepare the final result
@@ -44,7 +44,7 @@ if [ -z "$l_output2" ]; then
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Reason(s) for audit failure:\n$l_output2\n"
     [ -n "$l_output" ] && RESULT+="\n- Correctly set:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
@@ -57,4 +57,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

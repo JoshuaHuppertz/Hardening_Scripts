@@ -23,9 +23,9 @@ non_local_ports=$(echo "$open_ports" | awk '/LISTEN|UNCONN/ && !/127.0.0.1|::1/'
 # Verify that each non-local port has a corresponding firewall rule
 for port in $non_local_ports; do
     if echo "$firewall_rules" | grep -q "dpt:$port"; then
-        l_output+="\n - Firewall rule found for non-local port: $port"
+        l_output+="\n- Firewall rule found for non-local port: $port"
     else
-        l_output2+="\n - Missing firewall rule for non-local port: $port"
+        l_output2+="\n- Missing firewall rule for non-local port: $port"
     fi
 done
 
@@ -37,7 +37,7 @@ if [ -z "$l_output2" ]; then
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Reason(s) for audit failure:\n$l_output2\n"
     [ -n "$l_output" ] && RESULT+="\n- Correctly set:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
@@ -50,4 +50,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

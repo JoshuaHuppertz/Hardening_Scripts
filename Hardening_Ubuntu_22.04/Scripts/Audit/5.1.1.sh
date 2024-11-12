@@ -22,9 +22,9 @@ SSHD_FILES_CHK() {
         [ "$l_group" != "root" ] && l_out2="$l_out2\n - Is group owned by \"$l_user\"; should be group owned by \"root\""
 
         if [ -n "$l_out2" ]; then
-            l_output2="$l_output2\n - File: \"$l_file\":$l_out2"
+            l_output2="$l_output2\n- File: \"$l_file\":$l_out2"
         else
-            l_output="$l_output\n - File: \"$l_file\":\n - Correct: mode ($l_mode), owner ($l_user), and group owner ($l_group) configured"
+            l_output="$l_output\n- File: \"$l_file\":\n- Correct: mode ($l_mode), owner ($l_user), and group owner ($l_group) configured"
         fi
     done < <(stat -Lc '%#a:%U:%G' "$l_file")
 }
@@ -58,7 +58,7 @@ if [ -z "$l_output2" ]; then
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n- * Correctly set *:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - * Reasons for audit failure *:\n$l_output2\n"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- * Reasons for audit failure *:\n$l_output2\n"
     [ -n "$l_output" ] && RESULT+="\n- * Correctly set *:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
@@ -71,4 +71,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

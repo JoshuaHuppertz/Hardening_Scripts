@@ -23,10 +23,10 @@ RESULT=""
 
 # Determine PASS or FAIL based on the output
 if [[ "$output" == 'User: "root" Password is set' ]]; then
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\nRoot user's password is set."
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n- Root user's password is set."
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\nRoot user's password is not set."
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Root user's password is not set."
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -37,4 +37,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

@@ -17,9 +17,9 @@ CHECK_USE_PAM() {
     use_pam_output=$(sshd -T 2>/dev/null | grep -i usepam)
 
     if [[ $use_pam_output == *"yes"* ]]; then
-        l_output+="\n - UsePAM is correctly set to yes."
+        l_output+="\n- UsePAM is correctly set to yes."
     else
-        l_output2+="\n - UsePAM is not set to yes. Current value: ${use_pam_output:-not found}."
+        l_output2+="\n- UsePAM is not set to yes. Current value: ${use_pam_output:-not found}."
     fi
 }
 
@@ -34,7 +34,7 @@ if [ -z "$l_output2" ]; then
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - * Reasons for audit failure * :$l_output2"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- * Reasons for audit failure * :$l_output2"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -45,4 +45,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

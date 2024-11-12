@@ -22,9 +22,9 @@ expected_input_rules=(
 # Verify INPUT chain rules
 for rule in "${expected_input_rules[@]}"; do
     if echo "$input_output" | grep -q "$rule"; then
-        l_output+="\n - Found expected INPUT rule: $rule"
+        l_output+="\n- Found expected INPUT rule: $rule"
     else
-        l_output2+="\n - Missing expected INPUT rule: $rule"
+        l_output2+="\n- Missing expected INPUT rule: $rule"
     fi
 done
 
@@ -38,17 +38,17 @@ expected_output_rules=(
 # Verify OUTPUT chain rules
 for rule in "${expected_output_rules[@]}"; do
     if echo "$output_output" | grep -q "$rule"; then
-        l_output+="\n - Found expected OUTPUT rule: $rule"
+        l_output+="\n- Found expected OUTPUT rule: $rule"
     else
-        l_output2+="\n - Missing expected OUTPUT rule: $rule"
+        l_output2+="\n- Missing expected OUTPUT rule: $rule"
     fi
 done
 
 # Check if IPv6 is enabled
 if grep -Pqs '^\h*0\b' /sys/module/ipv6/parameters/disable; then
-    l_output2+="\n - IPv6 is enabled on the system."
+    l_output2+="\n- IPv6 is enabled on the system."
 else
-    l_output+="\n - IPv6 is not enabled on the system."
+    l_output+="\n- IPv6 is not enabled on the system."
 fi
 
 # Prepare the final result
@@ -59,7 +59,7 @@ if [ -z "$l_output2" ]; then
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Reason(s) for audit failure:\n$l_output2\n"
     [ -n "$l_output" ] && RESULT+="\n- Correctly set:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
@@ -72,4 +72,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

@@ -1,51 +1,51 @@
 #!/usr/bin/env bash
 
-# Ergebnisverzeichnis festlegen
+# Define the result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Verzeichnis erstellen, falls es nicht existiert
+mkdir -p "$RESULT_DIR"  # Create the directory if it doesn't exist
 
-# Auditnummer festlegen
+# Define the audit number
 AUDIT_NUMBER="6.1.1"
 
-# Ergebnisvariablen initialisieren
+# Initialize result variables
 l_output=""
 l_output2=""
 
-# Funktion zur Überprüfung, ob aide und aide-common installiert sind
+# Function to check if aide and aide-common are installed
 check_aide_installation() {
-    # Überprüfen, ob aide installiert ist
+    # Check if aide is installed
     if dpkg-query -s aide &>/dev/null; then
-        l_output+="\n - aide ist installiert"
+        l_output+="\n- aide is installed"
     else
-        l_output2+="\n - aide ist nicht installiert"
+        l_output2+="\n- aide is not installed"
     fi
 
-    # Überprüfen, ob aide-common installiert ist
+    # Check if aide-common is installed
     if dpkg-query -s aide-common &>/dev/null; then
-        l_output+="\n - aide-common ist installiert"
+        l_output+="\n- aide-common is installed"
     else
-        l_output2+="\n - aide-common ist nicht installiert"
+        l_output2+="\n- aide-common is not installed"
     fi
 }
 
-# Audit durchführen
+# Perform the audit
 check_aide_installation
 
-# Ergebnis überprüfen und ausgeben
+# Check result and output
 if [ -z "$l_output2" ]; then
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n *** PASS ***\n - * Korrekt konfiguriert *:\n$l_output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n *** PASS ***\n- * Correctly configured *:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** FAIL **\n - * Gründe für das Fehlschlagen der Prüfung * :\n$l_output2"
-    [ -n "$l_output" ] && RESULT+="\n- * Korrekt konfiguriert *:\n$l_output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- * Reasons for failure * :\n$l_output2"
+    [ -n "$l_output" ] && RESULT+="\n- * Correctly configured *:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Ergebnis in die entsprechende Datei schreiben
+# Write the result to the appropriate file
 {
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optional: Ergebnis in der Konsole ausgeben
-echo -e "$RESULT"
+# Optionally, output the result to the console
+#echo -e "$RESULT"

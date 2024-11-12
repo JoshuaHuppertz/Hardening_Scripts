@@ -21,9 +21,9 @@ ufw_status_output=$(ufw status numbered)
 
 expected_outbound_policy="ALLOW OUT anywhere"
 if grep -q "$expected_outbound_policy" <<< "$ufw_status_output"; then
-    l_output="$l_output\n - Outbound rule \"$expected_outbound_policy\" matches site policy"
+    l_output="$l_output\n- Outbound rule \"$expected_outbound_policy\" matches site policy"
 else
-    l_output2="$l_output2\n - Outbound rule \"$expected_outbound_policy\" does not match site policy"
+    l_output2="$l_output2\n- Outbound rule \"$expected_outbound_policy\" does not match site policy"
 fi
 
 # Prepare the final result
@@ -34,7 +34,7 @@ if [ -z "$l_output2" ]; then
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - Reason(s) for audit failure:\n$l_output2\n"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Reason(s) for audit failure:\n$l_output2\n"
     [ -n "$l_output" ] && RESULT+="\n- Correctly set:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
@@ -47,4 +47,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

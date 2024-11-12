@@ -20,10 +20,10 @@ CHECK_GSSAPI_AUTHENTICATION() {
     if [ -n "$gssapi_auth_output" ]; then
         # Check if GSSAPIAuthentication is set to no
         if [[ "$gssapi_auth_output" != *"gssapiauthentication no"* ]]; then
-            l_output2+="\n - GSSAPIAuthentication should be set to no, found: $gssapi_auth_output"
+            l_output2+="\n- GSSAPIAuthentication should be set to no, found: $gssapi_auth_output"
         fi
     else
-        l_output+="\n - No GSSAPIAuthentication setting found in SSHD configuration."
+        l_output+="\n- No GSSAPIAuthentication setting found in SSHD configuration."
     fi
 }
 
@@ -38,8 +38,8 @@ if [ -z "$l_output2" ]; then
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - * Reasons for audit failure * :$l_output2"
-    [ -n "$l_output" ] && RESULT+="\n\n - * Additional findings * :$l_output\n"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- * Reasons for audit failure * :$l_output2"
+    [ -n "$l_output" ] && RESULT+="\n\n- * Additional findings * :$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -50,4 +50,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

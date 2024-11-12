@@ -23,7 +23,7 @@ RESULT=""
 
 # Determine PASS or FAIL based on the output
 if [[ "$output" == "root" ]]; then
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\nOnly 'root' has UID 0."
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n- Only 'root' has UID 0."
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\nThe following users have UID 0:\n$output"
@@ -37,4 +37,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

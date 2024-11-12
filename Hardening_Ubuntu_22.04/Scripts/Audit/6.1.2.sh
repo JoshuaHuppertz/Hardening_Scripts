@@ -1,69 +1,69 @@
 #!/usr/bin/env bash
 
-# Ergebnisverzeichnis festlegen
+# Define the result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Verzeichnis erstellen, falls es nicht existiert
+mkdir -p "$RESULT_DIR"  # Create the directory if it doesn't exist
 
-# Auditnummer festlegen
+# Define the audit number
 AUDIT_NUMBER="6.1.2"
 
-# Ergebnisvariablen initialisieren
+# Initialize result variables
 l_output=""
 l_output2=""
 
-# Funktion zur Überprüfung der Cron-Job-Konfiguration
+# Function to check the cron job configuration
 check_cron_job() {
-    # Überprüfen, ob ein Cron-Job für aide vorhanden ist
+    # Check if a cron job for aide exists
     if grep -Prs '^([^#\n\r]+\h+)?(\/usr\/s?bin\/|^\h*)aide(\.wrapper)?\h+(--(check|update)|([^#\n\r]+\h+)?\$AIDEARGS)\b' /etc/cron.* /etc/crontab /var/spool/cron/; then
-        l_output+="\n - Ein gültiger Cron-Job für aide wurde gefunden."
+        l_output+="\n- A valid cron job for aide was found."
     else
-        l_output2+="\n - Kein gültiger Cron-Job für aide gefunden."
+        l_output2+="\n- No valid cron job for aide was found."
     fi
 }
 
-# Funktion zur Überprüfung des aidecheck.services und aidecheck.timer
+# Function to check aidecheck.service and aidecheck.timer
 check_aidecheck_service() {
-    # Überprüfen, ob aidecheck.service aktiviert ist
+    # Check if aidecheck.service is enabled
     if systemctl is-enabled aidecheck.service &>/dev/null; then
-        l_output+="\n - aidecheck.service ist aktiviert."
+        l_output+="\n- aidecheck.service is enabled."
     else
-        l_output2+="\n - aidecheck.service ist nicht aktiviert."
+        l_output2+="\n- aidecheck.service is not enabled."
     fi
 
-    # Überprüfen, ob aidecheck.timer aktiviert ist
+    # Check if aidecheck.timer is enabled
     if systemctl is-enabled aidecheck.timer &>/dev/null; then
-        l_output+="\n - aidecheck.timer ist aktiviert."
+        l_output+="\n- aidecheck.timer is enabled."
     else
-        l_output2+="\n - aidecheck.timer ist nicht aktiviert."
+        l_output2+="\n- aidecheck.timer is not enabled."
     fi
 
-    # Überprüfen, ob aidecheck.timer läuft
+    # Check if aidecheck.timer is active
     if systemctl is-active aidecheck.timer &>/dev/null; then
-        l_output+="\n - aidecheck.timer läuft."
+        l_output+="\n- aidecheck.timer is running."
     else
-        l_output2+="\n - aidecheck.timer läuft nicht."
+        l_output2+="\n- aidecheck.timer is not running."
     fi
 }
 
-# Audit durchführen
+# Perform the audit
 check_cron_job
 check_aidecheck_service
 
-# Ergebnis überprüfen und ausgeben
+# Check result and output
 if [ -z "$l_output2" ]; then
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n *** PASS ***\n - * Korrekt konfiguriert *:\n$l_output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n *** PASS ***\n- * Correctly configured *:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** FAIL **\n - * Gründe für das Fehlschlagen der Prüfung * :\n$l_output2"
-    [ -n "$l_output" ] && RESULT+="\n- * Korrekt konfiguriert *:\n$l_output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- * Reasons for failure * :\n$l_output2"
+    [ -n "$l_output" ] && RESULT+="\n- * Correctly configured *:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Ergebnis in die entsprechende Datei schreiben
+# Write the result to the appropriate file
 {
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optional: Ergebnis in der Konsole ausgeben
-echo -e "$RESULT"
+# Optionally, output the result to the console
+#echo -e "$RESULT"

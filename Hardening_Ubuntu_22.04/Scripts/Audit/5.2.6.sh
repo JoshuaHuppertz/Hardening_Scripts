@@ -19,9 +19,9 @@ CHECK_TIMESTAMP_TIMEOUT() {
         if [ "$timeout_value" ]; then
             # Check if the value is greater than 15
             if (( timeout_value > 15 )); then
-                l_output+="\n - timestamp_timeout is set to $timeout_value minutes, which is greater than 15 minutes."
+                l_output+="\n- timestamp_timeout is set to $timeout_value minutes, which is greater than 15 minutes."
             else
-                l_output+="\n - timestamp_timeout is set to $timeout_value minutes."
+                l_output+="\n- timestamp_timeout is set to $timeout_value minutes."
             fi
             is_default=false  # We found a specific configuration
         fi
@@ -31,11 +31,11 @@ CHECK_TIMESTAMP_TIMEOUT() {
     if $is_default; then
         timeout_value=$(sudo -V | grep "Authentication timestamp timeout:" | awk '{print $NF}')
         if [ "$timeout_value" = "-1" ]; then
-            l_output+="\n - timestamp_timeout is disabled (set to -1)."
+            l_output+="\n- timestamp_timeout is disabled (set to -1)."
         elif (( timeout_value > 15 )); then
-            l_output+="\n - Default timestamp_timeout is set to $timeout_value minutes, which is greater than 15 minutes."
+            l_output+="\n- Default timestamp_timeout is set to $timeout_value minutes, which is greater than 15 minutes."
         else
-            l_output+="\n - Default timestamp_timeout is set to $timeout_value minutes."
+            l_output+="\n- Default timestamp_timeout is set to $timeout_value minutes."
         fi
     fi
 }
@@ -48,7 +48,7 @@ RESULT=""
 
 # Determine PASS or FAIL based on the output
 if [[ $l_output == *"greater than 15 minutes."* ]]; then
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - * Reasons for audit failure * :$l_output"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- * Reasons for audit failure * :$l_output"
     FILE_NAME="$RESULT_DIR/fail.txt"
 else
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output"
@@ -62,4 +62,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

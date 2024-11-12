@@ -22,12 +22,12 @@ CHECK_MAX_STARTUPS() {
 
         # Check if values exceed the limits
         if [ "$max_conn" -gt 10 ] || [ "$max_wait" -gt 30 ] || [ "$max_users" -gt 60 ]; then
-            l_output2+="\n - MaxStartups is set to $startup_output, which exceeds the limits of 10:30:60."
+            l_output2+="\n- MaxStartups is set to $startup_output, which exceeds the limits of 10:30:60."
         else
-            l_output+="\n - MaxStartups is correctly set to $startup_output."
+            l_output+="\n- MaxStartups is correctly set to $startup_output."
         fi
     else
-        l_output2+="\n - MaxStartups setting not found."
+        l_output2+="\n- MaxStartups setting not found."
     fi
 }
 
@@ -42,7 +42,7 @@ if [ -z "$l_output2" ]; then
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - * Reasons for audit failure * :$l_output2"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- * Reasons for audit failure * :$l_output2"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -53,4 +53,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

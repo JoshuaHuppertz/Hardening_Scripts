@@ -23,12 +23,12 @@ CHECK_LOGIN_GRACE_TIME() {
 
         # Validate that the grace time is between 1 and 60 seconds
         if [[ "$grace_time_value" -ge 1 && "$grace_time_value" -le 60 ]]; then
-            l_output+="\n - LoginGraceTime is correctly configured to $grace_time_value seconds."
+            l_output+="\n- LoginGraceTime is correctly configured to $grace_time_value seconds."
         else
-            l_output2+="\n - Invalid LoginGraceTime: $grace_time_value seconds (should be between 1 and 60 seconds)."
+            l_output2+="\n- Invalid LoginGraceTime: $grace_time_value seconds (should be between 1 and 60 seconds)."
         fi
     else
-        l_output2+="\n - LoginGraceTime not found in SSHD configuration."
+        l_output2+="\n- LoginGraceTime not found in SSHD configuration."
     fi
 }
 
@@ -43,8 +43,8 @@ if [ -z "$l_output2" ]; then
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - * Reasons for audit failure * :$l_output2"
-    [ -n "$l_output" ] && RESULT+="\n\n - * Additional findings * :$l_output\n"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- * Reasons for audit failure * :$l_output2"
+    [ -n "$l_output" ] && RESULT+="\n\n- * Additional findings * :$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -55,4 +55,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

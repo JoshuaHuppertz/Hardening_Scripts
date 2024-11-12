@@ -23,17 +23,17 @@ CHECK_MAX_SESSIONS() {
         value=$(echo "$session_output" | awk '{print $2}')
 
         if [ "$value" -gt "$max_sessions" ]; then
-            l_output2+="\n - MaxSessions is set to $value, which exceeds the limit of $max_sessions."
+            l_output2+="\n- MaxSessions is set to $value, which exceeds the limit of $max_sessions."
         else
-            l_output+="\n - MaxSessions is correctly set to $value."
+            l_output+="\n- MaxSessions is correctly set to $value."
         fi
     else
-        l_output2+="\n - MaxSessions setting not found."
+        l_output2+="\n- MaxSessions setting not found."
     fi
 
     # Check configuration files for any MaxSessions value greater than 10
     if grep -Psi -- '^\h*MaxSessions\h+\"?(1[1-9]|[2-9][0-9]|[1-9][0-9][0-9]+)\b' /etc/ssh/sshd_config /etc/ssh/sshd_config.d/*.conf; then
-        l_output2+="\n - A MaxSessions value greater than 10 was found in the configuration files."
+        l_output2+="\n- A MaxSessions value greater than 10 was found in the configuration files."
     fi
 }
 
@@ -48,7 +48,7 @@ if [ -z "$l_output2" ]; then
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - * Reasons for audit failure * :$l_output2"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- * Reasons for audit failure * :$l_output2"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -59,4 +59,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"

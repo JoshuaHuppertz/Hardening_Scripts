@@ -25,13 +25,13 @@ CHECK_CLIENT_ALIVE() {
 
             # Validate the values
             if [[ "$key" == "clientaliveinterval" && "$value" -le 0 ]]; then
-                l_output2+="\n - clientaliveinterval should be greater than 0, found: $value"
+                l_output2+="\n- clientaliveinterval should be greater than 0, found: $value"
             elif [[ "$key" == "clientalivecountmax" && "$value" -le 0 ]]; then
-                l_output2+="\n - clientalivecountmax should be greater than 0, found: $value"
+                l_output2+="\n- clientalivecountmax should be greater than 0, found: $value"
             fi
         done <<< "$client_alive_output"
     else
-        l_output+="\n - No ClientAlive settings found in SSHD configuration."
+        l_output+="\n- No ClientAlive settings found in SSHD configuration."
     fi
 }
 
@@ -46,7 +46,7 @@ if [ -z "$l_output2" ]; then
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n - * Reasons for audit failure * :$l_output2"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- * Reasons for audit failure * :$l_output2"
     [ -n "$l_output" ] && RESULT+="\n\n - * Additional findings * :$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
@@ -58,4 +58,4 @@ fi
 } >> "$FILE_NAME"
 
 # Optionally print the result to the console
-echo -e "$RESULT"
+#echo -e "$RESULT"
