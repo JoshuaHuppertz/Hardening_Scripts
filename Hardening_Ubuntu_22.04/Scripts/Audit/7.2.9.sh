@@ -1,34 +1,34 @@
 #!/usr/bin/env bash
 
-# Ergebnisverzeichnis festlegen
+# Set the result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Verzeichnis erstellen, falls es nicht existiert
+mkdir -p "$RESULT_DIR"  # Create the directory if it doesn't exist
 
-# Auditnummer festlegen
+# Set audit number
 AUDIT_NUMBER="7.2.9"
 
-# Ergebnisvariablen initialisieren
+# Initialize result variables
 l_output=""
 l_output2=""
 l_heout2=""
 l_hoout2=""
 l_haout2=""
 
-# Gültige Shells definieren
-l_valid_shells="^($(awk -F/ '$NF != "nologin" {print}' /etc/shells | sed -rn '/^\//{s,/,\\\\/,g;p}' | paste -s -d '|' - ))$"
+# Define valid shells
+l_valid_shells="^($(awk -F/ '$NF != \"nologin\" {print}' /etc/shells | sed -rn '/^\//{s,/,\\\\/,g;p}' | paste -s -d '|' - ))$"
 
-# Array für Benutzer und Home-Verzeichnisse initialisieren
+# Initialize array for users and home directories
 unset a_uarr && a_uarr=() 
 while read -r l_epu l_eph; do 
     a_uarr+=("$l_epu $l_eph")
 done <<< "$(awk -v pat="$l_valid_shells" -F: '$(NF) ~ pat { print $1 " " $(NF-1) }' /etc/passwd)"
 
-l_asize="${#a_uarr[@]}" # Anzahl der Benutzer prüfen
+l_asize="${#a_uarr[@]}" # Check the number of users
 if [ "$l_asize" -gt "10000" ]; then
-    echo -e "\n ** INFO **\n - \"$l_asize\" Local interactive users found on the system\n - This may be a long running check\n"
+    echo -e "\n ** INFO **\n - \"$l_asize\" local interactive users found on the system\n - This may take a long time to check\n"
 fi
 
-# Überprüfen der Home-Verzeichnisse
+# Check home directories
 while read -r l_user l_home; do
     if [ -d "$l_home" ]; then
         l_mask='0027'
@@ -36,7 +36,7 @@ while read -r l_user l_home; do
         while read -r l_own l_mode; do
             [ "$l_user" != "$l_own" ] && l_hoout2="$l_hoout2\n - User: \"$l_user\" Home \"$l_home\" is owned by: \"$l_own\""
             if [ $(( l_mode & l_mask )) -gt 0 ]; then
-                l_haout2="$l_haout2\n - User: \"$l_user\" Home \"$l_home\" is mode: \"$l_mode\" should be mode: \"$l_max\" or more restrictive"
+                l_haout2="$l_haout2\n - User: \"$l_user\" Home \"$l_home\" has mode: \"$l_mode\", should be mode: \"$l_max\" or more restrictive"
             fi
         done <<< "$(stat -Lc '%U %#a' "$l_home")"
     else
@@ -44,30 +44,30 @@ while read -r l_user l_home; do
     fi
 done <<< "$(printf '%s\n' "${a_uarr[@]}")"
 
-# Zusammenfassen der Ergebnisse
-[ -z "$l_heout2" ] && l_output="$l_output\n - Home directories exist" || l_output2="$l_output2$l_heout2"
-[ -z "$l_hoout2" ] && l_output="$l_output\n - Own their home directory" || l_output2="$l_output2$l_hoout2"
-[ -z "$l_haout2" ] && l_output="$l_output\n - Home directories are mode: \"$l_max\" or more restrictive" || l_output2="$l_output2$l_haout2"
+# Summarize the results
+[ -z "$l_heout2" ] && l_output="$l_output\n- Home directories exist" || l_output2="$l_output2$l_heout2"
+[ -z "$l_hoout2" ] && l_output="$l_output\n- Own their home directory" || l_output2="$l_output2$l_hoout2"
+[ -z "$l_haout2" ] && l_output="$l_output\n- Home directories are mode: \"$l_max\" or more restrictive" || l_output2="$l_output2$l_haout2"
 
-# Audit-Ergebnisse ausgeben
+# Output the audit results
 if [ -n "$l_output" ]; then
-    l_output=" - All local interactive users:$l_output"
+    l_output="- All local interactive users:$l_output"
 fi
 
-# Ergebnisformatierung für die Ausgabe
+# Format the result for output
 if [ -z "$l_output2" ]; then 
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** PASS **\n - * Correctly configured *:\n$l_output"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n- * Correctly configured *:\n$l_output"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** FAIL **\n - * Reasons for audit failure *:\n$l_output2"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- * Reasons for audit failure *:\n$l_output2"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Ergebnis in die entsprechende Datei schreiben
+# Write the result to the corresponding file
 {
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optional: Ergebnis in der Konsole ausgeben
-echo -e "$RESULT"
+# Optionally: Output the result to the console
+#echo -e "$RESULT"

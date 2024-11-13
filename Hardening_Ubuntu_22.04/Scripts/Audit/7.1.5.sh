@@ -1,37 +1,37 @@
 #!/usr/bin/env bash
 
-# Ergebnisverzeichnis festlegen
+# Define the result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Verzeichnis erstellen, falls es nicht existiert
+mkdir -p "$RESULT_DIR"  # Create the directory if it doesn't exist
 
-# Auditnummer festlegen
+# Set audit number
 AUDIT_NUMBER="7.1.5"
 
-# Ergebnisvariablen initialisieren
+# Initialize result variables
 l_output=""
 l_output2=""
 
-# Überprüfen der Berechtigungen, UID und GID der Datei /etc/shadow
+# Check permissions, UID, and GID of the /etc/shadow file
 l_shadow_file="/etc/shadow"
 if [ -e "$l_shadow_file" ]; then
     l_stat_output=$(stat -Lc 'Access: (%#a/%A) Uid: ( %u/ %U) Gid: ( %g/ %G)' "$l_shadow_file")
     
-    # Überprüfen, ob die Berechtigung 640 oder restriktiver ist
+    # Check if permissions are 640 or more restrictive
     if [[ "$l_stat_output" =~ Access:\ \(([^/]+)\/ ]]; then
         l_permissions="${BASH_REMATCH[1]}"
         if [ "$l_permissions" -gt 640 ]; then
-            l_output2+="\n - Datei: \"$l_shadow_file\" hat Berechtigung: \"$l_permissions\" (sollte 640 oder restriktiver sein)"
+            l_output2+="\n- File: \"$l_shadow_file\" has permission: \"$l_permissions\" (should be 640 or more restrictive)"
         else
-            l_output+="\n - Datei: \"$l_shadow_file\" hat die erforderlichen Berechtigungen: \"$l_permissions\"."
+            l_output+="\n- File: \"$l_shadow_file\" has the required permissions: \"$l_permissions\"."
         fi
     fi
     
-    # Überprüfen von UID und GID
+    # Check UID and GID
     if [[ "$l_stat_output" =~ Uid:\ \ \(([^/]+)\/([^ ]+)\) ]]; then
         l_uid="${BASH_REMATCH[1]}"
         l_user="${BASH_REMATCH[2]}"
         if [ "$l_uid" -ne 0 ]; then
-            l_output2+="\n - Datei: \"$l_shadow_file\" hat UID: \"$l_uid\" (sollte 0/root sein)"
+            l_output2+="\n- File: \"$l_shadow_file\" has UID: \"$l_uid\" (should be 0/root)"
         fi
     fi
     
@@ -39,27 +39,27 @@ if [ -e "$l_shadow_file" ]; then
         l_gid="${BASH_REMATCH[1]}"
         l_group="${BASH_REMATCH[2]}"
         if [ "$l_gid" -ne 0 ] && [ "$l_gid" -ne 42 ]; then
-            l_output2+="\n - Datei: \"$l_shadow_file\" hat GID: \"$l_gid\" (sollte 0/root oder 42/shadow sein)"
+            l_output2+="\n- File: \"$l_shadow_file\" has GID: \"$l_gid\" (should be 0/root or 42/shadow)"
         fi
     fi
 else
-    l_output2+="\n - Datei: \"$l_shadow_file\" nicht gefunden."
+    l_output2+="\n- File: \"$l_shadow_file\" not found."
 fi
 
-# Ergebnis überprüfen und ausgeben
+# Check result and output
 if [ -z "$l_output2" ]; then
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** PASS **\n$l_output"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** FAIL **\n - Gründe für das Fehlschlagen der Prüfung:$l_output2"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Reasons for failure of the check:$l_output2"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Ergebnis in die entsprechende Datei schreiben
+# Write result to the corresponding file
 {
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optional: Ergebnis in der Konsole ausgeben
-echo -e "$RESULT"
+# Optionally: Output result to the console
+#echo -e "$RESULT"

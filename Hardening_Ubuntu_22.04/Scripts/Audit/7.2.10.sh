@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-# Ergebnisverzeichnis festlegen
+# Set the result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Verzeichnis erstellen, falls es nicht existiert
+mkdir -p "$RESULT_DIR"  # Create the directory if it doesn't exist
 
-# Auditnummer festlegen
+# Set audit number
 AUDIT_NUMBER="7.2.10"
 
-# Ergebnisvariablen initialisieren
+# Initialize result variables
 l_output=""
 l_output2=""
 l_output3=""
@@ -15,18 +15,18 @@ l_bf=""
 l_df=""
 l_nf=""
 l_hf=""
-l_valid_shells="^($(awk -F/ '$NF != "nologin" {print}' /etc/shells | sed -rn '/^\//{s,/,\\\\/,g;p}' | paste -s -d '|' - ))$"
+l_valid_shells="^($(awk -F/ '$NF != \"nologin\" {print}' /etc/shells | sed -rn '/^\//{s,/,\\\\/,g;p}' | paste -s -d '|' - ))$"
 
-# Array für Benutzer und Home-Verzeichnisse initialisieren
+# Initialize array for users and home directories
 unset a_uarr && a_uarr=()
 while read -r l_epu l_eph; do
     [[ -n "$l_epu" && -n "$l_eph" ]] && a_uarr+=("$l_epu $l_eph")
 done <<< "$(awk -v pat="$l_valid_shells" -F: '$(NF) ~ pat { print $1 " " $(NF-1) }' /etc/passwd)"
 
-l_asize="${#a_uarr[@]}"  # Anzahl der Benutzer prüfen
-l_maxsize="1000"  # Maximale Anzahl interaktiver Benutzer vor Warnung (Standard 1.000)
+l_asize="${#a_uarr[@]}"  # Check the number of users
+l_maxsize="1000"  # Maximum number of interactive users before a warning (default 1000)
 if [ "$l_asize" -gt "$l_maxsize" ]; then
-    echo -e "\n ** INFO **\n - \"$l_asize\" Local interactive users found on the system\n - This may be a long running check\n"
+    echo -e "\n ** INFO **\n- \"$l_asize\" Local interactive users found on the system\n - This may take a long time to check\n"
 fi
 
 file_access_chk() {
@@ -34,19 +34,19 @@ file_access_chk() {
     l_max="$(printf '%o' $((0777 & ~$l_mask)))"
     
     if [ $(( l_mode & l_mask )) -gt 0 ]; then
-        l_facout2="$l_facout2\n - File: \"$l_hdfile\" is mode: \"$l_mode\" and should be mode: \"$l_max\" or more restrictive"
+        l_facout2="$l_facout2\n- File: \"$l_hdfile\" is mode: \"$l_mode\" and should be mode: \"$l_max\" or more restrictive"
     fi
     
     if [[ ! "$l_owner" =~ ($l_user) ]]; then
-        l_facout2="$l_facout2\n - File: \"$l_hdfile\" owned by: \"$l_owner\" and should be owned by \"${l_user//|/ or }\""
+        l_facout2="$l_facout2\n- File: \"$l_hdfile\" owned by: \"$l_owner\" and should be owned by \"${l_user//|/ or }\""
     fi
     
     if [[ ! "$l_gowner" =~ ($l_group) ]]; then
-        l_facout2="$l_facout2\n - File: \"$l_hdfile\" group owned by: \"$l_gowner\" and should be group owned by \"${l_group//|/ or }\""
+        l_facout2="$l_facout2\n- File: \"$l_hdfile\" group owned by: \"$l_gowner\" and should be group owned by \"${l_group//|/ or }\""
     fi
 }
 
-# Überprüfen der Home-Verzeichnisse
+# Check home directories
 while read -r l_user l_home; do
     l_fe="" l_nout2="" l_nout3="" l_dfout2="" l_hdout2="" l_bhout2=""
     
@@ -99,30 +99,30 @@ while read -r l_user l_home; do
     [ -n "$l_nout3" ] && l_output3="$l_output3\n - User: \"$l_user\" Home Directory: \"$l_home\"\n$l_nout3"
 done <<< "$(printf '%s\n' "${a_uarr[@]}")"
 
-unset a_uarr  # Array leeren
+unset a_uarr  # Clear the array
 
-# Zusammenfassen der Ergebnisse
-[ -n "$l_output3" ] && l_output3=" - ** Warning **\n - \".netrc\" files should be removed unless deemed necessary\n and in accordance with local site policy:$l_output3"
-[ -z "$l_bf" ] && l_output="$l_output\n - \".forward\" or \".rhost\" files"
-[ -z "$l_nf" ] && l_output="$l_output\n - \".netrc\" files with incorrect access configured"
-[ -z "$l_hf" ] && l_output="$l_output\n - \".bash_history\" files with incorrect access configured"
-[ -z "$l_df" ] && l_output="$l_output\n - \"dot\" files with incorrect access configured"
+# Summarize results
+[ -n "$l_output3" ] && l_output3=" - ** Warning **\n- \".netrc\" files should be removed unless deemed necessary\n and in accordance with local site policy:$l_output3"
+[ -z "$l_bf" ] && l_output="$l_output\n- \".forward\" or \".rhost\" files"
+[ -z "$l_nf" ] && l_output="$l_output\n- \".netrc\" files with incorrect access configured"
+[ -z "$l_hf" ] && l_output="$l_output\n- \".bash_history\" files with incorrect access configured"
+[ -z "$l_df" ] && l_output="$l_output\n- \"dot\" files with incorrect access configured"
 [ -n "$l_output" ] && l_output=" - No local interactive users home directories contain:$l_output"
 
-# Audit-Ergebnisse ausgeben
-if [ -z "$l_output2" ]; then  # Wenn l_output2 leer ist, haben wir bestanden
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** PASS **\n - * Correctly configured *:\n$l_output\n"
+# Output audit results
+if [ -z "$l_output2" ]; then  # If l_output2 is empty, we passed
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Results:\n ** PASS **\n- * Correctly configured *:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** FAIL **\n - * Reasons for audit failure *:\n$l_output2\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Results:\n ** FAIL **\n- * Reasons for audit failure *:\n$l_output2\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Ergebnis in die entsprechende Datei schreiben
+# Write the result to the appropriate file
 {
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optional: Ergebnis in der Konsole ausgeben
-echo -e "$RESULT"
+# Optionally: Output the result to the console
+#echo -e "$RESULT"

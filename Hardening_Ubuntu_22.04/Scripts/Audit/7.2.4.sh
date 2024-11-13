@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 
-# Ergebnisverzeichnis festlegen
+# Set result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Verzeichnis erstellen, falls es nicht existiert
+mkdir -p "$RESULT_DIR"  # Create the directory if it doesn't exist
 
-# Auditnummer festlegen
+# Set audit number
 AUDIT_NUMBER="7.2.4"
 
-# Ergebnisvariablen initialisieren
+# Initialize result variable
 l_output=""
 
-# Überprüfen, ob die Gruppe "shadow" existiert und ihre Mitglieder
+# Check if the "shadow" group exists and list its members
 shadow_group_membership=$(awk -F: '($1=="shadow") {print $NF}' /etc/group)
 
 if [ -n "$shadow_group_membership" ]; then
-    l_output+="\n - Die Gruppe \"shadow\" hat Mitglieder: $shadow_group_membership."
+    l_output+="\n- The \"shadow\" group has members: $shadow_group_membership."
 fi
 
-# Überprüfen, ob Benutzer die Primärgruppe "shadow" haben
+# Check if users have "shadow" as their primary group
 shadow_gid=$(getent group shadow | awk -F: '{print $3}')
 
 if [ -n "$shadow_gid" ]; then
@@ -26,23 +26,23 @@ if [ -n "$shadow_gid" ]; then
         if [ -n "$l_user_check" ]; then
             l_output+="$l_user_check\n"
         fi
-    done < <(getent passwd | cut -d: -f1)  # Alle Benutzer durchlaufen
+    done < <(getent passwd | cut -d: -f1)  # Iterate over all users
 fi
 
-# Ergebnis überprüfen und ausgeben
+# Check the result and output it
 if [ -z "$l_output" ]; then
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** PASS **\n - Es wurden keine Benutzer in der Gruppe \"shadow\" gefunden."
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n- No users were found in the \"shadow\" group."
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** FAIL **\n - Gründe für das Fehlschlagen der Prüfung:\n$l_output"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Reasons for failure:\n$l_output"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Ergebnis in die entsprechende Datei schreiben
+# Write result to the corresponding file
 {
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optional: Ergebnis in der Konsole ausgeben
-echo -e "$RESULT"
+# Optionally: Output result to the console
+#echo -e "$RESULT"

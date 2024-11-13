@@ -1,65 +1,65 @@
 #!/usr/bin/env bash
 
-# Ergebnisverzeichnis festlegen
+# Set result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Verzeichnis erstellen, falls es nicht existiert
+mkdir -p "$RESULT_DIR"  # Create the directory if it doesn't exist
 
-# Auditnummer festlegen
+# Set audit number
 AUDIT_NUMBER="7.1.12"
 
-# Ergebnisvariablen initialisieren
+# Initialize result variables
 l_output=""
 l_output2=""
-a_nouser=()  # Array für unbesessene Dateien
-a_nogroup=() # Array für ungruppierte Dateien
+a_nouser=()  # Array for files with no owner
+a_nogroup=() # Array for files with no group
 
-# Ausschlussmuster für Pfade definieren
+# Define path exclusion patterns
 a_path=(! -path "/run/user/*" -a ! -path "/proc/*" -a ! -path \
 "*/containerd/*" -a ! -path "*/kubelet/pods/*" -a ! -path \
 "*/kubelet/plugins/*" -a ! -path "/sys/fs/cgroup/memory/*" -a ! -path \
 "/var/*/private/*")
 
-# Durchsuche die gemounteten Dateisysteme
+# Search mounted filesystems
 while IFS= read -r l_mount; do
-    # Suche nach Dateien oder Verzeichnissen ohne Eigentümer oder Gruppe
+    # Search for files or directories with no owner or group
     while IFS= read -r -d $'\0' l_file; do
         if [ -e "$l_file" ]; then
             while IFS=: read -r l_user l_group; do
-                [ "$l_user" = "UNKNOWN" ] && a_nouser+=("$l_file")   # Füge unbesessene Dateien hinzu
-                [ "$l_group" = "UNKNOWN" ] && a_nogroup+=("$l_file") # Füge ungruppierte Dateien hinzu
+                [ "$l_user" = "UNKNOWN" ] && a_nouser+=("$l_file")   # Add files with no owner
+                [ "$l_group" = "UNKNOWN" ] && a_nogroup+=("$l_file") # Add files with no group
             done < <(stat -Lc '%U:%G' "$l_file")
         fi
     done < <(find "$l_mount" -xdev \( "${a_path[@]}" \) \( -type f -o -type d \) \( -nouser -o -nogroup \) -print0 2> /dev/null)
 done < <(findmnt -Dkerno fstype,target | awk '($1 !~ /^\s*(nfs|proc|smb|vfat|iso9660|efivarfs|selinuxfs)/ && $2 !~ /^\/run\/user\//){print $2}')
 
-# Überprüfe, ob unbesessene Dateien existieren
+# Check if there are files with no owner
 if [ ${#a_nouser[@]} -eq 0 ]; then
-    l_output+="\n - Es existieren keine Dateien oder Verzeichnisse ohne Besitzer auf dem lokalen Dateisystem."
+    l_output+="\n- No files or directories with no owner found on the local filesystem."
 else
-    l_output2+="\n - Es gibt \"${#a_nouser[@]}\" unbesessene Dateien oder Verzeichnisse auf dem System.\n - Folgende unbesessene Dateien und/oder Verzeichnisse:\n$(printf '%s\n' "${a_nouser[@]}")\n - Ende der Liste"
+    l_output2+="\n- There are \"${#a_nouser[@]}\" files or directories with no owner on the system.\n - The following files and/or directories have no owner:\n$(printf '%s\n' "${a_nouser[@]}")\n - End of list"
 fi
 
-# Überprüfe, ob ungruppierte Dateien existieren
+# Check if there are files with no group
 if [ ${#a_nogroup[@]} -eq 0 ]; then
-    l_output+="\n - Es existieren keine Dateien oder Verzeichnisse ohne Gruppe auf dem lokalen Dateisystem."
+    l_output+="\n- No files or directories with no group found on the local filesystem."
 else
-    l_output2+="\n - Es gibt \"${#a_nogroup[@]}\" ungruppierte Dateien oder Verzeichnisse auf dem System.\n - Folgende ungruppierte Dateien und/oder Verzeichnisse:\n$(printf '%s\n' "${a_nogroup[@]}")\n - Ende der Liste"
+    l_output2+="\n- There are \"${#a_nogroup[@]}\" files or directories with no group on the system.\n - The following files and/or directories have no group:\n$(printf '%s\n' "${a_nogroup[@]}")\n - End of list"
 fi
 
-# Ergebnis überprüfen und ausgeben
+# Check the result and output it
 if [ -z "$l_output2" ]; then
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** PASS **\n$l_output"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** FAIL **\n - Gründe für das Fehlschlagen der Prüfung:$l_output2"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Reasons for failure of the check:$l_output2"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Ergebnis in die entsprechende Datei schreiben
+# Write result to the appropriate file
 {
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optional: Ergebnis in der Konsole ausgeben
-echo -e "$RESULT"
+# Optionally: Output result to the console
+#echo -e "$RESULT"

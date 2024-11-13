@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 
-# Ergebnisverzeichnis festlegen
+# Set the results directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Verzeichnis erstellen, falls es nicht existiert
+mkdir -p "$RESULT_DIR"  # Create the directory if it doesn't exist
 
-# Auditnummer festlegen
+# Set the audit number
 AUDIT_NUMBER="6.3.4.8"
 
-# Ergebnisvariablen initialisieren
+# Initialize result variables
 l_output=""
 l_output2=""
 
-# Berechtigungsmasken
+# Permission mask
 l_perm_mask="0022"
 
-# Maximale Berechtigung
+# Maximum permissions
 l_maxperm="$(printf '%o' $(( 0777 & ~$l_perm_mask )))"
 
-# Audit-Tools
+# Audit tools
 a_audit_tools=(
     "/sbin/auditctl"
     "/sbin/aureport"
@@ -27,35 +27,35 @@ a_audit_tools=(
     "/sbin/augenrules"
 )
 
-# Überprüfen der Berechtigungen der Audit-Tools
+# Check permissions of audit tools
 for l_audit_tool in "${a_audit_tools[@]}"; do
     if [ -e "$l_audit_tool" ]; then
         l_mode="$(stat -Lc '%#a' "$l_audit_tool")"
         if [ $(( "$l_mode" & "$l_perm_mask" )) -gt 0 ]; then
-            l_output2+="\n - Audit tool \"$l_audit_tool\" is mode: \"$l_mode\" and should be mode: \"$l_maxperm\" or more restrictive"
+            l_output2+="\n- Audit tool \"$l_audit_tool\" is mode: \"$l_mode\" and should be mode: \"$l_maxperm\" or more restrictive"
         else
-            l_output+="\n - Audit tool \"$l_audit_tool\" is correctly configured to mode: \"$l_mode\""
+            l_output+="\n- Audit tool \"$l_audit_tool\" is correctly configured to mode: \"$l_mode\""
         fi
     else
-        l_output2+="\n - Audit tool \"$l_audit_tool\" does not exist."
+        l_output2+="\n- Audit tool \"$l_audit_tool\" does not exist."
     fi
 done
 
-# Ergebnis überprüfen und ausgeben
+# Check and output result
 if [ -z "$l_output2" ]; then
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** PASS **\n - * Correctly configured *:$l_output"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n- * Correctly configured *:$l_output"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Ergebnis:\n ** FAIL **\n - * Reasons for audit failure * :$l_output2\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- * Reasons for audit failure * :$l_output2\n"
     [ -n "$l_output" ] && RESULT+="\n - * Correctly configured *:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Ergebnis in die entsprechende Datei schreiben
+# Write the result to the corresponding file
 {
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optional: Ergebnis in der Konsole ausgeben
-echo -e "$RESULT"
+# Optionally, output the result to the console
+#echo -e "$RESULT"
