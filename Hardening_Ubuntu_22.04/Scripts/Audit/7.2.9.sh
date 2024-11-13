@@ -15,17 +15,18 @@ l_hoout2=""
 l_haout2=""
 
 # Define valid shells
-l_valid_shells="^($(awk -F/ '$NF != \"nologin\" {print}' /etc/shells | sed -rn '/^\//{s,/,\\\\/,g;p}' | paste -s -d '|' - ))$"
+l_valid_shells="^($( awk -F\/ '$NF != "nologin" {print}' /etc/shells | sed -rn '/^\//{s,/,\\\\/,g;p}' | paste -s -d '|' - ))$"
 
 # Initialize array for users and home directories
-unset a_uarr && a_uarr=() 
-while read -r l_epu l_eph; do 
+unset a_uarr && a_uarr=()
+while read -r l_epu l_eph; do
     a_uarr+=("$l_epu $l_eph")
 done <<< "$(awk -v pat="$l_valid_shells" -F: '$(NF) ~ pat { print $1 " " $(NF-1) }' /etc/passwd)"
 
 l_asize="${#a_uarr[@]}" # Check the number of users
 if [ "$l_asize" -gt "10000" ]; then
-    echo -e "\n ** INFO **\n - \"$l_asize\" local interactive users found on the system\n - This may take a long time to check\n"
+    # Keine Konsolenausgabe mehr, wenn mehr als 10000 Benutzer
+    :
 fi
 
 # Check home directories
@@ -49,13 +50,13 @@ done <<< "$(printf '%s\n' "${a_uarr[@]}")"
 [ -z "$l_hoout2" ] && l_output="$l_output\n- Own their home directory" || l_output2="$l_output2$l_hoout2"
 [ -z "$l_haout2" ] && l_output="$l_output\n- Home directories are mode: \"$l_max\" or more restrictive" || l_output2="$l_output2$l_haout2"
 
-# Output the audit results
+# Format the result for output
 if [ -n "$l_output" ]; then
     l_output="- All local interactive users:$l_output"
 fi
 
-# Format the result for output
-if [ -z "$l_output2" ]; then 
+# Define the result message
+if [ -z "$l_output2" ]; then
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n- * Correctly configured *:\n$l_output"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
@@ -68,6 +69,3 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-
-# Optionally: Output the result to the console
-#echo -e "$RESULT"

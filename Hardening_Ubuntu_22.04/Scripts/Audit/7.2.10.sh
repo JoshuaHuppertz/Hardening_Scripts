@@ -15,7 +15,7 @@ l_bf=""
 l_df=""
 l_nf=""
 l_hf=""
-l_valid_shells="^($(awk -F/ '$NF != \"nologin\" {print}' /etc/shells | sed -rn '/^\//{s,/,\\\\/,g;p}' | paste -s -d '|' - ))$"
+l_valid_shells="^($( awk -F\/ '$NF != "nologin" {print}' /etc/shells | sed -rn '/^\//{s,/,\\\\/,g;p}' | paste -s -d '|' - ))$"
 
 # Initialize array for users and home directories
 unset a_uarr && a_uarr=()
@@ -84,8 +84,8 @@ while read -r l_user l_home; do
                             l_hdout2="$l_facout2"
                         fi ;;
                 esac
-            done <<< "$(stat -Lc '%#a %U %G' "$l_hdfile")"
-        done < <(find "$l_home" -xdev -type f -name '.*' -print0)
+            done <<< "$(stat -Lc '%#a %U %G' "$l_hdfile" 2>/dev/null)"  # Suppress permission denied errors here
+        done < <(find "$l_home" -xdev -type f -name '.*' -print0 2>/dev/null)  # Suppress permission denied errors for find
     fi
     
     if [ "$l_fe" = "Y" ]; then
