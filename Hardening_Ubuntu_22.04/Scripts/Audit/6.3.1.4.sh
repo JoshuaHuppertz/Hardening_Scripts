@@ -12,7 +12,7 @@ l_output=""
 l_output2=""
 
 # Check if audit_backlog_limit= is present in grub.cfg
-l_backlog_output=$(find /boot -type f -name 'grub.cfg' -exec grep -Ph -- '^\h*linux' {} + | grep -Pv 'audit_backlog_limit=\d+\b')
+l_backlog_output=$(find /boot -type f -name 'grub.cfg' -exec grep -Ph -- '^\h*linux' {} + 2>/dev/null | grep -Pv 'audit_backlog_limit=\d+\b')
 
 if [ -z "$l_backlog_output" ]; then
     l_output+="\n- The parameter 'audit_backlog_limit=' is set."

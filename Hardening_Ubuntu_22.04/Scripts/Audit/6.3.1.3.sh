@@ -11,8 +11,8 @@ AUDIT_NUMBER="6.3.1.3"
 l_output=""
 l_output2=""
 
-# Check if 'audit=1' is present in grub.cfg
-l_audit_output=$(find /boot -type f -name 'grub.cfg' -exec grep -Ph -- '^\h*linux' {} + | grep 'audit=1')
+# Check if 'audit=1' is present in grub.cfg, suppress any errors
+l_audit_output=$(find /boot -type f -name 'grub.cfg' -exec grep -Ph -- '^\h*linux' {} + 2>/dev/null | grep 'audit=1')
 
 if [ -z "$l_audit_output" ]; then
     l_output+="\n- The parameter 'audit=1' is not present in grub.cfg."
@@ -20,7 +20,7 @@ else
     l_output2+="\n- The parameter 'audit=1' is present in grub.cfg."
 fi
 
-# Check results and output
+# Check results and prepare the output
 if [ -z "$l_output2" ]; then
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
@@ -36,5 +36,5 @@ fi
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optional: Output the result to the console
-#echo -e "$RESULT"
+# No output to console
+#echo -e "$RESULT"  # This line is intentionally commented out to avoid console output

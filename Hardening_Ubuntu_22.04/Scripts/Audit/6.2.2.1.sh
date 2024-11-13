@@ -32,10 +32,10 @@ file_test_chk() {
 # Reset the array
 unset a_file && a_file=() # Reset and initialize the array
 
-# List files in /var/log/ with potential issues
+# List files in /var/log/ with potential issues, suppressing error messages
 while IFS= read -r -d $'\0' l_file; do
-    [ -e "$l_file" ] && a_file+=("$(stat -Lc '%n^%#a^%U^%u^%G^%g' "$l_file")")
-done < <(find -L /var/log -type f \( -perm /0137 -o ! -user root -o ! -group root \) -print0)
+    [ -e "$l_file" ] && a_file+=("$(stat -Lc '%n^%#a^%U^%u^%G^%g' "$l_file" 2>/dev/null)")  # Suppress errors here
+done < <(find -L /var/log -type f \( -perm /0137 -o ! -user root -o ! -group root \) -print0 2>/dev/null)  # Suppress errors for find
 
 # Check file properties
 while IFS="^" read -r l_fname l_mode l_user l_uid l_group l_gid; do
@@ -117,5 +117,5 @@ fi
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optionally: Output the result to the console
+# Optionally: Do NOT output the result to the console (disabled)
 #echo -e "$RESULT"
