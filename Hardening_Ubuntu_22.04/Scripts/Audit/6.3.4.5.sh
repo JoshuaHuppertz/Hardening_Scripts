@@ -21,7 +21,7 @@ while IFS= read -r -d $'\0' l_fname; do
     if [ $(( "$l_mode" & "$l_perm_mask" )) -gt 0 ]; then
         l_output2+="\n- File: \"$l_fname\" has permission: \"$l_mode\"\n (should be at least \"$l_maxperm\" or more restrictive)"
     fi
-done < <(find /etc/audit/ -type f \( -name "*.conf" -o -name '*.rules' \) -print0)
+done < <(find /etc/audit/ -type f \( -name "*.conf" -o -name '*.rules' \) -print0 2>/dev/null)
 
 # Check and output the result
 if [ -z "$l_output2" ]; then

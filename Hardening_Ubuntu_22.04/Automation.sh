@@ -374,20 +374,20 @@ execute_scripts() {
             #bash "$HARDENING_Audit/6.2.1.2.3.sh"
             #bash "$HARDENING_Audit/6.2.1.2.4.sh"
             # 6.2.2 Configure Logfiles
-            #bash "$HARDENING_Audit/6.2.2.1.sh"             #Test
+            #bash "$HARDENING_Audit/6.2.2.1.sh"
             # 6.3 System Auditing
             # 6.3.1 Configure auditd Service
             #bash "$HARDENING_Audit/6.3.1.1.sh" #Level.2
             #bash "$HARDENING_Audit/6.3.1.2.sh" #Level.2
-            #bash "$HARDENING_Audit/6.3.1.3.sh" #Level.2    #Test
-            #bash "$HARDENING_Audit/6.3.1.4.sh" #Level.2    #Test
+            #bash "$HARDENING_Audit/6.3.1.3.sh" #Level.2
+            #bash "$HARDENING_Audit/6.3.1.4.sh" #Level.2
             # 6.3.2 Configure Data Retention
             #bash "$HARDENING_Audit/6.3.2.1.sh" #Level.2
             #bash "$HARDENING_Audit/6.3.2.2.sh" #Level.2
             #bash "$HARDENING_Audit/6.3.2.3.sh" #Level.2
             #bash "$HARDENING_Audit/6.3.2.4.sh" #Level.2
             # 6.3.3 Configure auditd Rules
-            #bash "$HARDENING_Audit/6.3.3.1.sh" #Level.2
+            #bash "$HARDENING_Audit/6.3.3.1.sh" #Level.2    #Test
             #bash "$HARDENING_Audit/6.3.3.2.sh" #Level.2
             #bash "$HARDENING_Audit/6.3.3.3.sh" #Level.2
             #bash "$HARDENING_Audit/6.3.3.4.sh" #Level.2

@@ -20,7 +20,7 @@ if [ -e "/etc/audit/auditd.conf" ]; then
         # Find files that are not owned by the user "root"
         while IFS= read -r -d $'\0' l_file; do
             l_output2+="\n - File: \"$l_file\" is owned by user: \"$(stat -Lc '%U' "$l_file")\"\n (should be owned by user: \"root\")\n"
-        done < <(find "$l_audit_log_directory" -maxdepth 1 -type f ! -user root -print0)
+        done < <(find "$l_audit_log_directory" -maxdepth 1 -type f ! -user root -print0 2>/dev/null)
         
         # Check if no files were found
         if [ -z "$l_output2" ]; then

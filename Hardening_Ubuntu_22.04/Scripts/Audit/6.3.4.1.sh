@@ -27,7 +27,7 @@ if [ -e "/etc/audit/auditd.conf" ]; then
         # Find files in the audit log directory with the specified permissions
         while IFS= read -r -d $'\0' l_file; do
             [ -e "$l_file" ] && a_files+=("$l_file")
-        done < <(find "$l_audit_log_directory" -maxdepth 1 -type f -perm /"$l_perm_mask" -print0)
+        done < <(find "$l_audit_log_directory" -maxdepth 1 -type f -perm /"$l_perm_mask" -print0 2>/dev/null)
 
         # Check if any files were found
         if (( "${#a_files[@]}" > 0 )); then

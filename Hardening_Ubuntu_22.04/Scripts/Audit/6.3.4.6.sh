@@ -14,7 +14,7 @@ l_output2=""
 # Check if the audit configuration files belong to the user "root"
 while IFS= read -r -d $'\0' l_fname; do
     l_output2+="\n- File: \"$l_fname\" does not belong to user: \"root\""
-done < <(find /etc/audit/ -type f \( -name '*.conf' -o -name '*.rules' \) ! -user root -print0)
+done < <(find /etc/audit/ -type f \( -name '*.conf' -o -name '*.rules' \) ! -user root -print0 2>/dev/null)
 
 # Check and output the result
 if [ -z "$l_output2" ]; then

@@ -29,7 +29,7 @@ if [ -e "/etc/audit/auditd.conf" ]; then
         # Find files that are not owned by group "root" or "adm"
         while IFS= read -r -d $'\0' l_file; do
             l_output2+="\n - File: \"$l_file\" is not owned by group \"root\" or \"adm\"\n"
-        done < <(find -L "$l_fpath" -not -path "$l_fpath"/lost+found -type f \( ! -group root -a ! -group adm \) -print0)
+        done < <(find -L "$l_fpath" -not -path "$l_fpath"/lost+found -type f \( ! -group root -a ! -group adm \) -print0 2>/dev/null)
         
         # Check if no files were found
         if [ -z "$l_output2" ]; then
