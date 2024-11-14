@@ -25,10 +25,10 @@ if awk '/^ *-w/ \
 ||/\/etc\/pam.conf/ \
 ||/\/etc\/pam.d/) \
 &&/ +-p *wa/ \
-&&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)' /etc/audit/rules.d/*.rules; then
-    on_disk_output+="OK: On-disk audit rules found.\n"
+&&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)' /etc/audit/rules.d/*.rules 2>/dev/null; then
+    on_disk_output+="OK: On-disk audit rules found."
 else
-    on_disk_output+="Warning: On-disk audit rules not found for identity files.\n"
+    on_disk_output+="Warning: On-disk audit rules not found for identity files."
 fi
 
 # Check the on-disk configuration results
@@ -42,7 +42,7 @@ fi
 running_output=""
 
 # Check active audit rules
-if auditctl -l | awk '/^ *-w/ \
+if auditctl -l 2>/dev/null | awk '/^ *-w/ \
 &&(/\/etc\/group/ \
 ||/\/etc\/passwd/ \
 ||/\/etc\/gshadow/ \
@@ -52,10 +52,10 @@ if auditctl -l | awk '/^ *-w/ \
 ||/\/etc\/pam.conf/ \
 ||/\/etc\/pam.d/) \
 &&/ +-p *wa/ \
-&&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)/'; then
-    running_output+="OK: Running audit rules found.\n"
+&&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)/' 2>/dev/null; then
+    running_output+="OK: Running audit rules found."
 else
-    running_output+="Warning: Running audit rules not found for identity files.\n"
+    running_output+="Warning: Running audit rules not found for identity files."
 fi
 
 # Check the running configuration results
@@ -81,5 +81,5 @@ fi
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optionally, print the result to the console
+# Optional: Output result to the console
 #echo -e "$RESULT"

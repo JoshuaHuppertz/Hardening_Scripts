@@ -12,16 +12,16 @@ l_output=""
 l_output2=""
 
 # Check On-Disk configuration
-on_disk_rules=$(awk '/^ *-a *always,exit/ \
+on_disk_rules=$(sudo awk '/^ *-a *always,exit/ \
 && / -F *arch=b(32|64)/ \
 && / -S/ \
 && (/adjtimex/ || /settimeofday/ || /clock_settime/) \
-&& (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)' /etc/audit/rules.d/*.rules)
+&& (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)' /etc/audit/rules.d/*.rules 2>/dev/null)
 
-localtime_rule=$(awk '/^ *-w/ \
+localtime_rule=$(sudo awk '/^ *-w/ \
 && /\/etc\/localtime/ \
 && / -p *wa/ \
-&& (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)' /etc/audit/rules.d/*.rules)
+&& (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)' /etc/audit/rules.d/*.rules 2>/dev/null)
 
 expected_on_disk_rules="\
 -a always,exit -F arch=b64 -S adjtimex,settimeofday,clock_settime -k time-change
@@ -31,26 +31,28 @@ expected_on_disk_rules="\
 if [[ "$on_disk_rules" == *"$expected_on_disk_rules"* && "$localtime_rule" == *"$expected_on_disk_rules"* ]]; then
     l_output+="\n- On-Disk rules are correctly configured:\n$on_disk_rules\n$localtime_rule"
 else
-    l_output2+="\n- Error in On-Disk rules:\n$on_disk_rules\n$localtime_rule"
+    l_output2+="\n- Error in On-Disk rules:\n$on_disk_rules\n$localtime_rule"  
+    l_output2+="\n- Expected on-disk rules:\n$expected_on_disk_rules\n"
 fi
 
 # Check Running configuration
-running_rules=$(auditctl -l | awk '/^ *-a *always,exit/ \
+running_rules=$(sudo auditctl -l | awk '/^ *-a *always,exit/ \
 && / -F *arch=b(32|64)/ \
 && / -S/ \
 && (/adjtimex/ || /settimeofday/ || /clock_settime/) \
-&& (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)')
+&& (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)' 2>/dev/null)
 
-running_localtime_rule=$(auditctl -l | awk '/^ *-w/ \
+running_localtime_rule=$(sudo auditctl -l | awk '/^ *-w/ \
 && /\/etc\/localtime/ \
 && / -p *wa/ \
-&& (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)')
+&& (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)' 2>/dev/null)
 
 if [[ "$running_rules" == *"-a always,exit -F arch=b64 -S adjtimex,settimeofday,clock_settime -k time-change"* && \
       "$running_localtime_rule" == *"-w /etc/localtime -p wa -k time-change"* ]]; then
     l_output+="\n- Running rules are correctly configured:\n$running_rules\n$running_localtime_rule"
 else
-    l_output2+="\n- Error in Running rules:\n$running_rules\n$running_localtime_rule"
+    l_output2+="\n- Error in Running rules:\n$running_rules\n$"
+    l_output2+="\n- Expected running rules:\n$running_localtime_rule"
 fi
 
 # Check and output result

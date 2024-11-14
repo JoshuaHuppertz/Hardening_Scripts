@@ -15,7 +15,7 @@ l_output2=""
 on_disk_output=""
 
 # Check on-disk audit rules for mounts
-if UID_MIN=$(awk '/^\s*UID_MIN/{print $2}' /etc/login.defs); then
+if UID_MIN=$(awk '/^\s*UID_MIN/{print $2}' /etc/login.defs 2>/dev/null); then
     if [ -n "${UID_MIN}" ]; then
         if awk "/^ *-a *always,exit/ \
         &&/ -F *arch=b(32|64)/ \
@@ -23,16 +23,16 @@ if UID_MIN=$(awk '/^\s*UID_MIN/{print $2}' /etc/login.defs); then
         &&/ -F *auid>=${UID_MIN}/ \
         &&/ -S/ \
         &&/mount/ \
-        &&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)" /etc/audit/rules.d/*.rules; then
-            on_disk_output+="OK: On-disk audit rules for mounts found.\n"
+        &&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)" /etc/audit/rules.d/*.rules 2>/dev/null; then
+            on_disk_output+="OK: On-disk audit rules for mounts found."
         else
-            on_disk_output+="Warning: On-disk audit rules for mounts not found.\n"
+            on_disk_output+="Warning: On-disk audit rules for mounts not found."
         fi
     else
-        on_disk_output+="ERROR: Variable 'UID_MIN' is unset.\n"
+        on_disk_output+="ERROR: Variable 'UID_MIN' is unset."
     fi
 else
-    on_disk_output+="ERROR: Unable to read UID_MIN.\n"
+    on_disk_output+="ERROR: Unable to read UID_MIN."
 fi
 
 # Check on-disk configuration results
@@ -46,24 +46,24 @@ fi
 running_output=""
 
 # Check active audit rules for mounts
-if UID_MIN=$(awk '/^\s*UID_MIN/{print $2}' /etc/login.defs); then
+if UID_MIN=$(awk '/^\s*UID_MIN/{print $2}' /etc/login.defs 2>/dev/null); then
     if [ -n "${UID_MIN}" ]; then
-        if auditctl -l | awk "/^ *-a *always,exit/ \
+        if auditctl -l 2>/dev/null | awk "/^ *-a *always,exit/ \
         &&/ -F *arch=b(32|64)/ \
         &&(/ -F *auid!=unset/||/ -F *auid!=-1/||/ -F *auid!=4294967295/) \
         &&/ -F *auid>=${UID_MIN}/ \
         &&/ -S/ \
         &&/mount/ \
         &&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)"; then
-            running_output+="OK: Running audit rules for mounts found.\n"
+            running_output+="OK: Running audit rules for mounts found."
         else
-            running_output+="Warning: Running audit rules for mounts not found.\n"
+            running_output+="Warning: Running audit rules for mounts not found."
         fi
     else
-        running_output+="ERROR: Variable 'UID_MIN' is unset.\n"
+        running_output+="ERROR: Variable 'UID_MIN' is unset."
     fi
 else
-    running_output+="ERROR: Unable to read UID_MIN.\n"
+    running_output+="ERROR: Unable to read UID_MIN."
 fi
 
 # Check running configuration results
@@ -75,11 +75,11 @@ fi
 
 # Check and output the final result
 if [ -z "$l_output2" ]; then
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Reasons for failure:\n$l_output2\n"
-    [ -n "$l_output" ] && RESULT+="\n- Successfully configured:\n$l_output\n"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- Reasons for failure:\n$l_output2"
+    [ -n "$l_output" ] && RESULT+="\n- Successfully configured:\n$l_output"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -89,5 +89,5 @@ fi
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optionally, print the result to the console
+# Optional: Output result to the console
 #echo -e "$RESULT"

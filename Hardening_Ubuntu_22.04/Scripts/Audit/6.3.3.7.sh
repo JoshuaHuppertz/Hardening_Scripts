@@ -12,7 +12,7 @@ l_output=""
 l_output2=""
 
 # Get UID_MIN from the configuration
-UID_MIN=$(awk '/^\s*UID_MIN/{print $2}' /etc/login.defs)
+UID_MIN=$(awk '/^\s*UID_MIN/{print $2}' /etc/login.defs 2>/dev/null)
 
 # Check On-Disk configuration
 on_disk_output=""
@@ -30,7 +30,7 @@ if [ -n "${UID_MIN}" ]; then
             &&/creat/ \
             &&/open/ \
             &&/truncate/ \
-            &&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)" /etc/audit/rules.d/*.rules; then
+            &&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)" /etc/audit/rules.d/*.rules 2>/dev/null; then
                 on_disk_output+="OK: Audit rule for ${ARCH} with exit code ${EXIT_CODE} found.\n"
             else
                 on_disk_output+="Warning: Audit rule for ${ARCH} with exit code ${EXIT_CODE} not found.\n"
@@ -52,7 +52,7 @@ fi
 running_output=""
 
 if [ -n "${UID_MIN}" ]; then
-    RUNNING=$(auditctl -l)
+    RUNNING=$(auditctl -l 2>/dev/null)
 
     if [ -n "${RUNNING}" ]; then
         for ARCH in b64 b32; do
@@ -66,7 +66,7 @@ if [ -n "${UID_MIN}" ]; then
                 &&/creat/ \
                 &&/open/ \
                 &&/truncate/ \
-                &&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)/" ; then
+                &&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)/ 2>/dev/null"; then
                     running_output+="OK: Running rule for ${ARCH} with exit code ${EXIT_CODE} found.\n"
                 else
                     running_output+="Warning: Running rule for ${ARCH} with exit code ${EXIT_CODE} not found.\n"

@@ -12,13 +12,13 @@ l_output=""
 l_output2=""
 
 # Check on-disk rules
-SUDO_LOG_FILE=$(grep -r logfile /etc/sudoers* | sed -e 's/.*logfile=//;s/,? .*$//' -e 's/"//g' -e 's|/|\\/|g')
+SUDO_LOG_FILE=$(sudo grep -r logfile /etc/sudoers* | sed -e 's/.*logfile=//;s/,? .*$//' -e 's/"//g' -e 's|/|\\/|g')
 
 if [ -n "${SUDO_LOG_FILE}" ]; then
-    l_disk_rules_output=$(awk "/^ *-w/ \
+    l_disk_rules_output=$(sudo awk "/^ *-w/ \
     && /${SUDO_LOG_FILE}/ \
     && / -p *wa/ \
-    && (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)" /etc/audit/rules.d/*.rules)
+    && (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)" /etc/audit/rules.d/*.rules 2>/dev/null)
     
     expected_disk_rules="-w ${SUDO_LOG_FILE} -p wa -k sudo_log_file"
 
@@ -26,6 +26,7 @@ if [ -n "${SUDO_LOG_FILE}" ]; then
         l_output+="\n- On-Disk rules are correctly configured:\n$l_disk_rules_output"
     else
         l_output2+="\n- On-Disk rules are not correctly configured:\n$l_disk_rules_output"
+        l_output2+="\n- Expected on-disk rules:\n$expected_disk_rules\n"
     fi
 else
     l_output2+="\n- Error: 'SUDO_LOG_FILE' variable is not set.\n"
@@ -33,10 +34,10 @@ fi
 
 # Check running rules
 if [ -n "${SUDO_LOG_FILE}" ]; then
-    l_running_rules_output=$(auditctl -l | awk "/^ *-w/ \
+    l_running_rules_output=$(sudo auditctl -l | awk "/^ *-w/ \
     && /${SUDO_LOG_FILE}/ \
     && / -p *wa/ \
-    && (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)")
+    && (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)" 2>/dev/null)
     
     expected_running_rules="-w ${SUDO_LOG_FILE} -p wa -k sudo_log_file"
 
@@ -44,6 +45,7 @@ if [ -n "${SUDO_LOG_FILE}" ]; then
         l_output+="\n- Running rules are correctly configured:\n$l_running_rules_output"
     else
         l_output2+="\n- Running rules are not correctly configured:\n$l_running_rules_output"
+        l_output2+="\n- Expected running rules:\n$l_running_rules_output"
     fi
 else
     l_output2+="\n- Error: 'SUDO_LOG_FILE' variable is not set.\n"

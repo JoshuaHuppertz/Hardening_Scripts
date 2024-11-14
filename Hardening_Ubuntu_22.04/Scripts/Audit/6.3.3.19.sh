@@ -15,14 +15,14 @@ l_output2=""
 on_disk_output=""
 
 # Check on-disk rules for kernel modules
-if awk '/^ *-a *always,exit/ \
+if sudo awk '/^ *-a *always,exit/ \
 &&/ -F *arch=b(32|64)/ \
 &&(/ -F auid!=unset/||/ -F auid!=-1/||/ -F auid!=4294967295/) \
 &&/ -S/ \
 &&(/init_module/ \
 ||/finit_module/ \
 ||/delete_module/) \
-&&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)' /etc/audit/rules.d/*.rules; then
+&&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)' /etc/audit/rules.d/*.rules 2>/dev/null; then
     on_disk_output+="OK: On-disk audit rules for kernel modules found.\n"
 else
     on_disk_output+="Warning: On-disk audit rules for kernel modules not found.\n"
@@ -31,12 +31,12 @@ fi
 # Check UID_MIN for kmod
 UID_MIN=$(awk '/^\s*UID_MIN/{print $2}' /etc/login.defs)
 if [ -n "${UID_MIN}" ]; then
-    if awk "/^ *-a *always,exit/ \
+    if sudo awk "/^ *-a *always,exit/ \
     &&(/ -F *auid!=unset/||/ -F *auid!=-1/||/ -F *auid!=4294967295/) \
     &&/ -F *auid>=${UID_MIN}/ \
     &&/ -F *perm=x/ \
     &&/ -F *path=\/usr\/bin\/kmod/ \
-    &&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)" /etc/audit/rules.d/*.rules; then
+    &&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)" /etc/audit/rules.d/*.rules 2>/dev/null; then
         on_disk_output+="OK: On-disk audit rules for /usr/bin/kmod found.\n"
     else
         on_disk_output+="Warning: On-disk audit rules for /usr/bin/kmod not found.\n"
@@ -56,14 +56,14 @@ fi
 running_output=""
 
 # Check active audit rules for kernel modules
-if auditctl -l | awk '/^ *-a *always,exit/ \
+if sudo auditctl -l | sudo awk '/^ *-a *always,exit/ \
 &&/ -F *arch=b(32|64)/ \
 &&(/ -F auid!=unset/||/ -F auid!=-1/||/ -F *auid!=4294967295/) \
 &&/ -S/ \
 &&(/init_module/ \
 ||/finit_module/ \
 ||/delete_module/) \
-&&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)'; then
+&&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)' 2>/dev/null; then
     running_output+="OK: Running audit rules for kernel modules found.\n"
 else
     running_output+="Warning: Running audit rules for kernel modules not found.\n"
@@ -71,12 +71,12 @@ fi
 
 # Check UID_MIN for kmod
 if [ -n "${UID_MIN}" ]; then
-    if auditctl -l | awk "/^ *-a *always,exit/ \
+    if sudo auditctl -l | sudo awk "/^ *-a *always,exit/ \
     &&(/ -F *auid!=unset/||/ -F *auid!=-1/||/ -F *auid!=4294967295/) \
     &&/ -F *auid>=${UID_MIN}/ \
     &&/ -F *perm=x/ \
     &&/ -F *path=\/usr\/bin\/kmod/ \
-    &&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)"; then
+    &&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)" 2>/dev/null; then
         running_output+="OK: Running audit rules for /usr/bin/kmod found.\n"
     else
         running_output+="Warning: Running audit rules for /usr/bin/kmod not found.\n"
@@ -94,7 +94,7 @@ fi
 
 # Symlink check
 symlink_output=""
-S_LINKS=$(ls -l /usr/sbin/lsmod /usr/sbin/rmmod /usr/sbin/insmod /usr/sbin/modinfo /usr/sbin/modprobe /usr/sbin/depmod | grep -vE " -> (\.\./)?bin/kmod" || true)
+S_LINKS=$(sudo ls -l /usr/sbin/lsmod /usr/sbin/rmmod /usr/sbin/insmod /usr/sbin/modinfo /usr/sbin/modprobe /usr/sbin/depmod | grep -vE " -> (\.\./)?bin/kmod" || true)
 if [[ "${S_LINKS}" != "" ]]; then
     symlink_output="Issue with symlinks:\n${S_LINKS}\n"
 else
@@ -118,11 +118,11 @@ else
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Write result to the appropriate file
+# Write the result to the appropriate file
 {
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optional: Output the result to the console
+# Optional: Output result to the console
 #echo -e "$RESULT"

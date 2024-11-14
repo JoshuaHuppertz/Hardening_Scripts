@@ -2,7 +2,7 @@
 
 # Set result directory
 RESULT_DIR="$(dirname "$0")/../../Results"
-mkdir -p "$RESULT_DIR"  # Create the directory if it doesn't exist
+mkdir -p "$RESULT_DIR"  # Create directory if it doesn't exist
 
 # Set audit number
 AUDIT_NUMBER="6.3.3.16"
@@ -21,7 +21,7 @@ if UID_MIN=$(awk '/^\s*UID_MIN/{print $2}' /etc/login.defs) && [ -n "${UID_MIN}"
     &&/ -F *auid>=${UID_MIN}/ \
     &&/ -F *perm=x/ \
     &&/ -F *path=\/usr\/bin\/setfacl/ \
-    &&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)" /etc/audit/rules.d/*.rules; then
+    &&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)" /etc/audit/rules.d/*.rules 2>/dev/null; then
         on_disk_output+="OK: On-disk audit rules for /usr/bin/setfacl found.\n"
     else
         on_disk_output+="Warning: On-disk audit rules for /usr/bin/setfacl not found.\n"
@@ -42,7 +42,7 @@ running_output=""
 
 # Check active audit rules for /usr/bin/setfacl
 if UID_MIN=$(awk '/^\s*UID_MIN/{print $2}' /etc/login.defs) && [ -n "${UID_MIN}" ]; then
-    if auditctl -l | awk "/^ *-a *always,exit/ \
+    if auditctl -l 2>/dev/null | awk "/^ *-a *always,exit/ \
     &&(/ -F *auid!=unset/||/ -F *auid!=-1/||/ -F *auid!=4294967295/) \
     &&/ -F *auid>=${UID_MIN}/ \
     &&/ -F *perm=x/ \
@@ -73,11 +73,11 @@ else
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
-# Write the result to the corresponding file
+# Write the result to the appropriate file
 {
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optionally, print the result to the console
+# Optional: Output result to the console
 #echo -e "$RESULT"

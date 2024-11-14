@@ -15,7 +15,7 @@ l_output2=""
 on_disk_output=""
 
 # Check on-disk audit rules
-if UID_MIN=$(awk '/^\s*UID_MIN/{print $2}' /etc/login.defs); then
+if UID_MIN=$(awk '/^\s*UID_MIN/{print $2}' /etc/login.defs 2>/dev/null); then
     if [ -n "${UID_MIN}" ]; then
         if awk "/^ *-a *always,exit/ \
         &&/ -F *arch=b(32|64)/ \
@@ -26,16 +26,16 @@ if UID_MIN=$(awk '/^\s*UID_MIN/{print $2}' /etc/login.defs); then
         ||/chown/||/fchown/||/fchownat/||/lchown/ \
         ||/setxattr/||/lsetxattr/||/fsetxattr/ \
         ||/removexattr/||/lremovexattr/||/fremovexattr/) \
-        &&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)" /etc/audit/rules.d/*.rules; then
-            on_disk_output+="OK: On-disk audit rules found.\n"
+        &&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)" /etc/audit/rules.d/*.rules 2>/dev/null; then
+            on_disk_output+="OK: On-disk audit rules found."
         else
-            on_disk_output+="Warning: On-disk audit rules not found for permission modification syscalls.\n"
+            on_disk_output+="Warning: On-disk audit rules not found for permission modification syscalls."
         fi
     else
-        on_disk_output+="ERROR: Variable 'UID_MIN' is unset.\n"
+        on_disk_output+="ERROR: Variable 'UID_MIN' is unset."
     fi
 else
-    on_disk_output+="ERROR: Unable to read UID_MIN.\n"
+    on_disk_output+="ERROR: Unable to read UID_MIN."
 fi
 
 # Check on-disk configuration results
@@ -49,9 +49,9 @@ fi
 running_output=""
 
 # Check active audit rules
-if UID_MIN=$(awk '/^\s*UID_MIN/{print $2}' /etc/login.defs); then
+if UID_MIN=$(awk '/^\s*UID_MIN/{print $2}' /etc/login.defs 2>/dev/null); then
     if [ -n "${UID_MIN}" ]; then
-        if auditctl -l | awk "/^ *-a *always,exit/ \
+        if auditctl -l 2>/dev/null | awk "/^ *-a *always,exit/ \
         &&/ -F *arch=b(32|64)/ \
         &&(/ -F *auid!=unset/||/ -F *auid!=-1/||/ -F *auid!=4294967295/) \
         &&/ -S/ \
@@ -61,15 +61,15 @@ if UID_MIN=$(awk '/^\s*UID_MIN/{print $2}' /etc/login.defs); then
         ||/setxattr/||/lsetxattr/||/fsetxattr/ \
         ||/removexattr/||/lremovexattr/||/fremovexattr/) \
         &&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)"; then
-            running_output+="OK: Running audit rules found.\n"
+            running_output+="OK: Running audit rules found."
         else
-            running_output+="Warning: Running audit rules not found for permission modification syscalls.\n"
+            running_output+="Warning: Running audit rules not found for permission modification syscalls."
         fi
     else
-        running_output+="ERROR: Variable 'UID_MIN' is unset.\n"
+        running_output+="ERROR: Variable 'UID_MIN' is unset."
     fi
 else
-    running_output+="ERROR: Unable to read UID_MIN.\n"
+    running_output+="ERROR: Unable to read UID_MIN."
 fi
 
 # Check running configuration results
@@ -95,5 +95,5 @@ fi
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
 
-# Optionally, print the result to the console
+# Optional: Output result to the console
 #echo -e "$RESULT"

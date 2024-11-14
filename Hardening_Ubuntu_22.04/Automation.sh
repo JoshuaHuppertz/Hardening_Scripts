@@ -416,8 +416,8 @@ execute_scripts() {
             #bash "$HARDENING_Audit/6.3.4.6.sh" #Level.2
             #bash "$HARDENING_Audit/6.3.4.7.sh" #Level.2
             #bash "$HARDENING_Audit/6.3.4.8.sh" #Level.2
-            #bash "$HARDENING_Audit/6.3.4.9.sh" #Level.2
-            #bash "$HARDENING_Audit/6.3.4.10.sh" #Level.2
+            #bash "$HARDENING_Audit/6.3.4.9.sh" #Level.2       #Test
+            #bash "$HARDENING_Audit/6.3.4.10.sh" #Level.2       #Test
             #
             # 7.1 System File Permissions
             #bash "$HARDENING_Audit/7.1.1.sh"
