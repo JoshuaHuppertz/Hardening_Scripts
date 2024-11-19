@@ -19,7 +19,7 @@ HARDENING_Remediation="./Scripts/Remediation"
 select_hardness() {
     echo "Wähle den gewünschten Härtegrad:"
     echo "1) Härtegrad 1"
-    echo "2) Härtegrad 2"
+    echo "2) -Härtegrad 2- #Noch nicht fertig"
     echo "3) Beenden"
     read -p "Bitte gib die Nummer deiner Auswahl ein: " hardness_choice
 
