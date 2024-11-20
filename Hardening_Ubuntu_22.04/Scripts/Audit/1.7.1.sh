@@ -42,3 +42,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
+echo -e "$RESULT"

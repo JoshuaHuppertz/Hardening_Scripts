@@ -35,6 +35,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-
-# No output to console
-#echo -e "$RESULT"  # This line is intentionally commented out to avoid console output
+echo -e "$RESULT"

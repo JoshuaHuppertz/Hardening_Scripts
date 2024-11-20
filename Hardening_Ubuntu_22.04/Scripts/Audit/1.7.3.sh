@@ -86,6 +86,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-
-# Optional: Do not print the result to the console (currently it is redirected to the file only)
-# echo -e "$RESULT"
+echo -e "$RESULT"

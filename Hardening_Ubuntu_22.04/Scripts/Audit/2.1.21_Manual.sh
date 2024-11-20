@@ -48,6 +48,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-
-# Remove the option for console printing (comment or delete the line below)
-# echo -e "$RESULT"  # This is removed to ensure there's no console output
+echo -e "$RESULT"

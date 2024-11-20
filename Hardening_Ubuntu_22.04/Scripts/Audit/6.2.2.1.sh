@@ -116,6 +116,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-
-# Optionally: Do NOT output the result to the console (disabled)
-#echo -e "$RESULT"
+echo -e "$RESULT"

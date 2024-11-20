@@ -123,6 +123,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-
-# Optionally: Output the result to the console
-#echo -e "$RESULT"
+echo -e "$RESULT"

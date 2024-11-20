@@ -20,6 +20,8 @@ FAIL_FILE="/Results/fail.txt"
 HOST_IP=$(hostname -I | awk '{print $1}')
 
 mkdir -p ./Results/
+touch /Results/pass.txt
+touch /Results/fail.txt
 echo "H1\nAudit is running on $(hostname) with IP $HOST_IP" > $PASS_FILE
 date >> $PASS_FILE
 echo "-------------------------------------------------" >> $PASS_FILE

@@ -56,6 +56,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-
-# Optionally, output the result to the console
-#echo -e "$RESULT"
+echo -e "$RESULT"

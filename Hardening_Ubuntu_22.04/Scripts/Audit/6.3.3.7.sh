@@ -102,6 +102,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-
-# Optional: Output result to the console
-#echo -e "$RESULT"
+echo -e "$RESULT"

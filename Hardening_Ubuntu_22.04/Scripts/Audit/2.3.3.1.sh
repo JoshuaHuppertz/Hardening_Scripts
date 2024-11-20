@@ -64,6 +64,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-
-# Remove the line that prints to the console
-#echo -e "$RESULT"  # COMMENTED OUT to disable console output
+echo -e "$RESULT"

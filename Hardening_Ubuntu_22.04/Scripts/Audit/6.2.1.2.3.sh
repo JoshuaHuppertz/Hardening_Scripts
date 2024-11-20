@@ -42,6 +42,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-
-# Optional: Ergebnis in der Konsole ausgeben
-#echo -e "$RESULT"
+echo -e "$RESULT"

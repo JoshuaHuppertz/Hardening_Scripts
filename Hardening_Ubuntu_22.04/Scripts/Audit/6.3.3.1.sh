@@ -57,6 +57,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-
-# No console output (no echo command for console)
-#echo -e "$RESULT"
+echo -e "$RESULT"
