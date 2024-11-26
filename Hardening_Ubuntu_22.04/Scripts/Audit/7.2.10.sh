@@ -89,14 +89,14 @@ while read -r l_user l_home; do
     fi
     
     if [ "$l_fe" = "Y" ]; then
-        l_output2="$l_output2\n - User: \"$l_user\" Home Directory: \"$l_home\""
+        l_output2="$l_output2\n- User: \"$l_user\" Home Directory: \"$l_home\""
         [ -n "$l_dfout2" ] && l_output2="$l_output2$l_dfout2"
         [ -n "$l_nout2" ] && l_output2="$l_output2$l_nout2"
         [ -n "$l_bhout2" ] && l_output2="$l_output2$l_bhout2"
         [ -n "$l_hdout2" ] && l_output2="$l_output2$l_hdout2"
     fi
     
-    [ -n "$l_nout3" ] && l_output3="$l_output3\n - User: \"$l_user\" Home Directory: \"$l_home\"\n$l_nout3"
+    [ -n "$l_nout3" ] && l_output3="$l_output3\n- User: \"$l_user\" Home Directory: \"$l_home\"\n$l_nout3"
 done <<< "$(printf '%s\n' "${a_uarr[@]}")"
 
 unset a_uarr  # Clear the array
@@ -123,4 +123,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

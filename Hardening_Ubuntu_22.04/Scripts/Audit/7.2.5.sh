@@ -13,7 +13,7 @@ l_output=""
 # Check for duplicate UIDs
 while read -r l_count l_uid; do
     if [ "$l_count" -gt 1 ]; then
-        l_output+="\n- Duplicate UID: \"$l_uid\" Users: \"$(awk -F: '($3 == n) { print $1 }' n="$l_uid" /etc/passwd | xargs)\""
+        l_output+="\n- Duplicate UID: \"$l_uid\" Users: \"$(sudo awk -F: '($3 == n) { print $1 }' n="$l_uid" /etc/passwd | xargs)\""
     fi
 done < <(cut -f3 -d":" /etc/passwd | sort -n | uniq -c)
 
@@ -31,4 +31,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

@@ -11,7 +11,7 @@ AUDIT_NUMBER="7.2.2"
 l_output=""
 
 # Check for users with empty passwords
-l_check_output=$(awk -F: '($2 == "") { print $1 " does not have a password" }' /etc/shadow 2>/dev/null)
+l_check_output=$(sudo awk -F: '($2 == "") { print $1 " does not have a password" }' /etc/shadow 2>/dev/null)
 
 # Check if awk was able to access /etc/shadow file
 if [ $? -ne 0 ]; then
@@ -33,4 +33,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

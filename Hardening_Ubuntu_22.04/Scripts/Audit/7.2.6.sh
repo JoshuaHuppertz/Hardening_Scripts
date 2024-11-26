@@ -13,7 +13,7 @@ l_output=""
 # Check for duplicate GIDs
 while read -r l_count l_gid; do
     if [ "$l_count" -gt 1 ]; then
-        l_output+="\n- Duplicate GID: \"$l_gid\" Groups: \"$(awk -F: '($3 == n) { print $1 }' n="$l_gid" /etc/group | xargs)\""
+        l_output+="\n- Duplicate GID: \"$l_gid\" Groups: \"$(sudo awk -F: '($3 == n) { print $1 }' n="$l_gid" /etc/group | xargs)\""
     fi
 done < <(cut -f3 -d":" /etc/group | sort -n | uniq -c)
 
@@ -31,4 +31,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

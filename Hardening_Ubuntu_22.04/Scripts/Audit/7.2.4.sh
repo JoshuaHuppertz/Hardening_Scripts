@@ -11,14 +11,14 @@ AUDIT_NUMBER="7.2.4"
 l_output=""
 
 # Check if the "shadow" group exists and list its members
-shadow_group_membership=$(awk -F: '($1=="shadow") {print $NF}' /etc/group)
+shadow_group_membership=$(sudo awk -F: '($1=="shadow") {print $NF}' /etc/group)
 
 if [ -n "$shadow_group_membership" ]; then
     l_output+="\n- The \"shadow\" group has members: $shadow_group_membership."
 fi
 
 # Check if users have "shadow" as their primary group
-shadow_gid=$(getent group shadow | awk -F: '{print $3}')
+shadow_gid=$(getent group shadow | sudo awk -F: '{print $3}')
 
 if [ -n "$shadow_gid" ]; then
     while IFS= read -r l_user; do
@@ -43,4 +43,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

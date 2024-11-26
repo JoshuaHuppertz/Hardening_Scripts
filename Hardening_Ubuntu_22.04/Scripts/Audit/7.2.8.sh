@@ -13,7 +13,7 @@ l_output=""
 # Check for duplicate groups
 while read -r l_count l_group; do
     if [ "$l_count" -gt 1 ]; then
-        l_output+="\n- Duplicate Group: \"$l_group\" Groups: \"$(awk -F: '($1 == n) { print $1 }' n="$l_group" /etc/group | xargs)\""
+        l_output+="\n- Duplicate Group: \"$l_group\" Groups: \"$(sudo awk -F: '($1 == n) { print $1 }' n="$l_group" /etc/group | xargs)\""
     fi
 done < <(cut -f1 -d":" /etc/group | sort -n | uniq -c)
 
@@ -31,4 +31,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

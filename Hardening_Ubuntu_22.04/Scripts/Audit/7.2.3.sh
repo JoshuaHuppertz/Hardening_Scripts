@@ -11,13 +11,13 @@ AUDIT_NUMBER="7.2.3"
 l_output=""
 
 # Extract GIDs from /etc/passwd and /etc/group
-a_passwd_group_gid=($(awk -F: '{print $4}' /etc/passwd | sort -u))
-a_group_gid=($(awk -F: '{print $3}' /etc/group | sort -u))
+a_passwd_group_gid=($(sudo awk -F: '{print $4}' /etc/passwd | sort -u))
+a_group_gid=($(sudo awk -F: '{print $3}' /etc/group | sort -u))
 a_passwd_group_diff=($(printf '%s\n' "${a_group_gid[@]}" "${a_passwd_group_gid[@]}" | sort | uniq -u))
 
 # Check GIDs
 while IFS= read -r l_gid; do
-    l_check_output=$(awk -F: '($4 == '"$l_gid"') {print " - User: \"" $1 "\" has GID: \"" $4 "\" which does not exist in /etc/group"}' /etc/passwd)
+    l_check_output=$(sudo awk -F: '($4 == '"$l_gid"') {print " - User: \"" $1 "\" has GID: \"" $4 "\" which does not exist in /etc/group"}' /etc/passwd)
     
     # Store the result if the GID does not exist
     if [ -n "$l_check_output" ]; then
@@ -39,4 +39,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"
