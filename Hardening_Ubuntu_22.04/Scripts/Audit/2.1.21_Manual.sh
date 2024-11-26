@@ -37,7 +37,7 @@ if [[ -z "$output_non_loopback_ports" ]]; then
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n"
-    RESULT+=" - Reason(s):\n$output_non_loopback_ports"
+    RESULT+="\n- $output_non_loopback_ports"
     [ "${#output_port_list[@]}" -gt 0 ] && RESULT+="\n- Correctly set:\n$(printf "%s\n" "${output_port_list[@]}")"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
@@ -48,4 +48,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

@@ -19,7 +19,7 @@ if [[ -z "$ss_output" ]]; then
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n"
-    RESULT+=" - Reason: The following services are listening on the system:\n"
+    RESULT+="\n- The following services are listening on the system:\n"
     RESULT+="$ss_output\n"
     RESULT+="\n- Recommended Actions:\n"
     RESULT+="1. Review the services to ensure they are required and approved by local site policy.\n"
@@ -33,4 +33,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

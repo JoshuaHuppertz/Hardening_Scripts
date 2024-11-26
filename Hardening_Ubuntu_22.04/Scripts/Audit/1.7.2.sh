@@ -77,7 +77,7 @@ check_gdm_banner() {
         fi
     else
         # If GDM is not installed, skip the check
-        l_output="\n\n- GNOME Desktop Manager isn't installed\n- Recommendation is Not Applicable"
+        l_output="\n- GNOME Desktop Manager isn't installed\n- Recommendation is Not Applicable"
     fi
 }
 
@@ -100,4 +100,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

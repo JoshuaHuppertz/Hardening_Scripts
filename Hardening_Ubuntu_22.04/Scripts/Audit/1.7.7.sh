@@ -39,19 +39,19 @@ if [ -n "$l_pkgoutput" ]; then
 
     # Check for automount setting
     if [[ -n "$l_automount_setting" ]]; then
-        l_output="$l_output\n - \"automount\" setting found"
+        l_output="$l_output\n- \"automount\" setting found"
     else
-        l_output2="$l_output2\n - \"automount\" setting not found"
+        l_output2="$l_output2\n- \"automount\" setting not found"
     fi
 
     # Check for automount-open setting
     if [[ -n "$l_automount_open_setting" ]]; then
-        l_output="$l_output\n - \"automount-open\" setting found"
+        l_output="$l_output\n- \"automount-open\" setting found"
     else
-        l_output2="$l_output2\n - \"automount-open\" setting not found"
+        l_output2="$l_output2\n- \"automount-open\" setting not found"
     fi
 else
-    l_output="$l_output\n - GNOME Desktop Manager package is not installed on the system\n - Recommendation is not applicable"
+    l_output="$l_output\n- GNOME Desktop Manager package is not installed on the system\n - Recommendation is not applicable"
 fi
 
 # Prepare result report
@@ -69,4 +69,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

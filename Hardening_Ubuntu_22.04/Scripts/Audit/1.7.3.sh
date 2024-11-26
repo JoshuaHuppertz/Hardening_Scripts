@@ -63,7 +63,7 @@ check_disable_user_list() {
         fi
     else
         # If GDM is not installed, skip the check
-        l_output="\n\n- GNOME Desktop Manager isn't installed\n- Recommendation is Not Applicable\n"
+        l_output="\n- GNOME Desktop Manager isn't installed\n- Recommendation is Not Applicable\n"
     fi
 }
 

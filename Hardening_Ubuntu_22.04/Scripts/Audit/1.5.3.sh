@@ -18,9 +18,9 @@ kernel_parameter_chk() {
     # Check running configuration
     l_krp="$(sysctl "$l_kpname" | awk -F= '{print $2}' | xargs)"
     if [ "$l_krp" = "$l_kpvalue" ]; then
-        l_output="$l_output\n - \"$l_kpname\" is correctly set to \"$l_krp\" in the running configuration"
+        l_output="$l_output\n- \"$l_kpname\" is correctly set to \"$l_krp\" in the running configuration"
     else
-        l_output2="$l_output2\n - \"$l_kpname\" is incorrectly set to \"$l_krp\" in the running configuration and should have a value of: \"$l_kpvalue\""
+        l_output2="$l_output2\n- \"$l_kpname\" is incorrectly set to \"$l_krp\" in the running configuration and should have a value of: \"$l_kpvalue\""
     fi
 
     unset A_out; declare -A A_out # Check durable setting (files)
@@ -45,13 +45,13 @@ kernel_parameter_chk() {
         while IFS="=" read -r l_fkpname l_fkpvalue; do
             l_fkpname="${l_fkpname// /}"; l_fkpvalue="${l_fkpvalue// /}"
             if [ "$l_fkpvalue" = "$l_kpvalue" ]; then
-                l_output="$l_output\n - \"$l_kpname\" is correctly set to \"$l_fkpvalue\" in \"$(printf '%s' "${A_out[@]}")\"\n"
+                l_output="$l_output\n- \"$l_kpname\" is correctly set to \"$l_fkpvalue\" in \"$(printf '%s' "${A_out[@]}")\"\n"
             else
-                l_output2="$l_output2\n - \"$l_kpname\" is incorrectly set to \"$l_fkpvalue\" in \"$(printf '%s' "${A_out[@]}")\" and should have a value of: \"$l_kpvalue\"\n"
+                l_output2="$l_output2\n- \"$l_kpname\" is incorrectly set to \"$l_fkpvalue\" in \"$(printf '%s' "${A_out[@]}")\" and should have a value of: \"$l_kpvalue\"\n"
             fi
         done < <(grep -Po -- "^\h*$l_kpname\h*=\h*\H+" "${A_out[@]}")
     else
-        l_output2="$l_output2\n - \"$l_kpname\" is not set in an included file\n ** Note: \"$l_kpname\" May be set in a file that's ignored by load procedure **\n"
+        l_output2="$l_output2\n- \"$l_kpname\" is not set in an included file\n ** Note: \"$l_kpname\" May be set in a file that's ignored by load procedure **\n"
     fi
 }
 
@@ -73,9 +73,9 @@ done < <(printf '%s\n' "${a_parlist[@]}")
 # Check if systemd-coredump is installed
 check_systemd_coredump() {
     if systemctl list-unit-files | grep -q coredump; then
-        l_output="$l_output\n - systemd-coredump is installed."
+        l_output="$l_output\n- systemd-coredump is installed."
     else
-        l_output2="$l_output2\n - systemd-coredump is not installed."
+        l_output2="$l_output2\n- systemd-coredump is not installed."
     fi
 }
 
@@ -101,4 +101,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

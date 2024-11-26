@@ -33,7 +33,6 @@ check_issuenet() {
 check_issuenet
 
 # Compile the output
-l_output+="\n- Result:\n"
 l_output+="- $l_check_issuenet\n"
 
 # Determine the overall result
@@ -51,4 +50,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

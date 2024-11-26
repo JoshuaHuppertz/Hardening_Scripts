@@ -28,7 +28,6 @@ else
 fi
 
 # Compile the output
-l_output+="\n- Result:\n"
 l_output+="- $l_check\n"
 
 # Determine the overall result

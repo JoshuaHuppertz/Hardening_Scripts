@@ -17,9 +17,9 @@ maxperm="$( printf '%o' $(( 0777 & ~$perm_mask )) )"
 SSHD_FILES_CHK() {
     while IFS=: read -r l_mode l_user l_group; do
         l_out2=""
-        [ $(( l_mode & perm_mask )) -gt 0 ] && l_out2="$l_out2\n - Is mode: \"$l_mode\"; should be: \"$maxperm\" or more restrictive"
-        [ "$l_user" != "root" ] && l_out2="$l_out2\n - Is owned by \"$l_user\"; should be owned by \"root\""
-        [ "$l_group" != "root" ] && l_out2="$l_out2\n - Is group owned by \"$l_user\"; should be group owned by \"root\""
+        [ $(( l_mode & perm_mask )) -gt 0 ] && l_out2="$l_out2\n- Is mode: \"$l_mode\"; should be: \"$maxperm\" or more restrictive"
+        [ "$l_user" != "root" ] && l_out2="$l_out2\n- Is owned by \"$l_user\"; should be owned by \"root\""
+        [ "$l_group" != "root" ] && l_out2="$l_out2\n- Is group owned by \"$l_user\"; should be group owned by \"root\""
 
         if [ -n "$l_out2" ]; then
             l_output2="$l_output2\n- File: \"$l_file\":$l_out2"
@@ -55,7 +55,7 @@ RESULT=""
 
 # Provide output based on the audit checks
 if [ -z "$l_output2" ]; then
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n- * Correctly set *:\n$l_output\n"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n\n$l_output\n"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- * Reasons for audit failure *:\n$l_output2\n"
@@ -69,4 +69,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

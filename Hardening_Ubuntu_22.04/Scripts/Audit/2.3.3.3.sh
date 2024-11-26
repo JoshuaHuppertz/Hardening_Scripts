@@ -44,7 +44,7 @@ if [ ${#failures[@]} -eq 0 ]; then
 else
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n"
     for failure in "${failures[@]}"; do
-        RESULT+=" - Reason: $failure\n"
+        RESULT+="- $failure\n"
     done
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
@@ -55,4 +55,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

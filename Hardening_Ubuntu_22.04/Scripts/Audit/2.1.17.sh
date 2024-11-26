@@ -39,13 +39,13 @@ if [[ -z "$output_squid_installed" ]]; then
 else
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n"
     if [[ -n "$output_squid_installed" ]]; then
-        RESULT+="- Reason: $output_squid_installed\n"
+        RESULT+="\n- $output_squid_installed\n"
     fi
     if [[ -n "$output_enabled" ]]; then
-        RESULT+="- Reason: $output_enabled\n"
+        RESULT+="\n- $output_enabled\n"
     fi
     if [[ -n "$output_active" ]]; then
-        RESULT+="- Reason: $output_active\n"
+        RESULT+="\n- $output_active\n"
     fi
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
@@ -56,4 +56,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

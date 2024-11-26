@@ -45,7 +45,6 @@ check_motd
 check_grep
 
 # Compile the output
-l_output+="\n- Result:\n"
 l_output+="- $l_check_motd\n"
 l_output+="- $l_check_grep\n"
 
@@ -64,4 +63,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

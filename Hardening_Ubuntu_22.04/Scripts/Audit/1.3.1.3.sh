@@ -38,7 +38,6 @@ else
 fi
 
 # Compile output
-l_output+="\n- Result:\n"
 l_output+="- $l_profile_check\n"
 l_output+="- $l_process_check\n"
 
@@ -57,4 +56,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

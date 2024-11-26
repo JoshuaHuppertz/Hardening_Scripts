@@ -20,13 +20,13 @@ if [ -f "/etc/at.allow" ]; then
         FILE_NAME="$RESULT_DIR/pass.txt"
     else
         RESULT+="- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n"
-        RESULT+="- Reason: /etc/at.allow does not have the correct permissions or ownership.\n"
+        RESULT+="- /etc/at.allow does not have the correct permissions or ownership.\n"
         RESULT+="- Current Status: \n$at_allow_stat\n"
         FILE_NAME="$RESULT_DIR/fail.txt"
     fi
 else
     RESULT+="- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n"
-    RESULT+="- Reason: /etc/at.allow does not exist.\n"
+    RESULT+="- /etc/at.allow does not exist.\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -50,4 +50,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

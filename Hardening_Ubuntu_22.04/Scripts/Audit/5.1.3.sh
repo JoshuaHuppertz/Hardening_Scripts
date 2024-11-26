@@ -49,12 +49,12 @@ RESULT=""
 
 # Provide output based on the audit checks
 if [ -z "$l_output2" ]; then
-    [ -z "$l_output" ] && l_output="\n - No openSSH public keys found"
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n- * Correctly configured *:\n$l_output"
+    [ -z "$l_output" ] && l_output="\n- No openSSH public keys found"
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n\n$l_output"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- * Reasons for audit failure *:\n$l_output2\n"
-    [ -n "$l_output" ] && RESULT+="\n - * Correctly configured *:\n$l_output\n"
+    [ -n "$l_output" ] && RESULT+="\n- * Correctly configured *:\n$l_output\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -64,4 +64,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

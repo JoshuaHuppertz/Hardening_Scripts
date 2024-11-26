@@ -23,7 +23,7 @@ fi
 l_pcl="gdm gdm3"  # Space-separated list of packages to check
 for l_pn in $l_pcl; do
     if $l_pq "$l_pn" > /dev/null 2>&1; then
-        l_pkgoutput="$l_pkgoutput\n - Package: \"$l_pn\" exists on the system\n - Checking configuration"
+        l_pkgoutput="$l_pkgoutput\n- Package: \"$l_pn\" exists on the system\n - Checking configuration"
     fi
 done
 
@@ -37,12 +37,12 @@ if [[ -n "$l_desktop_media_handling" ]]; then
 
     # Check for auto-run setting
     if [[ -n "$l_autorun_setting" ]]; then
-        l_output="$l_output\n - \"autorun-never\" setting found"
+        l_output="$l_output\n- \"autorun-never\" setting found"
     else
-        l_output2="$l_output2\n - \"autorun-never\" setting not found"
+        l_output2="$l_output2\n- \"autorun-never\" setting not found"
     fi
 else
-    l_output="$l_output\n - [org/gnome/desktop/media-handling] setting not found in /etc/dconf/db/*"
+    l_output="$l_output\n- [org/gnome/desktop/media-handling] setting not found in /etc/dconf/db/*"
 fi
 
 # Prepare result report
@@ -64,4 +64,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

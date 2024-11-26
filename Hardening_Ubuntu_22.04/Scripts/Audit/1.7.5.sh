@@ -32,26 +32,26 @@ if [ -n "$l_pkgoutput" ]; then
     # Check if the idle-delay is locked
     if grep -Psrilq '^\h*idle-delay\h*=\h*uint32\h+\d+\b' /etc/dconf/db/*/; then
         if grep -Prilq '\/org\/gnome\/desktop\/session\/idle-delay\b' /etc/dconf/db/*/locks; then
-            l_output="$l_output\n - \"idle-delay\" is locked"
+            l_output="$l_output\n- \"idle-delay\" is locked"
         else
-            l_output2="$l_output2\n - \"idle-delay\" is not locked"
+            l_output2="$l_output2\n- \"idle-delay\" is not locked"
         fi
     else
-        l_output2="$l_output2\n - \"idle-delay\" is not set so it cannot be locked"
+        l_output2="$l_output2\n- \"idle-delay\" is not set so it cannot be locked"
     fi
 
     # Check if the lock-delay is locked
     if grep -Psrilq '^\h*lock-delay\h*=\h*uint32\h+\d+\b' /etc/dconf/db/*/; then
         if grep -Prilq '\/org\/gnome\/desktop\/screensaver\/lock-delay\b' /etc/dconf/db/*/locks; then
-            l_output="$l_output\n - \"lock-delay\" is locked"
+            l_output="$l_output\n- \"lock-delay\" is locked"
         else
-            l_output2="$l_output2\n - \"lock-delay\" is not locked"
+            l_output2="$l_output2\n- \"lock-delay\" is not locked"
         fi
     else
-        l_output2="$l_output2\n - \"lock-delay\" is not set so it cannot be locked"
+        l_output2="$l_output2\n- \"lock-delay\" is not set so it cannot be locked"
     fi
 else
-    l_output="$l_output\n - GNOME Desktop Manager package is not installed on the system\n - Recommendation is not applicable"
+    l_output="$l_output\n- GNOME Desktop Manager package is not installed on the system\n - Recommendation is not applicable"
 fi
 
 # Prepare result report
@@ -76,4 +76,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

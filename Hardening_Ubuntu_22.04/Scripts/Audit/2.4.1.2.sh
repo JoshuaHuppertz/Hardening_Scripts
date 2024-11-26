@@ -19,7 +19,7 @@ if [[ "$crontab_stat" =~ "Access: (600/-rw-------)" ]] && [[ "$crontab_stat" =~ 
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n"
-    RESULT+="- Reason: /etc/crontab permissions are incorrectly set or not owned by root.\n"
+    RESULT+="- /etc/crontab permissions are incorrectly set or not owned by root.\n"
     RESULT+="- Current Status: \n$crontab_stat\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
@@ -30,4 +30,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

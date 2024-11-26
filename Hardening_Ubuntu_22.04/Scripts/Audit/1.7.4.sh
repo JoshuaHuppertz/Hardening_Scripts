@@ -41,7 +41,7 @@ if dpkg-query -l | grep -q "gnome"; then
         l_output2="$l_output2\n- idle-delay is not set correctly or is disabled"
     fi
 else
-    l_output="\n\n- GNOME Desktop Manager isn't installed\n- Recommendation is Not Applicable"
+    l_output="\n- GNOME Desktop Manager isn't installed\n- Recommendation is Not Applicable"
 fi
 
 # Prepare result report
@@ -62,4 +62,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

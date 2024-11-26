@@ -47,37 +47,37 @@ if [ -n "$l_pkgoutput" ]; then
 
         # Check if profile file exists
         if grep -Pq -- "^\h*system-db:$l_gpname\b" /etc/dconf/profile/*; then
-            l_output="$l_output\n - dconf database profile file \"$(grep -Pl -- "^\h*system-db:$l_gpname\b" /etc/dconf/profile/*)\" exists"
+            l_output="$l_output\n- dconf database profile file \"$(grep -Pl -- "^\h*system-db:$l_gpname\b" /etc/dconf/profile/*)\" exists"
         else
-            l_output2="$l_output2\n - dconf database profile isn't set"
+            l_output2="$l_output2\n- dconf database profile isn't set"
         fi
 
         # Check if the dconf database file exists
         if [ -f "/etc/dconf/db/$l_gpname" ]; then
-            l_output="$l_output\n - The dconf database \"$l_gpname\" exists"
+            l_output="$l_output\n- The dconf database \"$l_gpname\" exists"
         else
-            l_output2="$l_output2\n - The dconf database \"$l_gpname\" doesn't exist"
+            l_output2="$l_output2\n- The dconf database \"$l_gpname\" doesn't exist"
         fi
 
         # Check if the dconf database directory exists
         if [ -d "$l_gpdir" ]; then
-            l_output="$l_output\n - The dconf directory \"$l_gpdir\" exists"
+            l_output="$l_output\n- The dconf directory \"$l_gpdir\" exists"
         else
-            l_output2="$l_output2\n - The dconf directory \"$l_gpdir\" doesn't exist"
+            l_output2="$l_output2\n- The dconf directory \"$l_gpdir\" doesn't exist"
         fi
 
         # Check autorun-never setting
         if grep -Pqrs -- '^\h*autorun-never\h*=\h*true\b' "$l_kfile"; then
-            l_output="$l_output\n - \"autorun-never\" is set to true in: \"$l_kfile\""
+            l_output="$l_output\n- \"autorun-never\" is set to true in: \"$l_kfile\""
         else
-            l_output2="$l_output2\n - \"autorun-never\" is not set correctly"
+            l_output2="$l_output2\n- \"autorun-never\" is not set correctly"
         fi
     else
         # Settings don't exist. Nothing further to check
-        l_output2="$l_output2\n - \"autorun-never\" is not set"
+        l_output2="$l_output2\n- \"autorun-never\" is not set"
     fi
 else
-    l_output="$l_output\n - GNOME Desktop Manager package is not installed on the system\n - Recommendation is not applicable"
+    l_output="$l_output\n- GNOME Desktop Manager package is not installed on the system\n - Recommendation is not applicable"
 fi
 
 # Prepare result report
@@ -95,4 +95,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

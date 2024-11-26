@@ -45,7 +45,6 @@ check_issue_net
 check_grep_net
 
 # Compile the output
-l_output+="\n- Result:\n"
 l_output+="- $l_check_issue_net\n"
 l_output+="- $l_check_grep_net\n"
 

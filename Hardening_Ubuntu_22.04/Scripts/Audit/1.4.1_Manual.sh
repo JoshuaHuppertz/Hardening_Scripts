@@ -36,7 +36,7 @@ else
 fi
 
 # Compile the result in the desired format
-l_output="\n- Result:\n$l_output"
+l_output="\n$l_output"
 l_output+="- Commands to run and expected results:\n"
 l_output+="- # grep \"^set superusers\" /boot/grub/grub.cfg\n"
 l_output+="- Expected Output: \"$expected_superuser_output\"\n"
@@ -58,4 +58,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

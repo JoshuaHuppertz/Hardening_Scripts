@@ -26,7 +26,7 @@ if [ -e "/etc/cron.allow" ]; then
     fi
 else
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n"
-    RESULT+="- Reason: /etc/cron.allow does not exist.\n"
+    RESULT+="- /etc/cron.allow does not exist.\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -50,4 +50,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

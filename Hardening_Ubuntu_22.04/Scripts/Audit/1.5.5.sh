@@ -17,21 +17,21 @@ check_apport() {
     if dpkg-query -s apport &> /dev/null; then
         # Check if Apport is enabled
         if grep -Psi -- '^\h*enabled\h*=\h*[^0]\b' /etc/default/apport &> /dev/null; then
-            l_output2="$l_output2\n - Apport is enabled."
+            l_output2="$l_output2\n- Apport is enabled."
         else
-            l_output="$l_output\n - Apport is not enabled."
+            l_output="$l_output\n- Apport is not enabled."
         fi
     else
-        l_output="$l_output\n - Apport is not installed."
+        l_output="$l_output\n- Apport is not installed."
     fi
 }
 
 # Function to check if the Apport service is active
 check_apport_service() {
     if systemctl is-active apport.service | grep '^active' &> /dev/null; then
-        l_output2="$l_output2\n - Apport service is active."
+        l_output2="$l_output2\n- Apport service is active."
     else
-        l_output="$l_output\n - Apport service is not active."
+        l_output="$l_output\n- Apport service is not active."
     fi
 }
 
@@ -56,4 +56,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

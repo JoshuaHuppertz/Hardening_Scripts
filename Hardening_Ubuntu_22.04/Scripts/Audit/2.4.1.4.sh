@@ -19,7 +19,7 @@ if [[ "$cron_daily_stat" =~ "Access: (700/drwx------)" ]] && [[ "$cron_daily_sta
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n"
-    RESULT+="- Reason: /etc/cron.daily permissions are incorrectly set or not owned by root.\n"
+    RESULT+="- /etc/cron.daily permissions are incorrectly set or not owned by root.\n"
     RESULT+="- Current Status: \n$cron_daily_stat\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
@@ -30,4 +30,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

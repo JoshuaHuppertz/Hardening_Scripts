@@ -14,9 +14,9 @@ l_output2=""
 # Function to check if prelink is installed
 check_prelink() {
     if dpkg-query -s prelink &>/dev/null; then
-        l_output2="$l_output2\n - prelink is installed."
+        l_output2="$l_output2\n- prelink is installed."
     else
-        l_output="$l_output\n - prelink is not installed."
+        l_output="$l_output\n- prelink is not installed."
     fi
 }
 
@@ -40,4 +40,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

@@ -23,7 +23,7 @@ if [[ -z "$output_talk_installed" ]]; then
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
     RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n"
-    RESULT+="- Reason: $output_talk_installed\n"
+    RESULT+="\n- $output_talk_installed\n"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -33,4 +33,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"
