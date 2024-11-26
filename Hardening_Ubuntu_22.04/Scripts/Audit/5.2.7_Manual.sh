@@ -15,31 +15,39 @@ group_check=""
 # Function to check pam_wheel configuration
 CHECK_PAM_WHEEL() {
     # Check for pam_wheel configuration in /etc/pam.d/su
-    if output=$(grep -Pi '^\h*auth\h+(?:required|requisite)\h+pam_wheel\.so\h+(?:[^#\n\r]+\h+)?((?!\2)(use_uid\b|group=\H+\b))\h+(?:[^#\n\r]+\h+)?((?!\1)(use_uid\b|group=\H+\b))(h+.*)?$' /etc/pam.d/su); then
-        if [ -n "$output" ]; then
-            l_output+="\n- pam_wheel is configured correctly: $output"
-            group_name=$(echo "$output" | grep -oP "group=\K\H+")
+    output=$(sudo grep -Pi '^\h*auth\h+(?:required|requisite)\h+pam_wheel\.so' /etc/pam.d/su)
+    if [ -n "$output" ]; then
+        # Check if the line includes the 'group' option
+        group_name=$(echo "$output" | sudo grep -oP "group=\K\H+")
+        if [ -n "$group_name" ]; then
+            l_output+="- pam_wheel is configured with group $group_name\n"
         else
-            l_output+="\n- pam_wheel is NOT configured correctly in /etc/pam.d/su."
+            l_output+="- pam_wheel is configured, but no group specified.\n"
         fi
+    else
+        l_output+="- pam_wheel is NOT configured correctly in /etc/pam.d/su.\n"
     fi
 }
 
 # Function to check the specified group for users
 CHECK_GROUP_USERS() {
     if [ -n "$group_name" ]; then
-        group_check=$(grep "$group_name" /etc/group)
+        group_check=$(sudo grep "$group_name" /etc/group)
         if [ -n "$group_check" ]; then
-            if [[ "$group_check" == *":"* ]]; then
-                user_count=$(echo "$group_check" | awk -F: '{print $4}' | tr ',' '\n' | wc -l)
+            # Extract the list of users in the group
+            user_list=$(echo "$group_check" | awk -F: '{print $4}')
+            if [ -n "$user_list" ]; then
+                user_count=$(echo "$user_list" | tr ',' '\n' | wc -l)
                 if [ "$user_count" -gt 0 ]; then
-                    l_output+="\n- Group $group_name contains users: $group_check"
+                    l_output+="- Group $group_name contains users: $user_list\n"
                 else
-                    l_output+="\n- Group $group_name is empty."
+                    l_output+="- Group $group_name is empty.\n"
                 fi
+            else
+                l_output+="- No users found in group $group_name.\n"
             fi
         else
-            l_output+="\n- Group $group_name does not exist."
+            l_output+="- Group $group_name does not exist.\n"
         fi
     fi
 }
@@ -52,8 +60,8 @@ CHECK_GROUP_USERS
 RESULT=""
 
 # Determine PASS or FAIL based on the output
-if [[ $l_output == *"NOT configured correctly"* || $l_output == *"contains users"* ]]; then
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- * Reasons for audit failure * :$l_output"
+if [[ $l_output == *"NOT configured correctly"* || $l_output == *"does not exist"* || $l_output == *"is empty"* || $l_output == *"No users found"* ]]; then
+    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n- * Reasons for audit failure * :\n$l_output"
     FILE_NAME="$RESULT_DIR/fail.txt"
 else
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$l_output"
@@ -65,4 +73,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

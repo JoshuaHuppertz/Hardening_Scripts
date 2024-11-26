@@ -13,9 +13,12 @@ l_output2=""
 
 # Function to check for NOPASSWD entries in sudoers files
 CHECK_NOPASSWD() {
-    # Check for any NOPASSWD entries
-    if grep -r "^[^#].*NOPASSWD" /etc/sudoers*; then
-        l_output2+="\n- NOPASSWD entries found in the sudoers configuration."
+    # Check for any NOPASSWD entries in /etc/sudoers and /etc/sudoers.d/*
+    # Redirect grep errors to /dev/null to suppress "Permission denied" messages
+    NOPASSWD_LINES=$(sudo grep -r "^[^#].*NOPASSWD" /etc/sudoers* 2>/dev/null)
+
+    if [ -n "$NOPASSWD_LINES" ]; then
+        l_output2+="\n- NOPASSWD entries found in the sudoers configuration:\n$NOPASSWD_LINES"
     else
         l_output+="\n- No NOPASSWD entries found."
     fi
@@ -41,4 +44,6 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+
+# Also print the result to the console
+#echo -e "$RESULT"

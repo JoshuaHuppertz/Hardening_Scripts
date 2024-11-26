@@ -15,7 +15,7 @@ is_default=true  # Flag to check if the default value is used
 # Function to check timestamp_timeout in sudoers files
 CHECK_TIMESTAMP_TIMEOUT() {
     # Check for timestamp_timeout values
-    if timeout_value=$(grep -roP "timestamp_timeout=\K[0-9]*" /etc/sudoers*); then
+    if timeout_value=$(sudo grep -roP "timestamp_timeout=\K[0-9]*" /etc/sudoers*); then
         if [ "$timeout_value" ]; then
             # Check if the value is greater than 15
             if (( timeout_value > 15 )); then
@@ -29,7 +29,7 @@ CHECK_TIMESTAMP_TIMEOUT() {
 
     # If no specific configuration found, check the default value
     if $is_default; then
-        timeout_value=$(sudo -V | grep "Authentication timestamp timeout:" | awk '{print $NF}')
+        timeout_value=$(sudo -V | sudo grep "Authentication timestamp timeout:" | awk '{print $NF}')
         if [ "$timeout_value" = "-1" ]; then
             l_output+="\n- timestamp_timeout is disabled (set to -1)."
         elif (( timeout_value > 15 )); then
@@ -60,4 +60,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

@@ -14,7 +14,7 @@ l_output2=""
 # Function to check sudo configuration for custom log file
 CHECK_LOGFILE() {
     # Check if a custom logfile is set
-    if grep -rPsi "^\h*Defaults\h+([^#]+,\h*)?logfile\h*=\h*(\"|\')?\H+(\"|\')?(,\h*\H+\h*)*\h*(#.*)?$" /etc/sudoers*; then
+    if sudo grep -rPsi "^\h*Defaults\h+([^#]+,\h*)?logfile\h*=\h*(\"|\')?\H+(\"|\')?(,\h*\H+\h*)*\h*(#.*)?$" /etc/sudoers*; then
         l_output+="\n- Custom logfile is configured."
     else
         l_output2+="\n- No custom logfile is configured."
@@ -41,4 +41,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

@@ -14,7 +14,7 @@ l_output2=""
 # Function to check for !authenticate entries in sudoers files
 CHECK_AUTHENTICATE() {
     # Check for any !authenticate entries
-    if grep -r "^[^#].*\!authenticate" /etc/sudoers*; then
+    if sudo grep -r "^[^#].*\!authenticate" /etc/sudoers*; then
         l_output2+="\n- !authenticate entries found in the sudoers configuration."
     else
         l_output+="\n- No !authenticate entries found."
@@ -41,4 +41,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"
