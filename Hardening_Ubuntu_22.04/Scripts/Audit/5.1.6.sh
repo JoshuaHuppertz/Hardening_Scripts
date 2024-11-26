@@ -14,8 +14,7 @@ l_output2=""
 # Function to check weak ciphers in SSHD configuration
 CHECK_WEAK_CIPHERS() {
     local cipher_output
-    # Fix the grep pattern and suppress console output (stderr)
-    cipher_output=$(sshd -T 2>/dev/null | grep -PiE 'ciphers\s+"?([^#\n\r]+,)?(3des|blowfish|cast128|aes(128|192|256)-cbc|arcfour(128|256)?|rijndael-cbc@lysator\.liu\.se|chacha20-poly1305@openssh\.com)\b')
+    cipher_output=$(sshd -T 2>/dev/null | grep -Pi -- '^ciphers\h+"?([^#\n\r]+,)?((3des|blowfish|cast128|aes(128|192|256)-cbc|arcfour(128|256)?|rijndael-cbc@lysator\.liu\.se|chacha20-poly1305@openssh\.com)\b')
 
     if [ -n "$cipher_output" ]; then
         l_output+="\n- Weak ciphers found:\n$cipher_output\n"
@@ -44,4 +43,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-#echo -e "$RESULT"
+echo -e "$RESULT"
