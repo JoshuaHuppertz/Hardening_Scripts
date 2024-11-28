@@ -14,10 +14,25 @@ l_output2=""
 # Permission masks
 l_perm_mask="0137"
 
-# Check if the auditd.conf file exists
-if [ -e "/etc/audit/auditd.conf" ]; then
+# Search for the auditd.conf file dynamically
+AUDIT_CONF_PATH=$(sudo find /etc -type f -name "auditd.conf" 2>/dev/null)
+
+# Debugging: Log the result of the find command
+#echo "Searching for auditd.conf..."
+
+# Check if the auditd.conf file was found
+if [ -n "$AUDIT_CONF_PATH" ]; then
+    #echo "auditd.conf found at $AUDIT_CONF_PATH. Proceeding with configuration check."
+
     # Read the log directory from the configuration file
-    l_audit_log_directory="$(dirname "$(awk -F= '/^\s*log_file\s*/{print $2}' /etc/audit/auditd.conf | xargs)")"
+    l_audit_log_directory="$(dirname "$(sudo awk -F= '/^\s*log_file\s*/{print $2}' "$AUDIT_CONF_PATH" | xargs)")"
+
+    # If log directory is not set in the configuration, fall back to default directory
+    if [ -z "$l_audit_log_directory" ]; then
+        l_audit_log_directory="/var/log/audit"
+    fi
+
+    echo "Using log directory: $l_audit_log_directory"
 
     # Check if the directory exists
     if [ -d "$l_audit_log_directory" ]; then
@@ -27,21 +42,23 @@ if [ -e "/etc/audit/auditd.conf" ]; then
         # Find files in the audit log directory with the specified permissions
         while IFS= read -r -d $'\0' l_file; do
             [ -e "$l_file" ] && a_files+=("$l_file")
-        done < <(find "$l_audit_log_directory" -maxdepth 1 -type f -perm /"$l_perm_mask" -print0 2>/dev/null)
+        done < <(sudo find "$l_audit_log_directory" -maxdepth 1 -type f -perm /"$l_perm_mask" -print0 2>/dev/null)
 
         # Check if any files were found
         if (( "${#a_files[@]}" > 0 )); then
             for l_file in "${a_files[@]}"; do
-                l_file_mode="$(stat -Lc '%#a' "$l_file")"
+                l_file_mode="$(sudo stat -Lc '%#a' "$l_file")"
                 l_output2+="\n- ** FAIL **\n- File: \"$l_file\" has permission: \"$l_file_mode\"\n (should be at least \"$l_maxperm\" or more restrictive)\n"
             done
         else
             l_output+="\n- All files in \"$l_audit_log_directory\" have the required permissions: \"$l_maxperm\" or more restrictive"
         fi
     else
-        l_output2+="\n- ** FAIL **\n- The log directory is not specified in \"/etc/audit/auditd.conf\". Please specify the directory."
+        l_output2+="\n- ** FAIL **\n- The log directory \"$l_audit_log_directory\" does not exist."
     fi
 else
+    # If the file was not found, output failure message and log the error
+    echo "auditd.conf not found! Please check if auditd is installed and configured."
     l_output2+="\n- ** FAIL **\n- File: \"/etc/audit/auditd.conf\" not found.\n- ** Please check if auditd is installed **"
 fi
 
@@ -60,4 +77,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

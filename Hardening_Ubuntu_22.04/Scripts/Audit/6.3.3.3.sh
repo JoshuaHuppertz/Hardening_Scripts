@@ -15,10 +15,7 @@ l_output2=""
 SUDO_LOG_FILE=$(sudo grep -r logfile /etc/sudoers* | sed -e 's/.*logfile=//;s/,? .*$//' -e 's/"//g' -e 's|/|\\/|g')
 
 if [ -n "${SUDO_LOG_FILE}" ]; then
-    l_disk_rules_output=$(sudo awk "/^ *-w/ \
-    && /${SUDO_LOG_FILE}/ \
-    && / -p *wa/ \
-    && (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)" /etc/audit/rules.d/*.rules 2>/dev/null)
+    l_disk_rules_output=$(sudo awk "/^ *-w/ && /${SUDO_LOG_FILE}/ && / -p *wa/ && (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)" /etc/audit/rules.d/*.rules 2>/dev/null)
     
     expected_disk_rules="-w ${SUDO_LOG_FILE} -p wa -k sudo_log_file"
 
@@ -34,10 +31,7 @@ fi
 
 # Check running rules
 if [ -n "${SUDO_LOG_FILE}" ]; then
-    l_running_rules_output=$(sudo auditctl -l | awk "/^ *-w/ \
-    && /${SUDO_LOG_FILE}/ \
-    && / -p *wa/ \
-    && (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)" 2>/dev/null)
+    l_running_rules_output=$(sudo auditctl -l | sudo awk "/^ *-w/ && /${SUDO_LOG_FILE}/ && / -p *wa/ && (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)" 2>/dev/null)
     
     expected_running_rules="-w ${SUDO_LOG_FILE} -p wa -k sudo_log_file"
 

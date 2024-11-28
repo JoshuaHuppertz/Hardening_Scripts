@@ -12,12 +12,7 @@ l_output=""
 l_output2=""
 
 # Check on-disk rules
-l_disk_rules_output=$(sudo awk '/^ *-a *always,exit/ \
-&& / -F *arch=b(32|64)/ \
-&& (/ -F *auid!=unset/ || / -F *auid!=-1/ || / -F *auid!=4294967295/) \
-&& (/ -C *euid!=uid/ || / -C *uid!=euid/) \
-&& / -S *execve/ \
-&& (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)' /etc/audit/rules.d/*.rules 2>/dev/null)
+l_disk_rules_output=$(sudo awk '/^ *-a *always,exit/ && / -F *arch=b(32|64)/ && (/ -F *auid!=unset/ || / -F *auid!=-1/ || / -F *auid!=4294967295/) && (/ -C *euid!=uid/ || / -C *uid!=euid/) && / -S *execve/ && (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)' /etc/audit/audit.rules /etc/audit/rules.d/*.rules 2>/dev/null)
 
 # Define the expected on-disk rules
 expected_disk_rules="-a always,exit -F arch=b64 -C euid!=uid -F auid!=unset -S execve -k user_emulation"
@@ -34,12 +29,7 @@ else
 fi
 
 # Check running rules
-l_running_rules_output=$(sudo auditctl -l | sudo awk '/^ *-a *always,exit/ \
-&& / -F *arch=b(32|64)/ \
-&& (/ -F *auid!=unset/ || / -F *auid!=-1/ || / -F *auid!=4294967295/) \
-&& (/ -C *euid!=uid/ || / -C *uid!=euid/) \
-&& / -S *execve/ \
-&& (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)' 2>/dev/null)
+l_running_rules_output=$(sudo auditctl -l | sudo awk '/^ *-a *always,exit/ && / -F *arch=b(32|64)/ && (/ -F *auid!=unset/ || / -F *auid!=-1/ || / -F *auid!=4294967295/) && (/ -C *euid!=uid/ || / -C *uid!=euid/) && / -S *execve/ && (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)' 2>/dev/null)
 
 # Define the expected running rules
 expected_running_rules="-a always,exit -F arch=b64 -S execve -C uid!=euid -F auid!=-1 -F key=user_emulation

@@ -12,16 +12,10 @@ l_output=""
 l_output2=""
 
 # Check On-Disk configuration
-on_disk_rules=$(sudo awk '/^ *-a *always,exit/ \
-&& / -F *arch=b(32|64)/ \
-&& / -S/ \
-&& (/adjtimex/ || /settimeofday/ || /clock_settime/) \
-&& (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)' /etc/audit/rules.d/*.rules 2>/dev/null)
+on_disk_rules=$(sudo awk '/^ *-a *always,exit/ \ && / -F *arch=b(32|64)/ \ && / -S/ \ && (/adjtimex/ || /settimeofday/ || /clock_settime/) \ && (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)' /etc/audit/rules.d/*.rules 2>/dev/null)
 
-localtime_rule=$(sudo awk '/^ *-w/ \
-&& /\/etc\/localtime/ \
-&& / -p *wa/ \
-&& (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)' /etc/audit/rules.d/*.rules 2>/dev/null)
+localtime_rule=$(sudo awk '/^ *-w/ && /\/etc\/localtime/ && / -p *wa/ && (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)' /etc/audit/rules.d/*.rules 2>/dev/null)
+
 
 expected_on_disk_rules="\
 -a always,exit -F arch=b64 -S adjtimex,settimeofday,clock_settime -k time-change
@@ -35,16 +29,11 @@ else
 fi
 
 # Check Running configuration
-running_rules=$(sudo auditctl -l | awk '/^ *-a *always,exit/ \
-&& / -F *arch=b(32|64)/ \
-&& / -S/ \
-&& (/adjtimex/ || /settimeofday/ || /clock_settime/) \
-&& (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)' 2>/dev/null)
+running_rules=$(sudo auditctl -l | awk '/^ *-a *always,exit/ && / -F *arch=b(32|64)/ && / -S/ && (/adjtimex/ || /settimeofday/ || /clock_settime/) && (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)' 2>/dev/null)
 
-running_localtime_rule=$(sudo auditctl -l | awk '/^ *-w/ \
-&& /\/etc\/localtime/ \
-&& / -p *wa/ \
-&& (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)' 2>/dev/null)
+
+running_localtime_rule=$(sudo auditctl -l | awk '/^ *-w/ && /\/etc\/localtime/ && / -p *wa/ && (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)' 2>/dev/null)
+
 
 if [[ "$running_rules" == *"-a always,exit -F arch=b64 -S adjtimex,settimeofday,clock_settime -k time-change"* && \
       "$running_localtime_rule" == *"-w /etc/localtime -p wa -k time-change"* ]]; then
@@ -69,4 +58,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

@@ -30,7 +30,7 @@ a_audit_tools=(
 # Check permissions of audit tools
 for l_audit_tool in "${a_audit_tools[@]}"; do
     if [ -e "$l_audit_tool" ]; then
-        l_mode="$(stat -Lc '%#a' "$l_audit_tool")"
+        l_mode="$(sudo stat -Lc '%#a' "$l_audit_tool")"
         if [ $(( "$l_mode" & "$l_perm_mask" )) -gt 0 ]; then
             l_output2+="\n- Audit tool \"$l_audit_tool\" is mode: \"$l_mode\" and should be mode: \"$l_maxperm\" or more restrictive"
         else
@@ -56,4 +56,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

@@ -24,7 +24,7 @@ a_audit_tools=(
 # Check if the audit tools belong to the "root" group
 for l_audit_tool in "${a_audit_tools[@]}"; do
     if [ -e "$l_audit_tool" ]; then
-        l_group="$(stat -Lc '%G' "$l_audit_tool")"
+        l_group="$(sudo stat -Lc '%G' "$l_audit_tool")"
         if [ "$l_group" != "root" ]; then
             l_output2+="\n- Audit tool \"$l_audit_tool\" is owned by group: \"$l_group\" (should be owned by group: \"root\")"
         fi
@@ -47,4 +47,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

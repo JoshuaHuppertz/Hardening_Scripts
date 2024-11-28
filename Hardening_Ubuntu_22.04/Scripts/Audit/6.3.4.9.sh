@@ -24,7 +24,7 @@ a_audit_tools=(
 # Check if audit tools are owned by the "root" user
 for l_audit_tool in "${a_audit_tools[@]}"; do
     if [ -e "$l_audit_tool" ]; then
-        l_owner="$(stat -Lc '%U' "$l_audit_tool")"
+        l_owner="$(sudo stat -Lc '%U' "$l_audit_tool")"
         if [ "$l_owner" != "root" ]; then
             l_output2+="\n- Audit tool \"$l_audit_tool\" is owned by user: \"$l_owner\" (should be owned by user: \"root\")"
         fi
@@ -47,4 +47,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"
