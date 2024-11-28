@@ -12,7 +12,7 @@ l_output=""
 l_output2=""
 
 # Get the output of iptables
-iptables_rules=$(iptables -L -v -n)
+iptables_rules=$(sudo iptables -L -v -n)
 
 # Define expected rules for new outbound and established connections
 expected_rules=(

@@ -12,7 +12,7 @@ l_output=""
 l_output2=""
 
 # Check if max_log_file is set in auditd.conf
-l_log_file_output=$(grep -Po -- '^\h*max_log_file\h*=\h*\d+\b' /etc/audit/auditd.conf)
+l_log_file_output=$(sudo grep -Po -- '^\h*max_log_file\h*=\h*\d+\b' /etc/audit/auditd.conf)
 
 if [ -n "$l_log_file_output" ]; then
     l_output+="\n- The 'max_log_file' parameter is set: $l_log_file_output."
@@ -35,4 +35,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

@@ -12,7 +12,7 @@ l_output=""
 l_output2=""
 
 # Check if space_left_action is set to email, exec, single, or halt
-l_space_left_action_output=$(grep -Pi '^\s*space_left_action\s*=\s*(email|exec|single|halt)\b' /etc/audit/auditd.conf)
+l_space_left_action_output=$(sudo grep -Pi '^\s*space_left_action\s*=\s*(email|exec|single|halt)\b' /etc/audit/auditd.conf)
 
 if [ -n "$l_space_left_action_output" ]; then
     l_output+="\n- The 'space_left_action' parameter is correctly set: $l_space_left_action_output."
@@ -21,7 +21,7 @@ else
 fi
 
 # Check if admin_space_left_action is set to single or halt
-l_admin_space_left_action_output=$(grep -Pi '^\s*admin_space_left_action\s*=\s*(single|halt)\b' /etc/audit/auditd.conf)
+l_admin_space_left_action_output=$(sudo grep -Pi '^\s*admin_space_left_action\s*=\s*(single|halt)\b' /etc/audit/auditd.conf)
 
 if [ -n "$l_admin_space_left_action_output" ]; then
     l_output+="\n- The 'admin_space_left_action' parameter is correctly set: $l_admin_space_left_action_output."
@@ -44,4 +44,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

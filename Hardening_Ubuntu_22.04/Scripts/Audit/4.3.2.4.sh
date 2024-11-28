@@ -15,10 +15,10 @@ l_output2=""
 open_ports=$(ss -4tuln)
 
 # Determine firewall rules
-firewall_rules=$(iptables -L INPUT -v -n)
+firewall_rules=$(sudo iptables -L INPUT -v -n)
 
 # Check for open ports listening on non-localhost addresses
-non_local_ports=$(echo "$open_ports" | awk '/LISTEN|UNCONN/ && !/127.0.0.1|::1/' | awk '{print $5}' | cut -d':' -f2)
+non_local_ports=$(echo "$open_ports" | sudo awk '/LISTEN|UNCONN/ && !/127.0.0.1|::1/' | sudo awk '{print $5}' | cut -d':' -f2)
 
 # Verify that each non-local port has a corresponding firewall rule
 for port in $non_local_ports; do
@@ -48,4 +48,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

@@ -12,7 +12,7 @@ l_output=""
 l_output2=""
 
 # Check if max_log_file_action is correctly set in auditd.conf
-l_log_file_action_output=$(grep -P '^\s*max_log_file_action\s*=\s*keep_logs' /etc/audit/auditd.conf)
+l_log_file_action_output=$(sudo grep -P '^\s*max_log_file_action\s*=\s*keep_logs' /etc/audit/auditd.conf)
 
 if [ -n "$l_log_file_action_output" ]; then
     l_output+="\n- The 'max_log_file_action' parameter is correctly set: $l_log_file_action_output."
@@ -35,4 +35,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

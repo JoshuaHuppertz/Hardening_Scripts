@@ -12,7 +12,7 @@ output=""
 
 # Function to check PASS_WARN_AGE in /etc/login.defs
 CHECK_PASS_WARN_AGE_LOGIN_DEFS() {
-    pass_warn_age_check=$(grep -Pi -- '^\h*PASS_WARN_AGE\h+\d+\b' /etc/login.defs)
+    pass_warn_age_check=$(sudo grep -Pi -- '^\h*PASS_WARN_AGE\h+\d+\b' /etc/login.defs)
     
     if [[ "$pass_warn_age_check" =~ ([0-9]+) ]]; then
         warn_age_value="${BASH_REMATCH[1]}"
@@ -28,7 +28,7 @@ CHECK_PASS_WARN_AGE_LOGIN_DEFS() {
 
 # Function to check PASS_WARN_AGE for all users
 CHECK_PASS_WARN_AGE_SHADOW() {
-    shadow_check=$(awk -F: '($2~/^\$.+\$/) {if($6 < 7)print "User: " $1 " PASS_WARN_AGE: " $6}' /etc/shadow)
+    shadow_check=$(sudo awk -F: '($2~/^\$.+\$/) {if($6 < 7)print "User: " $1 " PASS_WARN_AGE: " $6}' /etc/shadow)
     
     if [ -z "$shadow_check" ]; then
         output+="All users have PASS_WARN_AGE set to 7 or more (PASS)\n"
@@ -58,4 +58,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

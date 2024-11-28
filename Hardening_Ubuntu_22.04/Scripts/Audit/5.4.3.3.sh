@@ -14,9 +14,9 @@ l_output2=""
 # Function to check umask in a file
 file_umask_chk() {
     if grep -Psiq -- '^\h*umask\h+(0?[0-7][2-7]7|u(=[rwx]{0,3}),g=([rx]{0,2}),o=)(\h*#.*)?$' "$l_file"; then
-        l_output="$l_output\n - umask is correctly set in \"$l_file\""
+        l_output="$l_output\n- umask is correctly set in \"$l_file\""
     elif grep -Psiq -- '^\h*umask\h+(([0-7][0-7][01][0-7]\b|[0-7][0-7][0-7][0-6]\b)|([0-7][01][0-7]\b|[0-7][0-7][0-6]\b)|(u=[rwx]{1,3},)?(((g=[rx]?[rx]?w[rx]?[rx]?\b)(,o=[rwx]{1,3})?)|((g=[wrx]{1,3},)?o=[wrx]{1,3}\b)))' "$l_file"; then
-        l_output2="$l_output2\n - umask is incorrectly set in \"$l_file\""
+        l_output2="$l_output2\n- umask is incorrectly set in \"$l_file\""
     fi
 }
 
@@ -33,9 +33,9 @@ done < <(find /etc/profile.d/ -type f -name '*.sh' -print0)
 
 if [ -z "$l_output" ]; then
     if grep -Psiq -- '^\h*session\h+[^#\n\r]+\h+pam_umask\.so\h+([^#\n\r]+\h+)?umask=(0?[0-7][2-7]7)\b' "$l_file"; then
-        l_output="$l_output\n - umask is correctly set in \"$l_file\""
+        l_output="$l_output\n- umask is correctly set in \"$l_file\""
     elif grep -Psiq '^\h*session\h+[^#\n\r]+\h+pam_umask\.so\h+([^#\n\r]+\h+)?umask=(([0-7][0-7][01][0-7]\b|[0-7][0-7][0-7][0-6]\b)|([0-7][01][0-7]\b))' "$l_file"; then
-        l_output2="$l_output2\n - umask is incorrectly set in \"$l_file\""
+        l_output2="$l_output2\n- umask is incorrectly set in \"$l_file\""
     fi
 fi
 
@@ -59,4 +59,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

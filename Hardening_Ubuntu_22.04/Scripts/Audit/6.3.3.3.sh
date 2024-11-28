@@ -29,7 +29,7 @@ if [ -n "${SUDO_LOG_FILE}" ]; then
         l_output2+="\n- Expected on-disk rules:\n$expected_disk_rules\n"
     fi
 else
-    l_output2+="\n- Error: 'SUDO_LOG_FILE' variable is not set.\n"
+    l_output2+="\n- Error: On-Disk 'SUDO_LOG_FILE' variable is not set.\n"
 fi
 
 # Check running rules
@@ -48,7 +48,7 @@ if [ -n "${SUDO_LOG_FILE}" ]; then
         l_output2+="\n- Expected running rules:\n$l_running_rules_output"
     fi
 else
-    l_output2+="\n- Error: 'SUDO_LOG_FILE' variable is not set.\n"
+    l_output2+="\n- Error: Running rules 'SUDO_LOG_FILE' variable is not set.\n"
 fi
 
 # Check and output result
@@ -66,4 +66,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

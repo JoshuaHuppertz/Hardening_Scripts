@@ -12,9 +12,9 @@ l_output=""
 l_output2=""
 
 # Check iptables policies
-input_policy=$(iptables -L INPUT -n | awk '/Chain INPUT/{getline; print $3}')
-forward_policy=$(iptables -L FORWARD -n | awk '/Chain FORWARD/{getline; print $3}')
-output_policy=$(iptables -L OUTPUT -n | awk '/Chain OUTPUT/{getline; print $3}')
+input_policy=$(sudo iptables -L INPUT -n | sudo awk '/Chain INPUT/{getline; print $3}')
+forward_policy=$(sudo iptables -L FORWARD -n | sudo awk '/Chain FORWARD/{getline; print $3}')
+output_policy=$(sudo iptables -L OUTPUT -n | sudo awk '/Chain OUTPUT/{getline; print $3}')
 
 # Check INPUT policy
 if [[ "$input_policy" == "DROP" || "$input_policy" == "REJECT" ]]; then

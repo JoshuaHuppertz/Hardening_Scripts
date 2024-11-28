@@ -12,7 +12,7 @@ output=""
 
 # Function to check PASS_MAX_DAYS in /etc/login.defs
 CHECK_PASS_MAX_DAYS_LOGIN_DEFS() {
-    pass_max_days_check=$(grep -Pi -- '^\h*PASS_MAX_DAYS\h+\d+\b' /etc/login.defs)
+    pass_max_days_check=$(sudo grep -Pi -- '^\h*PASS_MAX_DAYS\h+\d+\b' /etc/login.defs)
     
     if [[ "$pass_max_days_check" =~ ([0-9]+) ]]; then
         max_days_value="${BASH_REMATCH[1]}"
@@ -28,7 +28,7 @@ CHECK_PASS_MAX_DAYS_LOGIN_DEFS() {
 
 # Function to check PASS_MAX_DAYS for all users
 CHECK_PASS_MAX_DAYS_SHADOW() {
-    shadow_check=$(awk -F: '($2~/^\$.+\$/) {if($5 > 365 || $5 < 1)print "User: " $1 " PASS_MAX_DAYS: " $5}' /etc/shadow)
+    shadow_check=$(sudo awk -F: '($2~/^\$.+\$/) {if($5 > 365 || $5 < 1)print "User: " $1 " PASS_MAX_DAYS: " $5}' /etc/shadow)
     
     if [ -z "$shadow_check" ]; then
         output+="All users have PASS_MAX_DAYS set to 365 days or less (PASS)\n"
@@ -45,7 +45,7 @@ CHECK_PASS_MAX_DAYS_SHADOW
 RESULT=""
 
 # Determine PASS or FAIL based on the output
-if echo "$output" | grep -q "(FAIL)"; then
+if echo "$output" | sudo grep -q "(FAIL)"; then
     RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n$output"
     FILE_NAME="$RESULT_DIR/fail.txt"
 else
@@ -58,4 +58,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

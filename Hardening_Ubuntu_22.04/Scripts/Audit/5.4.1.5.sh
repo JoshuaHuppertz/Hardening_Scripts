@@ -23,7 +23,7 @@ CHECK_DEFAULT_INACTIVE() {
 
 # Function to check INACTIVE values for all users in /etc/shadow
 CHECK_USER_INACTIVE_VALUES() {
-    inactive_violations=$(awk -F: '($2~/^\$.+\$/) {if($7 > 45 || $7 < 0)print "User: " $1 " INACTIVE: " $7}' /etc/shadow)
+    inactive_violations=$(sudo awk -F: '($2~/^\$.+\$/) {if($7 > 45 || $7 < 0)print "User: " $1 " INACTIVE: " $7}' /etc/shadow)
     
     if [[ -z "$inactive_violations" ]]; then
         output+="All users have INACTIVE values within policy limits (PASS)\n"
@@ -53,4 +53,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

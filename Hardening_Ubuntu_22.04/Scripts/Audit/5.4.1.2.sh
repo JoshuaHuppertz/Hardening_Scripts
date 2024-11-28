@@ -12,7 +12,7 @@ output=""
 
 # Function to check PASS_MIN_DAYS in /etc/login.defs
 CHECK_PASS_MIN_AGE_LOGIN_DEFS() {
-    pass_min_days_check=$(grep -Pi -- '^\h*PASS_MIN_DAYS\h+\d+\b' /etc/login.defs)
+    pass_min_days_check=$(sudo grep -Pi -- '^\h*PASS_MIN_DAYS\h+\d+\b' /etc/login.defs)
     
     if [[ "$pass_min_days_check" =~ ([0-9]+) ]]; then
         min_days_value="${BASH_REMATCH[1]}"
@@ -28,7 +28,7 @@ CHECK_PASS_MIN_AGE_LOGIN_DEFS() {
 
 # Function to check PASS_MIN_DAYS for all users
 CHECK_PASS_MIN_AGE_SHADOW() {
-    shadow_check=$(awk -F: '($2~/^\$.+\$/) {if($4 < 1)print "User: " $1 " PASS_MIN_DAYS: " $4}' /etc/shadow)
+    shadow_check=$(sudo awk -F: '($2~/^\$.+\$/) {if($4 < 1)print "User: " $1 " PASS_MIN_DAYS: " $4}' /etc/shadow)
     
     if [ -z "$shadow_check" ]; then
         output+="All users have PASS_MIN_DAYS set to greater than 0 (PASS)\n"
@@ -58,4 +58,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

@@ -14,10 +14,10 @@ version_check=""
 # Function to check the version of libpam-pwquality
 CHECK_LIBPAM_PWQUALITY() {
     # Check the version of libpam-pwquality
-    output=$(sudo dpkg-query -s libpam-pwquality | sudo grep -P -- '^(Status|Version)\b')
+    output=$(sudo dpkg-query -s libpam-pwquality 2>/dev/null | grep -P -- '^(Status|Version)\b')
     
     if [ $? -eq 0 ]; then
-        version_check=$(echo "$output" | sudo grep -oP 'Version:\s+\K\S+')
+        version_check=$(echo "$output" | grep -oP 'Version:\s+\K\S+')
         
         # Construct the output to show the version
         output="Status: installed\nVersion: $version_check"
@@ -33,11 +33,11 @@ CHECK_LIBPAM_PWQUALITY
 RESULT=""
 
 # Determine PASS or FAIL based on the output
-if echo "$output" | sudo grep -q "installed"; then
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$output"
+if echo "$output" | grep -q "installed"; then
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** PASS **\n$output"
     FILE_NAME="$RESULT_DIR/pass.txt"
 else
-    RESULT+="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n$output"
+    RESULT="\n- Audit: $AUDIT_NUMBER\n\n- Audit Result:\n ** FAIL **\n$output"
     FILE_NAME="$RESULT_DIR/fail.txt"
 fi
 
@@ -46,4 +46,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

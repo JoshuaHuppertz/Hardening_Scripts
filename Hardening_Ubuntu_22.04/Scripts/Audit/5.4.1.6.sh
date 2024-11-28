@@ -14,13 +14,13 @@ output=""
 CHECK_FUTURE_PASSWORD_CHANGE() {
     while IFS= read -r l_user; do
         # Get the last password change date in seconds
-        l_change=$(date -d "$(chage --list "$l_user" | grep '^Last password change' | cut -d: -f2 | grep -v 'never$')" +%s 2>/dev/null)
+        l_change=$(date -d "$(sudo chage --list "$l_user" | grep '^Last password change' | cut -d: -f2 | grep -v 'never$')" +%s 2>/dev/null)
 
         # Check if the last change date is in the future
         if [[ -n "$l_change" && "$l_change" -gt "$(date +%s)" ]]; then
-            output+="User: \"$l_user\" last password change was \"$(chage --list "$l_user" | grep '^Last password change' | cut -d: -f2)\"\n"
+            output+="User: \"$l_user\" last password change was \"$(sudo chage --list "$l_user" | grep '^Last password change' | cut -d: -f2)\"\n"
         fi
-    done < <(awk -F: '$2~/^\$.+\$/{print $1}' /etc/shadow)
+    done < <(sudo awk -F: '$2~/^\$.+\$/{print $1}' /etc/shadow)
 }
 
 # Run the check
@@ -43,4 +43,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

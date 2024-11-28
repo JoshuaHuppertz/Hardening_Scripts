@@ -12,7 +12,7 @@ l_output=""
 l_output2=""
 
 # Check ip6tables INPUT chain rules
-input_output=$(ip6tables -L INPUT -v -n)
+input_output=$(sudo ip6tables -L INPUT -v -n)
 expected_input_rules=(
     "Chain INPUT (policy DROP)"
     "ACCEPT all lo * ::/0 ::/0"
@@ -21,7 +21,7 @@ expected_input_rules=(
 
 # Verify INPUT chain rules
 for rule in "${expected_input_rules[@]}"; do
-    if echo "$input_output" | grep -q "$rule"; then
+    if echo "$input_output" | sudo grep -q "$rule"; then
         l_output+="\n- Found expected INPUT rule: $rule"
     else
         l_output2+="\n- Missing expected INPUT rule: $rule"
@@ -29,7 +29,7 @@ for rule in "${expected_input_rules[@]}"; do
 done
 
 # Check ip6tables OUTPUT chain rules
-output_output=$(ip6tables -L OUTPUT -v -n)
+output_output=$(sudo ip6tables -L OUTPUT -v -n)
 expected_output_rules=(
     "Chain OUTPUT (policy DROP)"
     "ACCEPT all * lo ::/0 ::/0"
@@ -37,7 +37,7 @@ expected_output_rules=(
 
 # Verify OUTPUT chain rules
 for rule in "${expected_output_rules[@]}"; do
-    if echo "$output_output" | grep -q "$rule"; then
+    if echo "$output_output" | sudo grep -q "$rule"; then
         l_output+="\n- Found expected OUTPUT rule: $rule"
     else
         l_output2+="\n- Missing expected OUTPUT rule: $rule"
@@ -45,7 +45,7 @@ for rule in "${expected_output_rules[@]}"; do
 done
 
 # Check if IPv6 is enabled
-if grep -Pqs '^\h*0\b' /sys/module/ipv6/parameters/disable; then
+if sudo grep -Pqs '^\h*0\b' /sys/module/ipv6/parameters/disable; then
     l_output2+="\n- IPv6 is enabled on the system."
 else
     l_output+="\n- IPv6 is not enabled on the system."
@@ -70,4 +70,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

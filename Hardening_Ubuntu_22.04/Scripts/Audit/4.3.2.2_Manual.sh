@@ -12,7 +12,7 @@ l_output=""
 l_output2=""
 
 # Check INPUT chain
-input_rules=$(iptables -L INPUT -v -n)
+input_rules=$(sudo iptables -L INPUT -v -n)
 expected_input_rules=(
     "Chain INPUT (policy DROP 0 packets, 0 bytes)"
     "ACCEPT all -- lo * 0.0.0.0/0 0.0.0.0/0"
@@ -22,14 +22,14 @@ expected_input_rules=(
 # Verify expected INPUT rules
 for rule in "${expected_input_rules[@]}"; do
     if echo "$input_rules" | grep -q "$rule"; then
-        l_output+="\n - Found expected INPUT rule: $rule"
+        l_output+="\n- Found expected INPUT rule: $rule"
     else
-        l_output2+="\n - Missing expected INPUT rule: $rule"
+        l_output2+="\n- Missing expected INPUT rule: $rule"
     fi
 done
 
 # Check OUTPUT chain
-output_rules=$(iptables -L OUTPUT -v -n)
+output_rules=$(sudo iptables -L OUTPUT -v -n)
 expected_output_rules=(
     "Chain OUTPUT (policy DROP 0 packets, 0 bytes)"
     "ACCEPT all -- * lo 0.0.0.0/0 0.0.0.0/0"

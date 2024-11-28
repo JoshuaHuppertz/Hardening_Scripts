@@ -12,29 +12,29 @@ l_output=""
 l_output2=""
 
 # Check the ip6tables policies
-iptables_output=$(ip6tables -L)
+iptables_output=$(sudo ip6tables -L)
 
 # Check for policies on INPUT, FORWARD, OUTPUT chains
-if echo "$iptables_output" | grep -q "Chain INPUT (policy DROP)"; then
+if echo "$iptables_output" | sudo grep -q "Chain INPUT (policy DROP)"; then
     l_output+="\n- INPUT chain policy is DROP."
 else
     l_output2+="\n- INPUT chain policy is not DROP."
 fi
 
-if echo "$iptables_output" | grep -q "Chain FORWARD (policy DROP)"; then
+if echo "$iptables_output" | sudo grep -q "Chain FORWARD (policy DROP)"; then
     l_output+="\n- FORWARD chain policy is DROP."
 else
     l_output2+="\n- FORWARD chain policy is not DROP."
 fi
 
-if echo "$iptables_output" | grep -q "Chain OUTPUT (policy DROP)"; then
+if echo "$iptables_output" | sudo grep -q "Chain OUTPUT (policy DROP)"; then
     l_output+="\n- OUTPUT chain policy is DROP."
 else
     l_output2+="\n- OUTPUT chain policy is not DROP."
 fi
 
 # Check if IPv6 is enabled
-if grep -Pqs '^\h*0\b' /sys/module/ipv6/parameters/disable; then
+if sudo grep -Pqs '^\h*0\b' /sys/module/ipv6/parameters/disable; then
     l_output2+="\n- IPv6 is enabled on the system."
 else
     l_output+="\n- IPv6 is not enabled on the system."
@@ -59,4 +59,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

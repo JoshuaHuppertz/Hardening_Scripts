@@ -12,7 +12,7 @@ l_output=""
 l_output2=""
 
 # Check if disk_full_action is set to halt or single
-l_disk_full_action_output=$(grep -Pi '^\s*disk_full_action\s*=\s*(halt|single)\b' /etc/audit/auditd.conf)
+l_disk_full_action_output=$(sudo grep -Pi '^\s*disk_full_action\s*=\s*(halt|single)\b' /etc/audit/auditd.conf)
 
 if [ -n "$l_disk_full_action_output" ]; then
     l_output+="\n- The 'disk_full_action' parameter is correctly set: $l_disk_full_action_output."
@@ -21,7 +21,7 @@ else
 fi
 
 # Check if disk_error_action is set to syslog, single, or halt
-l_disk_error_action_output=$(grep -Pi '^\s*disk_error_action\s*=\s*(syslog|single|halt)\b' /etc/audit/auditd.conf)
+l_disk_error_action_output=$(sudo grep -Pi '^\s*disk_error_action\s*=\s*(syslog|single|halt)\b' /etc/audit/auditd.conf)
 
 if [ -n "$l_disk_error_action_output" ]; then
     l_output+="\n- The 'disk_error_action' parameter is correctly set: $l_disk_error_action_output."
@@ -44,4 +44,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

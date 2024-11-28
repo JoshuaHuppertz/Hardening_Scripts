@@ -15,11 +15,11 @@ l_output2=""
 open_ports=$(ss -6tuln)
 
 # Check firewall rules
-iptables_output=$(ip6tables -L INPUT -v -n)
+iptables_output=$(sudo ip6tables -L INPUT -v -n)
 
 # Verify all open ports listening on non-localhost addresses have firewall rules
-if echo "$open_ports" | grep -q 'tcp LISTEN.*:::22'; then
-    if echo "$iptables_output" | grep -q 'tcp dpt:22 state NEW'; then
+if echo "$open_ports" | sudo grep -q 'tcp LISTEN.*:::22'; then
+    if echo "$iptables_output" | sudo grep -q 'tcp dpt:22 state NEW'; then
         l_output+="\n- Firewall rule for TCP port 22 is present."
     else
         l_output2+="\n- Missing firewall rule for TCP port 22."
@@ -30,9 +30,9 @@ fi
 
 # Verify IPv6 is disabled
 output=""
-grubfile="$(find -L /boot -name 'grub.cfg' -type f)"
-[ -f "$grubfile" ] && ! grep "^\s*linux" "$grubfile" | grep -vq ipv6.disable=1 && output="IPv6 disabled in grub config"
-grep -Eqs "^\s*net\.ipv6\.conf\.all\.disable_ipv6\s*=\s*1\b" /etc/sysctl.conf /etc/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /run/sysctl.d/*.conf && grep -Eqs "^\s*net\.ipv6\.conf\.default\.disable_ipv6\s*=\s*1\b" /etc/sysctl.conf /etc/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /run/sysctl.d/*.conf && sysctl net.ipv6.conf.all.disable_ipv6 | grep -Eq "^\s*net\.ipv6\.conf\.all\.disable_ipv6\s*=\s*1\b" && sysctl net.ipv6.conf.default.disable_ipv6 | grep -Eq "^\s*net\.ipv6\.conf\.default\.disable_ipv6\s*=\s*1\b" && output="IPv6 disabled in sysctl config"
+grubfile="$(sudo find -L /boot -name 'grub.cfg' -type f)"
+[ -f "$grubfile" ] && ! sudo grep "^\s*linux" "$grubfile" | sudo grep -vq ipv6.disable=1 && output="IPv6 disabled in grub config"
+sudo grep -Eqs "^\s*net\.ipv6\.conf\.all\.disable_ipv6\s*=\s*1\b" /etc/sysctl.conf /etc/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /run/sysctl.d/*.conf && sudo grep -Eqs "^\s*net\.ipv6\.conf\.default\.disable_ipv6\s*=\s*1\b" /etc/sysctl.conf /etc/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /run/sysctl.d/*.conf && sysctl net.ipv6.conf.all.disable_ipv6 | sudo grep -Eq "^\s*net\.ipv6\.conf\.all\.disable_ipv6\s*=\s*1\b" && sysctl net.ipv6.conf.default.disable_ipv6 | sudo grep -Eq "^\s*net\.ipv6\.conf\.default\.disable_ipv6\s*=\s*1\b" && output="IPv6 disabled in sysctl config"
 if [ -n "$output" ]; then
     l_output+="\n$output"
 else
@@ -58,4 +58,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"
