@@ -11,10 +11,6 @@
 #        ├── Audit
 #        └── Remediation
 
-# Verzeichnis anlegen
-mkdir -p ./Results/
-touch /Results/pass.txt
-touch /Results/fail.txt
 
 # Pfad zu den Härtungsskripten
 HARDENING_Audit="./Scripts/Audit"
