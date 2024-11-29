@@ -190,7 +190,7 @@ bash "$HARDENING_Audit/4.2.3.sh" #Manual
 bash "$HARDENING_Audit/4.2.4.sh"
 bash "$HARDENING_Audit/4.2.5.sh"
 bash "$HARDENING_Audit/4.2.6.sh"
-bash "$HARDENING_Audit/4.2.7.sh" #Manual
+bash "$HARDENING_Audit/4.2.7_Manual.sh" #Manual
 bash "$HARDENING_Audit/4.2.8.sh"
 bash "$HARDENING_Audit/4.2.9.sh"
 bash "$HARDENING_Audit/4.2.10.sh"
