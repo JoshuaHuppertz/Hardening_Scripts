@@ -11,6 +11,11 @@
 #        ├── Audit
 #        └── Remediation
 
+# Verzeichnis anlegen
+mkdir -p ./Results/
+touch /Results/pass.txt
+touch /Results/fail.txt
+
 # Pfad zu den Härtungsskripten
 HARDENING_Audit="./Scripts/Audit"
 PASS_FILE="/Results/pass.txt"
@@ -18,10 +23,6 @@ FAIL_FILE="/Results/fail.txt"
 
 # Get the IP address of the host
 HOST_IP=$(hostname -I | awk '{print $1}')
-
-mkdir -p /Results/
-touch /Results/pass.txt
-touch /Results/fail.txt
 echo "H1\nAudit is running on $(hostname) with IP $HOST_IP" > $PASS_FILE
 date >> $PASS_FILE
 echo "-------------------------------------------------" >> $PASS_FILE
@@ -178,8 +179,8 @@ bash "$HARDENING_Audit/3.3.11.sh"
 bash "$HARDENING_Audit/4.1.1.sh"
 bash "$HARDENING_Audit/4.1.2.sh"
 bash "$HARDENING_Audit/4.1.3.sh"
-bash "$HARDENING_Audit/4.1.4.sh"
-bash "$HARDENING_Audit/4.1.5.sh"  #Manual
+bash "$HARDENING_Audit/4.1.4_Manual.sh"
+bash "$HARDENING_Audit/4.1.5_Manual.sh"  #Manual
 bash "$HARDENING_Audit/4.1.6.sh"
 bash "$HARDENING_Audit/4.1.7.sh"
 # 4.2 Configure nftables
@@ -200,8 +201,8 @@ bash "$HARDENING_Audit/4.3.1.2.sh"
 bash "$HARDENING_Audit/4.3.1.3.sh"
 # 4.3.2 Configure IPv4 iptables
 bash "$HARDENING_Audit/4.3.2.1.sh"
-bash "$HARDENING_Audit/4.3.2.2.sh"
-bash "$HARDENING_Audit/4.3.2.3.sh" #Manual
+bash "$HARDENING_Audit/4.3.2.2_Manual.sh"
+bash "$HARDENING_Audit/4.3.2.3_Manual.sh" #Manual
 bash "$HARDENING_Audit/4.3.2.4.sh"
 # 4.3.3 Configure IPv6 ip6tables
 bash "$HARDENING_Audit/4.3.3.1.sh"
@@ -236,7 +237,7 @@ bash "$HARDENING_Audit/5.2.2.sh"
 bash "$HARDENING_Audit/5.2.3.sh"
 bash "$HARDENING_Audit/5.2.5.sh"
 bash "$HARDENING_Audit/5.2.6.sh"
-bash "$HARDENING_Audit/5.2.7.sh"
+bash "$HARDENING_Audit/5.2.7_Manual.sh"
 # 5.3 Pluggable Authentication Modules
 # 5.3.1 Configure PAM software packages
 bash "$HARDENING_Audit/5.3.1.1.sh"
