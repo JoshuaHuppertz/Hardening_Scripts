@@ -29,7 +29,7 @@ if [ -n "$AUDIT_CONF_PATH" ]; then
         l_audit_log_directory="/var/log/audit"
     fi
 
-    echo "Using log directory: $l_audit_log_directory"
+    #echo "Using log directory: $l_audit_log_directory"
 
     # Check if the directory exists
     if [ -d "$l_audit_log_directory" ]; then
@@ -66,4 +66,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"
