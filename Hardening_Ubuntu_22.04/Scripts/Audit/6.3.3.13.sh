@@ -25,9 +25,9 @@ if {
     && (/unlink/ || /rename/ || /unlinkat/ || /renameat/) \
     && (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)" /etc/audit/rules.d/*.rules 2>/dev/null; 
 }; then
-    on_disk_output+="OK: On-disk audit rules for file deletion found."
+    on_disk_output+="OK: On-disk audit rules for file deletion found.\n"
 else
-    on_disk_output+="Warning: On-disk audit rules for file deletion not found."
+    on_disk_output+="Warning: On-disk audit rules for file deletion not found.\n"
 fi
 
 # Check the on-disk configuration results
@@ -51,9 +51,9 @@ if {
     && (/unlink/ || /rename/ || /unlinkat/ || /renameat/) \
     && (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)"; 
 }; then
-    running_output+="OK: Running audit rules for file deletion found."
+    running_output+="OK: Running audit rules for file deletion found.\n"
 else
-    running_output+="Warning: Running audit rules for file deletion not found."
+    running_output+="Warning: Running audit rules for file deletion not found.\n"
 fi
 
 # Check the running configuration results
@@ -78,4 +78,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

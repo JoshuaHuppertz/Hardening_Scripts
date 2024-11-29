@@ -39,7 +39,7 @@ if [ -n "${SUDO_LOG_FILE}" ]; then
         l_output+="\n- Running rules are correctly configured:\n$l_running_rules_output"
     else
         l_output2+="\n- Running rules are not correctly configured:\n$l_running_rules_output"
-        l_output2+="\n- Expected running rules:\n$l_running_rules_output"
+        l_output2+="\n- Expected running rules:\n$expected_disk_rules\n"
     fi
 else
     l_output2+="\n- Error: Running rules 'SUDO_LOG_FILE' variable is not set.\n"
@@ -60,4 +60,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

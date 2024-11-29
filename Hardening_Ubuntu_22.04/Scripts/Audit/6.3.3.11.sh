@@ -21,9 +21,9 @@ if awk "/^ *-w/ \
 ||/\/var\/log\/btmp/) \
 &&/ +-p *wa/ \
 &&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)" /etc/audit/rules.d/*.rules 2>/dev/null; then
-    on_disk_output+="OK: On-disk audit rules for session files found."
+    on_disk_output+="OK: On-disk audit rules for session files found.\n"
 else
-    on_disk_output+="Warning: On-disk audit rules for session files not found."
+    on_disk_output+="Warning: On-disk audit rules for session files not found.\n"
 fi
 
 # Check on-disk configuration results
@@ -43,9 +43,9 @@ if auditctl -l 2>/dev/null | awk "/^ *-w/ \
 ||/\/var\/log\/btmp/) \
 &&/ +-p *wa/ \
 &&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)"; then
-    running_output+="OK: Running audit rules for session files found."
+    running_output+="OK: Running audit rules for session files found.\n"
 else
-    running_output+="Warning: Running audit rules for session files not found."
+    running_output+="Warning: Running audit rules for session files not found.\n"
 fi
 
 # Check running configuration results
@@ -70,4 +70,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

@@ -20,9 +20,9 @@ if awk '/^ *-w/ \
 || /\/etc\/apparmor.d/) \
 && / -p *wa/ \
 && (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)' /etc/audit/rules.d/*.rules 2>/dev/null; then
-    on_disk_output+="OK: On-disk audit rules for AppArmor found."
+    on_disk_output+="OK: On-disk audit rules for AppArmor found.\n"
 else
-    on_disk_output+="Warning: On-disk audit rules for AppArmor not found."
+    on_disk_output+="Warning: On-disk audit rules for AppArmor not found.\n"
 fi
 
 # Check on-disk configuration results
@@ -41,9 +41,9 @@ if auditctl -l 2>/dev/null | awk '/^ *-w/ \
 || /\/etc\/apparmor.d/) \
 && / -p *wa/ \
 && (/ key= *[!-~]* *$/ || / -k *[!-~]* *$/)'; then
-    running_output+="OK: Running audit rules for AppArmor found."
+    running_output+="OK: Running audit rules for AppArmor found.\n"
 else
-    running_output+="Warning: Running audit rules for AppArmor not found."
+    running_output+="Warning: Running audit rules for AppArmor not found.\n"
 fi
 
 # Check running configuration results
@@ -68,4 +68,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

@@ -42,7 +42,7 @@ if [[ "$running_rules" == *"-a always,exit -F arch=b64 -S sethostname,setdomainn
     l_output+="\n- Running rules are correctly configured:\n$running_rules\n$running_file_rules"
 else
     l_output2+="\n- Error in Running rules:\n$running_rules\n"
-    l_output2+="\n- Expected running rules:\n$running_file_rules\n"
+    l_output2+="\n- Expected running rules:\n$expected_on_disk_rules\n"
 fi
 
 # Check and output result
@@ -60,4 +60,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

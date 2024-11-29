@@ -43,7 +43,7 @@ if [ "$normalized_running_rules" == "$expected_running_rules" ]; then
     l_output+="\n- Running rules are correctly configured:\n$normalized_running_rules"
 else
     l_output2+="\n- Running rules are not correctly configured:\n$normalized_running_rules"
-    l_output2+="\n- Expected running rules:\n$normalized_running_rules"
+    l_output2+="\n- Expected running rules:\n$expected_disk_rules"
 fi
 
 # Check and output the result
@@ -61,4 +61,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

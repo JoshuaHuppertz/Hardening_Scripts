@@ -27,15 +27,15 @@ if UID_MIN=$(awk '/^\s*UID_MIN/{print $2}' /etc/login.defs 2>/dev/null); then
         ||/setxattr/||/lsetxattr/||/fsetxattr/ \
         ||/removexattr/||/lremovexattr/||/fremovexattr/) \
         &&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)" /etc/audit/rules.d/*.rules 2>/dev/null; then
-            on_disk_output+="OK: On-disk audit rules found."
+            on_disk_output+="OK: On-disk audit rules found.\n"
         else
-            on_disk_output+="Warning: On-disk audit rules not found for permission modification syscalls."
+            on_disk_output+="Warning: On-disk audit rules not found for permission modification syscalls.\n"
         fi
     else
-        on_disk_output+="ERROR: Variable 'UID_MIN' is unset."
+        on_disk_output+="ERROR: Variable 'UID_MIN' is unset.\n"
     fi
 else
-    on_disk_output+="ERROR: Unable to read UID_MIN."
+    on_disk_output+="ERROR: Unable to read UID_MIN.\n"
 fi
 
 # Check on-disk configuration results
@@ -61,15 +61,15 @@ if UID_MIN=$(awk '/^\s*UID_MIN/{print $2}' /etc/login.defs 2>/dev/null); then
         ||/setxattr/||/lsetxattr/||/fsetxattr/ \
         ||/removexattr/||/lremovexattr/||/fremovexattr/) \
         &&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)"; then
-            running_output+="OK: Running audit rules found."
+            running_output+="OK: Running audit rules found.\n"
         else
-            running_output+="Warning: Running audit rules not found for permission modification syscalls."
+            running_output+="Warning: Running audit rules not found for permission modification syscalls.\n"
         fi
     else
-        running_output+="ERROR: Variable 'UID_MIN' is unset."
+        running_output+="ERROR: Variable 'UID_MIN' is unset.\n"
     fi
 else
-    running_output+="ERROR: Unable to read UID_MIN."
+    running_output+="ERROR: Unable to read UID_MIN.\n"
 fi
 
 # Check running configuration results
@@ -94,4 +94,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

@@ -40,7 +40,7 @@ if [[ "$running_rules" == *"-a always,exit -F arch=b64 -S adjtimex,settimeofday,
     l_output+="\n- Running rules are correctly configured:\n$running_rules\n$running_localtime_rule"
 else
     l_output2+="\n- Error in Running rules:\n$running_rules"
-    l_output2+="\n- Expected running rules:\n$running_localtime_rule"
+    l_output2+="\n- Expected running rules:\n$expected_on_disk_rules"
 fi
 
 # Check and output result
@@ -58,4 +58,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

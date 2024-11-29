@@ -22,12 +22,12 @@ if UID_MIN=$(awk '/^\s*UID_MIN/{print $2}' /etc/login.defs) && [ -n "${UID_MIN}"
     &&/ -F *perm=x/ \
     &&/ -F *path=\/usr\/bin\/chcon/ \
     &&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)" /etc/audit/rules.d/*.rules 2>/dev/null; then
-        on_disk_output+="OK: On-disk audit rules for /usr/bin/chcon found."
+        on_disk_output+="OK: On-disk audit rules for /usr/bin/chcon found.\n"
     else
-        on_disk_output+="Warning: On-disk audit rules for /usr/bin/chcon not found."
+        on_disk_output+="Warning: On-disk audit rules for /usr/bin/chcon not found.\n"
     fi
 else
-    on_disk_output+="ERROR: 'UID_MIN' variable is unset."
+    on_disk_output+="ERROR: 'UID_MIN' variable is unset.\n"
 fi
 
 # Check on-disk configuration results
@@ -48,12 +48,12 @@ if UID_MIN=$(awk '/^\s*UID_MIN/{print $2}' /etc/login.defs) && [ -n "${UID_MIN}"
     &&/ -F *perm=x/ \
     &&/ -F *path=\/usr\/bin\/chcon/ \
     &&(/ key= *[!-~]* *$/||/ -k *[!-~]* *$/)"; then
-        running_output+="OK: Running audit rules for /usr/bin/chcon found."
+        running_output+="OK: Running audit rules for /usr/bin/chcon found.\n"
     else
-        running_output+="Warning: Running audit rules for /usr/bin/chcon not found."
+        running_output+="Warning: Running audit rules for /usr/bin/chcon not found.\n"
     fi
 else
-    running_output+="ERROR: 'UID_MIN' variable is unset."
+    running_output+="ERROR: 'UID_MIN' variable is unset.\n"
 fi
 
 # Check running configuration results
@@ -78,4 +78,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"

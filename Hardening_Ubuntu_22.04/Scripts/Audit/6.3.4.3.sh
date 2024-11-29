@@ -35,13 +35,13 @@ if [ -n "$AUDIT_CONF_PATH" ]; then
     # Check if the directory exists
     if [ -d "$l_fpath" ]; then
         # Find files that are not owned by group "root" or "adm"
-        while IFS= sudo read -r -d $'\0' l_file; do
-            l_output2+="\n - File: \"$l_file\" is not owned by group \"root\" or \"adm\"\n"
+        while IFS= read -r -d $'\0' l_file; do
+            l_output2+="\n - File: \"$l_file\" is not owned by group \"root\" or \"adm\""
         done < <(sudo find -L "$l_fpath" -not -path "$l_fpath"/lost+found -type f \( ! -group root -a ! -group adm \) -print0 2>/dev/null)
         
         # Check if no files were found
         if [ -z "$l_output2" ]; then
-            l_output+="\n- All files in the directory \"$l_fpath\" are owned by group \"root\" or \"adm\"\n"
+            l_output+="\n- All files in the directory \"$l_fpath\" are owned by group \"root\" or \"adm\""
         fi
     else
         l_output2+="\n- ** FAIL **\n- The log directory \"$l_fpath\" does not exist. Please specify the directory in \"/etc/audit/auditd.conf\"."
