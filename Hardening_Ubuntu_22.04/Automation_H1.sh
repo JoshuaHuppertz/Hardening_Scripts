@@ -19,10 +19,10 @@ FAIL_FILE="./Results/fail.txt"
 
 # Get the IP address of the host
 HOST_IP=$(hostname -I | awk '{print $1}')
-echo "H1\nAudit is running on $(hostname) with IP $HOST_IP" > $PASS_FILE
+echo "H1: Audit is running on $(hostname) with IP $HOST_IP" > $PASS_FILE
 date >> $PASS_FILE
 echo "-------------------------------------------------" >> $PASS_FILE
-echo "H1\nAudit is running on $(hostname) with IP $HOST_IP" > $FAIL_FILE
+echo "H1: Audit is running on $(hostname) with IP $HOST_IP" > $FAIL_FILE
 date >> $FAIL_FILE
 echo "-------------------------------------------------" >> $FAIL_FILE
 sleep 2.5
