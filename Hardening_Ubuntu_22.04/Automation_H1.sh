@@ -19,7 +19,7 @@ FAIL_FILE="/Results/fail.txt"
 # Get the IP address of the host
 HOST_IP=$(hostname -I | awk '{print $1}')
 
-mkdir -p ./Results/
+mkdir -p /Results/
 touch /Results/pass.txt
 touch /Results/fail.txt
 echo "H1\nAudit is running on $(hostname) with IP $HOST_IP" > $PASS_FILE
