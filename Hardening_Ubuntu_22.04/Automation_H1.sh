@@ -14,8 +14,8 @@
 
 # Pfad zu den Härtungsskripten
 HARDENING_Audit="./Scripts/Audit"
-PASS_FILE="/Results/pass.txt"
-FAIL_FILE="/Results/fail.txt"
+PASS_FILE="./Results/pass.txt"
+FAIL_FILE="./Results/fail.txt"
 
 # Get the IP address of the host
 HOST_IP=$(hostname -I | awk '{print $1}')
