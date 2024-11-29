@@ -70,4 +70,4 @@ fi
     echo -e "$RESULT"
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-#echo -e "$RESULT"
+echo -e "$RESULT"

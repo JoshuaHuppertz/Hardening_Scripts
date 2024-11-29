@@ -11,21 +11,18 @@
 #        ├── Audit
 #        └── Remediation
 
+
 # Pfad zu den Härtungsskripten
 HARDENING_Audit="./Scripts/Audit"
-PASS_FILE="/Results/pass.txt"
-FAIL_FILE="/Results/fail.txt"
+PASS_FILE="./Results/pass.txt"
+FAIL_FILE="./Results/fail.txt"
 
 # Get the IP address of the host
 HOST_IP=$(hostname -I | awk '{print $1}')
-
-mkdir -p ./Results/
-touch /Results/pass.txt
-touch /Results/fail.txt
-echo "H2\nAudit is running on $(hostname) with IP $HOST_IP" > $PASS_FILE
+echo "H2: Audit is running on $(hostname) with IP $HOST_IP" > $PASS_FILE
 date >> $PASS_FILE
 echo "-------------------------------------------------" >> $PASS_FILE
-echo "H2\nAudit is running on $(hostname) with IP $HOST_IP" > $FAIL_FILE
+echo "H2: Audit is running on $(hostname) with IP $HOST_IP" > $FAIL_FILE
 date >> $FAIL_FILE
 echo "-------------------------------------------------" >> $FAIL_FILE
 sleep 2.5
@@ -34,7 +31,7 @@ sleep 2.5
 
 
 
-echo "Audit für Härtegrad 1 ausgewählt."
+echo "Audit für Härtegrad 2 ausgewählt."
 # 1.1 Filesystem
 # 1.1.1 Configure Filesystem Kernel Modules
 bash "$HARDENING_Audit/1.1.1.6.sh" #Level.2 Server
