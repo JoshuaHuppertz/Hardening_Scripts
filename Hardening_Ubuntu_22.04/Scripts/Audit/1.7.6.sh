@@ -83,7 +83,7 @@ if [ -n "$l_pkgoutput" ]; then
         l_output2="$l_output2\n- neither \"automount\" or \"automount-open\" is set"
     fi
 else
-    l_output="$l_output\n- GNOME Desktop Manager package is not installed on the system\n - Recommendation is not applicable"
+    l_output="$l_output\n- GNOME Desktop Manager package is not installed on the system\n- Recommendation is not applicable"
 fi
 
 # Prepare result report
@@ -101,4 +101,4 @@ fi
     # Add a separator line
     echo -e "-------------------------------------------------"
 } >> "$FILE_NAME"
-echo -e "$RESULT"
+#echo -e "$RESULT"
